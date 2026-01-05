@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CC.AppointmentService/CC.AppointmentService.csproj" />
+  </Folder>
+</Solution>
