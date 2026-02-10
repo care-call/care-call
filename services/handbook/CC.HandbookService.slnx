@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CC.HandbookService/CC.HandbookService.csproj" />
+  </Folder>
+</Solution>
