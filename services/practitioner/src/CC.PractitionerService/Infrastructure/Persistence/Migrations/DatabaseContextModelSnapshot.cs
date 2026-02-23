@@ -92,6 +92,44 @@ namespace CC.PractitionerService.Infrastructure.Persistence.Migrations
                     b.ToTable("practitioner_profiles", (string)null);
                 });
 
+            modelBuilder.Entity("CC.PractitionerService.Domain.WorkSchedules.Adjustment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
+
+                    b.Property<Guid>("WorkScheduleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("work_schedule_id");
+
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "Period", "CC.PractitionerService.Domain.WorkSchedules.Adjustment.Period#DateTimeRange", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<DateTime>("From")
+                                .HasColumnType("timestamp without time zone")
+                                .HasColumnName("period_from");
+
+                            b1.Property<DateTime>("To")
+                                .HasColumnType("timestamp without time zone")
+                                .HasColumnName("period_to");
+                        });
+
+                    b.HasKey("Id")
+                        .HasName("pk_adjustments");
+
+                    b.ToTable("adjustments", (string)null);
+                });
+
             modelBuilder.Entity("CC.PractitionerService.Domain.WorkSchedules.WorkSchedule", b =>
                 {
                     b.Property<Guid>("Id")

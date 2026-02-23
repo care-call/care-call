@@ -8,10 +8,11 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
 {
     public DbSet<PractitionerProfile> PractitionerProfiles { get; set; }
     public DbSet<WorkSchedule> WorkSchedules { get; set; }
+    public DbSet<Adjustment> Adjustments { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);
-        base.OnModelCreating(modelBuilder);
-    }
+   protected override void OnModelCreating(ModelBuilder modelBuilder)
+   {
+       modelBuilder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);
+       base.OnModelCreating(modelBuilder);
+   }
 }

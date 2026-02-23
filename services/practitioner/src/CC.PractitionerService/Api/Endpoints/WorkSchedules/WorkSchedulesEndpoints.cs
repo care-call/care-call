@@ -8,6 +8,7 @@ public static class WorkSchedulesEndpoints
         {
             var v1Group = builder.MapGroup("api/v1/work-schedules");
             v1Group.MapPost("", CreateWorkScheduleEndpoint.Handle);
+            v1Group.MapPost("{id:guid}/adjustments", AddAdjustmentsEndpoint.Handle);
         }
     }
 }
