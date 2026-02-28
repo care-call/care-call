@@ -6,27 +6,30 @@ namespace CC.PractitionerService.Infrastructure.OpenApi;
 
 public static class OpenApiSchemaExampleExtensions
 {
-    public static void ApplyExamplesFromAttributes(this IOpenApiSchema schema, OpenApiSchemaTransformerContext context)
+    extension(IOpenApiSchema schema)
     {
-        foreach (var jsonProp  in context.JsonTypeInfo.Properties)
+        public void ApplyExamplesFromAttributes(OpenApiSchemaTransformerContext context)
         {
-            if (!schema.Properties.TryGetValue(jsonProp.Name, out var propSchema))
-                continue;
+            foreach (var jsonProp in context.JsonTypeInfo.Properties)
+            {
+                if (!schema.Properties.TryGetValue(jsonProp.Name, out var propSchema))
+                    continue;
 
-            var provider = jsonProp.AttributeProvider;
-            if (provider is null)
-                continue;
+                var provider = jsonProp.AttributeProvider;
+                if (provider is null)
+                    continue;
 
-            var exampleAttr = provider
-                .GetCustomAttributes(typeof(OpenApiExample), inherit: true)
-                .Cast<OpenApiExample>()
-                .FirstOrDefault();
+                var exampleAttr = provider
+                    .GetCustomAttributes(typeof(OpenApiExampleAttribute), inherit: true)
+                    .Cast<OpenApiExampleAttribute>()
+                    .FirstOrDefault();
 
-            if (exampleAttr is null)
-                continue;
+                if (exampleAttr is null)
+                    continue;
 
-            if (propSchema is OpenApiSchema concreteProp) 
-                concreteProp.Example = JsonValue.Create(exampleAttr.Value);
+                if (propSchema is OpenApiSchema concreteProp)
+                    concreteProp.Example = JsonValue.Create(exampleAttr.Value);
+            }
         }
     }
 }
