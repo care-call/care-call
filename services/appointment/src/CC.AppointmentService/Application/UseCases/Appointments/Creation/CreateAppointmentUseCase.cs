@@ -1,6 +1,8 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
+using CC.AppointmentService.Domain.Appointments.Rules;
+using CC.AppointmentService.Domain.Errors;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
 using Mediator;
@@ -18,13 +20,27 @@ public record CreateAppointment : IRequest<Result>
 
 public class CreateAppointmentUseCase(
     IUnitOfWork unitOfWork,
-    IAppointmentRepository appointmentRepository) : IRequestHandler<CreateAppointment, Result>
+    IAppointmentsRepository appointmentsRepository,
+    TimeProvider timeProvider) : IRequestHandler<CreateAppointment, Result>
 {
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
     {
+        if (AppointmentsTimeRules.IsTooSoon(command.TimeSlot.From, timeProvider.GetUtcNow().DateTime))
+            return Result.Fail(AppointmentErrors.TooSoon(AppointmentsTimeRules.MinHoursBeforeStart));
+
+        var hasIntercept = await appointmentsRepository.HasInterceptsAsync(command.TimeSlot, command.ClientId);
+        if (hasIntercept)
+            return Result.Fail(AppointmentErrors.HasIntercepts());
+
+        var lastAppointment = await appointmentsRepository.GetLastAppointmentAsync(command.ClientId);
+        if (lastAppointment != null &&
+            AppointmentsTimeRules.HasInsufficientBreak(lastAppointment.TimeSlot.To, command.TimeSlot.From))
+            return Result.Fail(AppointmentErrors.MinBreakBetweenAppointments(
+                AppointmentsTimeRules.MinBreakBetweenAppointmentsMinutes));
+
         var appointment = new Appointment(Guid.CreateVersion7())
         {
-            ClientId =  command.ClientId,
+            ClientId = command.ClientId,
             PractitionerId = command.PractitionerId,
             TimeSlot = command.TimeSlot,
             Status = AppointmentStatus.Planned,
@@ -32,7 +48,7 @@ public class CreateAppointmentUseCase(
             PractitionerSnapshot = command.PractitionerSnapshot
         };
 
-        await appointmentRepository.AddAsync(appointment);
+        await appointmentsRepository.AddAsync(appointment);
         await unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();

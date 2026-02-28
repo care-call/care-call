@@ -7,11 +7,9 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
 {
     public required Guid ClientId { get; init; }
     public required Guid PractitionerId { get; init; }
-    public required DateTimeRange TimeSlot { get; init; }
+    public required DateTimeRange TimeSlot { get; set; }
     public required AppointmentStatus Status { get; set; }
-
     public required ClientSnapshot ClientSnapshot { get; init; }
     public required PractitionerSnapshot PractitionerSnapshot { get; init; }
-    
     public string? CancellationReason { get; set; }
 }
