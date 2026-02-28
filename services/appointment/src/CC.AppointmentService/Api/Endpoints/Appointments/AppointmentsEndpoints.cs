@@ -8,6 +8,7 @@ public static class AppointmentsEndpoints
         {
             var v1Group = builder.MapGroup("api/v1/appointments");
             v1Group.MapPost("", CreateAppointmentEndpoint.Handle);
+            v1Group.MapPost("{id}/transfer", TransferAppointmentEndpoint.Handle);
         }
     }
 }
