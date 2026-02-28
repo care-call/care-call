@@ -6,6 +6,6 @@ public interface IAppointmentsRepository
 {
     Task AddAsync(Appointment appointment);
     Task<Appointment?> GetByIdAsync(Guid id);
-    Task<bool> HasIntercepts(DateTimeRange range, Guid clientId);
-    Task<Appointment?> GetLastAppointment(Guid clientId);
+    Task<bool> HasInterceptsAsync(DateTimeRange range, Guid clientId);
+    Task<Appointment?> GetLastAppointmentAsync(Guid clientId);
 }

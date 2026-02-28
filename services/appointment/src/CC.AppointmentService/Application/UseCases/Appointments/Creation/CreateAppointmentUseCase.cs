@@ -2,6 +2,7 @@ using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
 using CC.AppointmentService.Domain.Appointments.Rules;
+using CC.AppointmentService.Domain.Errors;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
 using Mediator;
@@ -24,19 +25,18 @@ public class CreateAppointmentUseCase(
 {
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
     {
-        var currentDateTime = timeProvider.GetUtcNow();
-        if ((command.TimeSlot.From - currentDateTime).TotalHours <
-            AppointmentsTimeRules.MinHoursBeforeAppointment.TotalMinutes)
-            return Result.Fail("Время между созданием записи и началом должно быть не меньше 4 часов");
+        if (AppointmentsTimeRules.IsTooSoon(command.TimeSlot.From, timeProvider.GetUtcNow().DateTime))
+            return Result.Fail(AppointmentErrors.TooSoon(AppointmentsTimeRules.MinHoursBeforeStart));
 
-        var hasIntercept = await appointmentsRepository.HasIntercepts(command.TimeSlot, command.ClientId);
+        var hasIntercept = await appointmentsRepository.HasInterceptsAsync(command.TimeSlot, command.ClientId);
         if (hasIntercept)
-            return Result.Fail("Клиент не может иметь пересекающиеся записи");
+            return Result.Fail(AppointmentErrors.HasIntercepts());
 
-        var lastAppointment = await appointmentsRepository.GetLastAppointment(command.ClientId);
-        if (lastAppointment != null && (command.TimeSlot.From - lastAppointment.TimeSlot.To).TotalMinutes <
-            AppointmentsTimeRules.MinMinutesBetweenAppointments.TotalMinutes)
-            return Result.Fail("Минимальный интервал между записями — 30 минут");
+        var lastAppointment = await appointmentsRepository.GetLastAppointmentAsync(command.ClientId);
+        if (lastAppointment != null &&
+            AppointmentsTimeRules.HasInsufficientBreak(lastAppointment.TimeSlot.To, command.TimeSlot.From))
+            return Result.Fail(AppointmentErrors.MinBreakBetweenAppointments(
+                AppointmentsTimeRules.MinBreakBetweenAppointmentsMinutes));
 
         var appointment = new Appointment(Guid.CreateVersion7())
         {

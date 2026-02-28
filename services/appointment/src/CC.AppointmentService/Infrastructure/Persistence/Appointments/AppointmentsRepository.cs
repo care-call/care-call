@@ -13,11 +13,11 @@ internal class AppointmentsRepository(DatabaseContext db) : IAppointmentsReposit
     public async Task<Appointment?> GetByIdAsync(Guid id) =>
         await db.Appointments.FirstOrDefaultAsync(a => a.Id == id);
 
-    public async Task<bool> HasIntercepts(DateTimeRange range, Guid clientId) =>
+    public async Task<bool> HasInterceptsAsync(DateTimeRange range, Guid clientId) =>
         await db.Appointments.Where(a => a.ClientId == clientId)
             .AnyAsync(a => a.TimeSlot.From < range.To && a.TimeSlot.To > range.From);
 
-    public async Task<Appointment?> GetLastAppointment(Guid clientId) =>
+    public async Task<Appointment?> GetLastAppointmentAsync(Guid clientId) =>
         await db.Appointments.Where(a => a.ClientId == clientId)
             .OrderByDescending(a => a.TimeSlot.To).FirstOrDefaultAsync();
 }
