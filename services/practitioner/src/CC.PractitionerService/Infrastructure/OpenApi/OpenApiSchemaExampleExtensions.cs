@@ -12,23 +12,24 @@ public static class OpenApiSchemaExampleExtensions
         {
             foreach (var jsonProp in context.JsonTypeInfo.Properties)
             {
+                if (schema.Properties is null)
+                    continue;
+
                 if (!schema.Properties.TryGetValue(jsonProp.Name, out var propSchema))
                     continue;
 
-                var provider = jsonProp.AttributeProvider;
-                if (provider is null)
+                if (propSchema is not OpenApiSchema concretePropSchema)
                     continue;
 
-                var exampleAttr = provider
-                    .GetCustomAttributes(typeof(OpenApiExampleAttribute), inherit: true)
+                var exampleAttr = jsonProp.AttributeProvider
+                    ?.GetCustomAttributes(typeof(OpenApiExampleAttribute), inherit: true)
                     .Cast<OpenApiExampleAttribute>()
                     .FirstOrDefault();
 
                 if (exampleAttr is null)
                     continue;
 
-                if (propSchema is OpenApiSchema concreteProp)
-                    concreteProp.Example = JsonValue.Create(exampleAttr.Value);
+                concretePropSchema.Example = JsonValue.Create(exampleAttr.Value);
             }
         }
     }
