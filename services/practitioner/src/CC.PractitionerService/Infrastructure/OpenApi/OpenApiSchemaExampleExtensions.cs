@@ -18,17 +18,15 @@ public static class OpenApiSchemaExampleExtensions
                 continue;
 
             var exampleAttr = provider
-                .GetCustomAttributes(typeof(OpenApiExampleAttribute), inherit: true)
-                .Cast<OpenApiExampleAttribute>()
+                .GetCustomAttributes(typeof(OpenApiExample), inherit: true)
+                .Cast<OpenApiExample>()
                 .FirstOrDefault();
 
             if (exampleAttr is null)
                 continue;
 
-            if (propSchema is OpenApiSchema concreteProp)
-            {
+            if (propSchema is OpenApiSchema concreteProp) 
                 concreteProp.Example = JsonValue.Create(exampleAttr.Value);
-            }
         }
     }
 }
