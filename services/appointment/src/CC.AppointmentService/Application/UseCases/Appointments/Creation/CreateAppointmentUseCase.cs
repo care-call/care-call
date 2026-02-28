@@ -1,5 +1,4 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
-using CC.AppointmentService.Domain;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
 using CC.AppointmentService.Domain.Appointments.Rules;
@@ -20,30 +19,24 @@ public record CreateAppointment : IRequest<Result>
 
 public class CreateAppointmentUseCase(
     IUnitOfWork unitOfWork,
-    IAppointmentRepository appointmentRepository,
+    IAppointmentsRepository appointmentsRepository,
     TimeProvider timeProvider) : IRequestHandler<CreateAppointment, Result>
 {
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
     {
         var currentDateTime = timeProvider.GetUtcNow();
-        if ((command.TimeSlot.From - currentDateTime).TotalHours < AppointmentsTimeRules.MinHoursBeforeAppointment)
-        {
+        if ((command.TimeSlot.From - currentDateTime).TotalHours <
+            AppointmentsTimeRules.MinHoursBeforeAppointment.TotalMinutes)
             return Result.Fail("Время между созданием записи и началом должно быть не меньше 4 часов");
-        }
 
-        var hasIntercept = await appointmentRepository.HasIntercepts(command.TimeSlot);
-
+        var hasIntercept = await appointmentsRepository.HasIntercepts(command.TimeSlot, command.ClientId);
         if (hasIntercept)
-        {
             return Result.Fail("Клиент не может иметь пересекающиеся записи");
-        }
 
-        var lastAppointment = await appointmentRepository.GetLastAppointment(command.ClientId);
+        var lastAppointment = await appointmentsRepository.GetLastAppointment(command.ClientId);
         if (lastAppointment != null && (command.TimeSlot.From - lastAppointment.TimeSlot.To).TotalMinutes <
-            AppointmentsTimeRules.MinMinutesBetweenAppointments)
-        {
+            AppointmentsTimeRules.MinMinutesBetweenAppointments.TotalMinutes)
             return Result.Fail("Минимальный интервал между записями — 30 минут");
-        }
 
         var appointment = new Appointment(Guid.CreateVersion7())
         {
@@ -55,7 +48,7 @@ public class CreateAppointmentUseCase(
             PractitionerSnapshot = command.PractitionerSnapshot
         };
 
-        await appointmentRepository.AddAsync(appointment);
+        await appointmentsRepository.AddAsync(appointment);
         await unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();

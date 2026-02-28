@@ -1,5 +1,4 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
-using CC.AppointmentService.Domain;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
 using CC.AppointmentService.Domain.Appointments.Rules;
@@ -16,14 +15,14 @@ public record TransferAppointment : IRequest<Result>
 }
 
 public class TransferAppointmentUseCase(
-    IAppointmentRepository appointmentRepository,
+    IAppointmentsRepository appointmentsRepository,
     IUnitOfWork unitOfWork,
     TimeProvider timeProvider)
     : IRequestHandler<TransferAppointment, Result>
 {
     public async ValueTask<Result> Handle(TransferAppointment command, CancellationToken cancellationToken)
     {
-        var appointment = await appointmentRepository.GetByIdAsync(command.AppointmentId);
+        var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId);
         if (appointment is null)
             return Result.Fail("Заявка не существует!");
 
@@ -31,23 +30,18 @@ public class TransferAppointmentUseCase(
             return Result.Fail("Заявка уже завершена, перенос не возможен!");
 
         var currentDateTime = timeProvider.GetUtcNow();
-        var daysDifference = Math.Abs((appointment.TimeSlot.From - command.TimeSlot.From).Days);
+        var daysDifference = Math.Abs((appointment.TimeSlot.From - command.TimeSlot.From).TotalDays);
 
-        if ((command.TimeSlot.From - currentDateTime).TotalHours < AppointmentsTimeRules.MinHoursBeforeAppointment)
-        {
-            return Result.Fail("Время между созданием записи и началом должно быть не меньше 4ех часов");
-        }
-
-        if (daysDifference > AppointmentsTimeRules.MaxDaysTransferAppointment)
-        {
+        if (daysDifference > AppointmentsTimeRules.MaxDaysTransferAppointment.TotalDays)
             return Result.Fail("Максимальная дальность переноса записи не больше недели от старой даты");
-        }
 
-        var hasIntersections = await appointmentRepository.HasIntercepts(command.TimeSlot);
+        if ((command.TimeSlot.From - currentDateTime).TotalHours <
+            AppointmentsTimeRules.MinHoursBeforeAppointment.TotalHours)
+            return Result.Fail("Время между созданием записи и началом должно быть не меньше 4ех часов");
+
+        var hasIntersections = await appointmentsRepository.HasIntercepts(command.TimeSlot, appointment.ClientId);
         if (hasIntersections)
-        {
             return Result.Fail("Клиент не может иметь пересекающиеся записи");
-        }
 
         appointment.TimeSlot = command.TimeSlot;
         await unitOfWork.SaveAsync(cancellationToken);

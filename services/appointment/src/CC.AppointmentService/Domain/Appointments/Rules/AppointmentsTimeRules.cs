@@ -2,7 +2,7 @@ namespace CC.AppointmentService.Domain.Appointments.Rules;
 
 public static class AppointmentsTimeRules
 {
-    public static readonly int MinHoursBeforeAppointment = 4;
-    public static readonly int MaxDaysTransferAppointment = 7;
-    public static readonly int MinMinutesBetweenAppointments = 30;
+    public static readonly TimeSpan MinHoursBeforeAppointment = TimeSpan.FromHours(4);
+    public static readonly TimeSpan MaxDaysTransferAppointment = TimeSpan.FromDays(7);
+    public static readonly TimeSpan MinMinutesBetweenAppointments = TimeSpan.FromMinutes(30);
 }
