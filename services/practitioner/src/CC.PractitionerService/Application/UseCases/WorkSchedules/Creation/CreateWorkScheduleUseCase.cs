@@ -44,7 +44,6 @@ public class CreateWorkScheduleUseCase(
         };
 
         await workScheduleRepository.AddAsync(newSchedule);
-
         await unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();

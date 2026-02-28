@@ -15,7 +15,7 @@ public record CreateAdjustmentsForSchedule : IRequest<Result>
 }
 
 public sealed class AddAdjustmentsUseCase(
-    IAdjustmentRepository repository,
+    IAdjustmentRepository adjustmentRepository,
     IUnitOfWork unitOfWork,
     IWorkScheduleRepository workScheduleRepository
 ) : IRequestHandler<CreateAdjustmentsForSchedule, Result>
@@ -66,7 +66,7 @@ public sealed class AddAdjustmentsUseCase(
             }
         }
         
-        var existing = await repository.ListByScheduleIdAsync(command.WorkScheduleId);
+        var existing = await adjustmentRepository.ListByScheduleIdAsync(command.WorkScheduleId);
         
         if (existing.Count > 0)
         {
@@ -82,13 +82,12 @@ public sealed class AddAdjustmentsUseCase(
                     return Result.Fail("Новая корректировка конфликтует с уже существующей.");
             }
         }
-        await repository.AddAsync(ordered);
-        
+        await adjustmentRepository.AddAsync(ordered);
         await unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();
     }
 
-    private static bool Intersects(DateTimeRange a, DateTimeRange b)
+    private bool Intersects(DateTimeRange a, DateTimeRange b)
         => a.From < b.To && b.From < a.To;
 }

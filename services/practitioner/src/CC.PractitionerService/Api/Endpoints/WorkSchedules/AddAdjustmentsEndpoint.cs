@@ -9,7 +9,7 @@ namespace CC.PractitionerService.Api.Endpoints.WorkSchedules;
 public static class AddAdjustmentsEndpoint
 {
     public static async Task<IResult> Handle(Guid id, 
-        CreateAdjustmentsForScheduleRequest request,
+        AddAdjustmentsForScheduleRequest request,
         IMediator mediator)
     {
         var command = new CreateAdjustmentsForSchedule()
