@@ -1,11 +1,12 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
+using CC.AppointmentService.Domain;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
 using Mediator;
 
-namespace CC.AppointmentService.Application.UseCases.Appointments.Rescheduling;
+namespace CC.AppointmentService.Application.UseCases.Appointments.Transfering;
 
 public record TransferAppointment : IRequest<Result>
 {
@@ -15,7 +16,8 @@ public record TransferAppointment : IRequest<Result>
 
 public class TransferAppointmentUseCase(
     IAppointmentRepository appointmentRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    TimeProvider timeProvider)
     : IRequestHandler<TransferAppointment, Result>
 {
     public async ValueTask<Result> Handle(TransferAppointment command, CancellationToken cancellationToken)
@@ -27,28 +29,20 @@ public class TransferAppointmentUseCase(
         if (appointment.Status != AppointmentStatus.Planned)
             return Result.Fail("Заявка уже завершена, перенос не возможен!");
 
-        var currentDateTime = DateTime.UtcNow;
+        var currentDateTime = timeProvider.GetUtcNow();
         var daysDifference = Math.Abs((appointment.TimeSlot.From - command.TimeSlot.From).Days);
-        var minHours = 4;
-        var minDays = 7;
 
-        if ((command.TimeSlot.From - currentDateTime).TotalHours < minHours)
+        if ((command.TimeSlot.From - currentDateTime).TotalHours < AppointmentsTimeRules.MinHoursBeforeAppointment)
         {
             return Result.Fail("Время между созданием записи и началом должно быть не меньше 4ех часов");
         }
 
-        if (daysDifference > minDays)
+        if (daysDifference > AppointmentsTimeRules.MaxDaysTransferAppointment)
         {
             return Result.Fail("Максимальная дальность переноса записи не больше недели от старой даты");
         }
 
-        var appointments = await appointmentRepository.GetAllAsync();
-        var hasIntersections = appointments.Any(a => 
-            a.ClientId == appointment.ClientId
-            && a.Id != appointment.Id
-            && a.TimeSlot.From < command.TimeSlot.To
-            && a.TimeSlot.To > command.TimeSlot.From);
-
+        var hasIntersections = await appointmentRepository.HasIntercepts(command.TimeSlot);
         if (hasIntersections)
         {
             return Result.Fail("Клиент не может иметь пересекающиеся записи");

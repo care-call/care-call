@@ -28,7 +28,7 @@ public static class DependencyInjection
         {
             return services
                 .AddScoped<IUnitOfWork, UnitOfWork>()
-                .AddScoped<IAppointmentRepository, AppointmentRepository>();
+                .AddScoped<IAppointmentRepository, AppointmentsRepository>();
         }
     }
 }

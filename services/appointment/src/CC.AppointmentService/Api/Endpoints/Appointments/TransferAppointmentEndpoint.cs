@@ -1,5 +1,5 @@
 using CC.AppointmentService.Api.Contracts;
-using CC.AppointmentService.Application.UseCases.Appointments.Rescheduling;
+using CC.AppointmentService.Application.UseCases.Appointments.Transfering;
 using CC.Shared.Domain.TimeRanges;
 using Mediator;
 
