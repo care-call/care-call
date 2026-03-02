@@ -25,7 +25,7 @@ public class CreateAppointmentUseCase(
 {
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
     {
-        if (AppointmentsTimeRules.IsTooSoon(command.TimeSlot.From, timeProvider.GetUtcNow().DateTime))
+        if (AppointmentsTimeRules.IsTransferAllowed(command.TimeSlot.From, timeProvider.GetUtcNow().DateTime))
             return Result.Fail(AppointmentErrors.TooSoon(AppointmentsTimeRules.MinHoursBeforeStart));
 
         var hasIntercept = await appointmentsRepository.HasInterceptsAsync(command.TimeSlot, command.ClientId);

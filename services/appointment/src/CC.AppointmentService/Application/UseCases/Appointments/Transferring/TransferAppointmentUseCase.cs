@@ -13,6 +13,7 @@ public record TransferAppointment : IRequest<Result>
 {
     public Guid AppointmentId { get; init; }
     public DateTimeRange TimeSlot { get; init; }
+    public Guid ClientId { get; init; }
 }
 
 public class TransferAppointmentUseCase(
@@ -23,7 +24,7 @@ public class TransferAppointmentUseCase(
 {
     public async ValueTask<Result> Handle(TransferAppointment command, CancellationToken cancellationToken)
     {
-        var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId);
+        var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId, command.ClientId);
         if (appointment is null)
             return Result.Fail(AppointmentErrors.NotFound());
 
@@ -35,7 +36,7 @@ public class TransferAppointmentUseCase(
         if (!AppointmentsTimeRules.IsWithinAllowedShift(appointment.TimeSlot.From, command.TimeSlot.From))
             return Result.Fail(AppointmentErrors.NotWithinAllowedShift(AppointmentsTimeRules.MaxTransferringShiftDays));
 
-        if (AppointmentsTimeRules.IsTooSoon(command.TimeSlot.From, currentTime))
+        if (AppointmentsTimeRules.IsTransferAllowed(command.TimeSlot.From, currentTime))
             return Result.Fail(AppointmentErrors.TooSoon(AppointmentsTimeRules.MinHoursBeforeStart));
 
         var hasIntersections = await appointmentsRepository.HasInterceptsAsync(command.TimeSlot, appointment.ClientId);
