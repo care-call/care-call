@@ -14,7 +14,8 @@ public static class TransferAppointmentEndpoint
         var result = await mediator.Send(new TransferAppointment()
         {
             AppointmentId = id,
-            TimeSlot = new DateTimeRange(request.From, request.To)
+            TimeSlot = new DateTimeRange(request.From, request.To),
+            ClientId = request.ClientId
         });
         return Results.Ok(result);
     }
