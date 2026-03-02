@@ -4,7 +4,7 @@ using Mediator;
 
 namespace CC.AppointmentService.Api.Endpoints.Appointments;
 
-public static class CancellationAppointmentEndpoint
+public static class CancelAppointmentEndpoint
 {
     public static async Task<IResult> Handle(
         CancelAppointmentRequest request,

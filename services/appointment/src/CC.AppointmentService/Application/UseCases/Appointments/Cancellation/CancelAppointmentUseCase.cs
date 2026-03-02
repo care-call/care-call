@@ -8,11 +8,11 @@ using Mediator;
 
 namespace CC.AppointmentService.Application.UseCases.Appointments.Cancellation;
 
-public class CancelAppointment : IRequest<Result>
+public sealed record CancelAppointment : IRequest<Result>
 {
-    public Guid AppointmentId { get; init; }
-    public Guid ClientId { get; init; }
-    public string Reason { get; init; }
+    public required Guid AppointmentId { get; init; }
+    public required Guid ClientId { get; init; }
+    public required string Reason { get; init; }
 }
 
 public class CancelAppointmentUseCase(
@@ -22,16 +22,15 @@ public class CancelAppointmentUseCase(
 {
     public async ValueTask<Result> Handle(CancelAppointment command, CancellationToken cancellationToken)
     {
-        var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId, command.ClientId);
-        if (appointment is null)
+        var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId);
+        if (appointment is null || appointment.ClientId != command.ClientId)
             return Result.Fail(AppointmentErrors.NotFound());
 
         if (appointment.Status != AppointmentStatus.Planned)
             return Result.Fail(AppointmentErrors.InvalidStatusForCancel());
 
         if (!AppointmentsTimeRules.IsCancellationAllowed(appointment.TimeSlot.From, timeProvider.GetUtcNow().DateTime))
-            return Result.Fail(AppointmentErrors.CancellationDeadlineExceeded(
-                AppointmentsTimeRules.MinHoursBeforeCancellation));
+            return Result.Fail(AppointmentErrors.CancellationDeadlineExceeded);
 
         appointment.Status = AppointmentStatus.Cancelled;
         appointment.CancellationReason = command.Reason;

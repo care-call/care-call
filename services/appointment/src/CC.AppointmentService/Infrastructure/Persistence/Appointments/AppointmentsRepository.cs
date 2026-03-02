@@ -10,8 +10,8 @@ internal class AppointmentsRepository(DatabaseContext db) : IAppointmentsReposit
     public async Task AddAsync(Appointment appointment) =>
         await db.Appointments.AddAsync(appointment);
 
-    public async Task<Appointment?> GetByIdAsync(Guid id, Guid clientId) =>
-        await db.Appointments.Where(a => a.ClientId == clientId).FirstOrDefaultAsync(a => a.Id == id);
+    public async Task<Appointment?> GetByIdAsync(Guid id) =>
+        await db.Appointments.FirstOrDefaultAsync(a => a.Id == id);
 
     public async Task<bool> HasInterceptsAsync(DateTimeRange range, Guid clientId) =>
         await db.Appointments.Where(a => a.ClientId == clientId)

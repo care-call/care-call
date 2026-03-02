@@ -9,7 +9,7 @@ using Mediator;
 
 namespace CC.AppointmentService.Application.UseCases.Appointments.Creation;
 
-public record CreateAppointment : IRequest<Result>
+public sealed record CreateAppointment : IRequest<Result>
 {
     public required Guid ClientId { get; init; }
     public required Guid PractitionerId { get; init; }
@@ -26,7 +26,7 @@ public class CreateAppointmentUseCase(
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
     {
         if (AppointmentsTimeRules.IsTransferAllowed(command.TimeSlot.From, timeProvider.GetUtcNow().DateTime))
-            return Result.Fail(AppointmentErrors.TooSoon(AppointmentsTimeRules.MinHoursBeforeStart));
+            return Result.Fail(AppointmentErrors.TooSoon);
 
         var hasIntercept = await appointmentsRepository.HasInterceptsAsync(command.TimeSlot, command.ClientId);
         if (hasIntercept)
@@ -35,8 +35,7 @@ public class CreateAppointmentUseCase(
         var lastAppointment = await appointmentsRepository.GetLastAppointmentAsync(command.ClientId);
         if (lastAppointment != null &&
             AppointmentsTimeRules.HasInsufficientBreak(lastAppointment.TimeSlot.To, command.TimeSlot.From))
-            return Result.Fail(AppointmentErrors.MinBreakBetweenAppointments(
-                AppointmentsTimeRules.MinBreakBetweenAppointmentsMinutes));
+            return Result.Fail(AppointmentErrors.MinBreakBetweenAppointments);
 
         var appointment = new Appointment(Guid.CreateVersion7())
         {
