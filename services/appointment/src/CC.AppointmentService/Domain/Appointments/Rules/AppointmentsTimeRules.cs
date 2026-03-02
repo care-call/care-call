@@ -13,7 +13,7 @@ public static class AppointmentsTimeRules
     public static bool IsWithinAllowedShift(DateTime original, DateTime proposed) =>
         Math.Abs((proposed - original).TotalDays) <= MaxTransferringShiftDays;
     
-    public static bool IsCancellationAllowed (DateTime slotStart, DateTime now) =>
+    public static bool IsCancellationAllowed(DateTime slotStart, DateTime now) =>
         (slotStart - now).TotalHours > MinHoursBeforeCancellation;
     
     public static bool HasInsufficientBreak(DateTime previousEnd, DateTime newStart) =>

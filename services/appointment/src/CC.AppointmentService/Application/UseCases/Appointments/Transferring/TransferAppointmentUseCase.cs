@@ -12,7 +12,7 @@ namespace CC.AppointmentService.Application.UseCases.Appointments.Transferring;
 public sealed record TransferAppointment : IRequest<Result>
 {
     public required Guid AppointmentId { get; init; }
-    public DateTimeRange TimeSlot { get; init; }
+    public required DateTimeRange TimeSlot { get; init; }
     public required Guid ClientId { get; init; }
 }
 
