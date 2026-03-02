@@ -33,17 +33,18 @@ public class TransferAppointmentUseCase(
 
         var currentTime = timeProvider.GetUtcNow().DateTime;
 
-        if (!AppointmentsTimeRules.IsWithinAllowedShift(appointment.TimeSlot.From, command.TimeSlot.From))
+        if (!AppointmentsTimeRules.IsWithinAllowedShift(appointment, command.TimeSlot.From))
             return Result.Fail(AppointmentErrors.NotWithinAllowedShift);
 
-        if (AppointmentsTimeRules.IsTransferAllowed(command.TimeSlot.From, currentTime))
+        appointment.TimeSlot = command.TimeSlot;
+        
+        if (AppointmentsTimeRules.IsTransferAllowed(appointment, currentTime))
             return Result.Fail(AppointmentErrors.TooSoon);
 
-        var hasIntersections = await appointmentsRepository.HasInterceptsAsync(command.TimeSlot, appointment.ClientId);
+        var hasIntersections = await appointmentsRepository.HasInterceptsAsync(appointment);
         if (hasIntersections)
             return Result.Fail(AppointmentErrors.HasIntercepts());
 
-        appointment.TimeSlot = command.TimeSlot;
         await unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();
