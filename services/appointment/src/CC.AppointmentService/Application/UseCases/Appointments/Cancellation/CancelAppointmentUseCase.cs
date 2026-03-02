@@ -29,11 +29,10 @@ public class CancelAppointmentUseCase(
         if (appointment.Status != AppointmentStatus.Planned)
             return Result.Fail(AppointmentErrors.InvalidStatusForCancel());
 
-        if (!AppointmentsTimeRules.IsCancellationAllowed(appointment.TimeSlot.From, timeProvider.GetUtcNow().DateTime))
+        if (!AppointmentsTimeRules.IsCancellationAllowed(appointment, timeProvider.GetUtcNow().DateTime))
             return Result.Fail(AppointmentErrors.CancellationDeadlineExceeded);
 
-        appointment.Status = AppointmentStatus.Cancelled;
-        appointment.CancellationReason = command.Reason;
+        appointment.Cancel(command.Reason);
 
         await unitOfWork.SaveAsync(cancellationToken);
         return Result.Ok();

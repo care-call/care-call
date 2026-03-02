@@ -11,5 +11,11 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
     public required AppointmentStatus Status { get; set; }
     public required ClientSnapshot ClientSnapshot { get; init; }
     public required PractitionerSnapshot PractitionerSnapshot { get; init; }
-    public string? CancellationReason { get; set; }
+    public string? CancellationReason { get; private set; }
+
+    public void Cancel(string reason)
+    {
+        CancellationReason = reason;
+        Status = AppointmentStatus.Cancelled;
+    }
 }

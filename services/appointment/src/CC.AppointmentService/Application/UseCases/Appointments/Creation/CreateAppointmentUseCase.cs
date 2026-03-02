@@ -25,18 +25,6 @@ public class CreateAppointmentUseCase(
 {
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
     {
-        if (AppointmentsTimeRules.IsTransferAllowed(command.TimeSlot.From, timeProvider.GetUtcNow().DateTime))
-            return Result.Fail(AppointmentErrors.TooSoon);
-
-        var hasIntercept = await appointmentsRepository.HasInterceptsAsync(command.TimeSlot, command.ClientId);
-        if (hasIntercept)
-            return Result.Fail(AppointmentErrors.HasIntercepts());
-
-        var lastAppointment = await appointmentsRepository.GetLastAppointmentAsync(command.ClientId);
-        if (lastAppointment != null &&
-            AppointmentsTimeRules.HasInsufficientBreak(lastAppointment.TimeSlot.To, command.TimeSlot.From))
-            return Result.Fail(AppointmentErrors.MinBreakBetweenAppointments);
-
         var appointment = new Appointment(Guid.CreateVersion7())
         {
             ClientId = command.ClientId,
@@ -46,6 +34,17 @@ public class CreateAppointmentUseCase(
             ClientSnapshot = command.ClientSnapshot,
             PractitionerSnapshot = command.PractitionerSnapshot
         };
+
+        if (AppointmentsTimeRules.IsCreationAllowed(appointment, timeProvider.GetUtcNow().DateTime))
+            return Result.Fail(AppointmentErrors.TooSoon);
+
+        var lastAppointment = await appointmentsRepository.GetLastAppointmentAsync(command.ClientId);
+        if (lastAppointment != null && AppointmentsTimeRules.HasInsufficientBreak(lastAppointment, appointment))
+            return Result.Fail(AppointmentErrors.MinBreakBetweenAppointments);
+
+        var hasIntercept = await appointmentsRepository.HasInterceptsAsync(appointment);
+        if (hasIntercept)
+            return Result.Fail(AppointmentErrors.HasIntercepts());
 
         await appointmentsRepository.AddAsync(appointment);
         await unitOfWork.SaveAsync(cancellationToken);
