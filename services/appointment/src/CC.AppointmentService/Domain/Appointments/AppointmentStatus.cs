@@ -1,3 +1,9 @@
 namespace CC.AppointmentService.Domain.Appointments;
 
-public enum AppointmentStatus { Planned, Completed, Cancelled , InProgress} 
+public enum AppointmentStatus
+{
+    Planned,
+    Completed,
+    Cancelled,
+    InProgress
+}

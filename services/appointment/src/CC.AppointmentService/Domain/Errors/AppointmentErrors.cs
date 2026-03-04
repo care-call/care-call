@@ -36,7 +36,7 @@ public static class AppointmentErrors
 
     public static Error InvalidStatusForCancel() =>
         new Error("Заявка уже отменена, отменить снова нельзя").WithErrorCode("A204");
-    
+
     public static Error InvalidStatusForComplete() =>
-        new Error("Заявка готова, завершть ее нельзя").WithErrorCode("A205");
+        new Error("Заявка готова, завершить ее нельзя").WithErrorCode("A205");
 }
