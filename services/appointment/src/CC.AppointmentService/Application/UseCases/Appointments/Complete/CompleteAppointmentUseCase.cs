@@ -10,24 +10,22 @@ namespace CC.AppointmentService.Application.UseCases.Appointments.Complete;
 public sealed record CompleteAppointment : IRequest<Result>
 {
     public required Guid AppointmentId { get; init; }
-    public required Guid Practicant { get; init; }
+    public required Guid PractitionerId { get; init; }
 }
-
 
 public class CompleteAppointmentUseCase(
     IUnitOfWork unitOfWork,
-    IAppointmentsRepository appointmentsRepository
-    ) : IRequestHandler<CompleteAppointment, Result>
+    IAppointmentsRepository appointmentsRepository,
+    TimeProvider timeProvider) : IRequestHandler<CompleteAppointment, Result>
 {
     public async ValueTask<Result> Handle(CompleteAppointment command, CancellationToken cancellationToken)
     {
         var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId);
-        if(appointment ==null || appointment.PractitionerId != command.Practicant)
+        if (appointment is null || appointment.PractitionerId != command.PractitionerId)
             return Result.Fail(AppointmentErrors.NotFound());
-        if(appointment.Status != AppointmentStatus.InProgress)
+        if (appointment.Status is not AppointmentStatus.InProgress)
             return Result.Fail(AppointmentErrors.InvalidStatusForComplete());
-        appointment.Complete(DateTime.UtcNow);
-        
+        appointment.Complete(timeProvider.GetUtcNow().UtcDateTime);
         await unitOfWork.SaveAsync(cancellationToken);
         return Result.Ok();
     }
