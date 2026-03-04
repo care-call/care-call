@@ -10,6 +10,7 @@ public static class AppointmentsEndpoints
             v1Group.MapPost("", CreateAppointmentEndpoint.Handle);
             v1Group.MapPost("{id}/transfer", TransferAppointmentEndpoint.Handle);
             v1Group.MapPost("{id}/cancel", CancelAppointmentEndpoint.Handle);
+            v1Group.MapPost("{id}/complete", CompleteAppointmentEndpoint.Handle);
         }
     }
 }
