@@ -60,7 +60,7 @@ namespace CC.PractitionerService.Infrastructure.Persistence.Migrations
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "PhotoUrl", "CC.PractitionerService.Domain.Practitioners.PractitionerProfile.PhotoUrl#PhotoUrl", b1 =>
                         {
-                            b1.Property<string>("Value")
+                            b1.Property<string>("StartedAt")
                                 .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("photo_url");
@@ -172,7 +172,7 @@ namespace CC.PractitionerService.Infrastructure.Persistence.Migrations
                         {
                             b1.IsRequired();
 
-                            b1.Property<TimeSpan>("Value")
+                            b1.Property<TimeSpan>("StartedAt")
                                 .HasColumnType("interval")
                                 .HasColumnName("session_duration");
                         });

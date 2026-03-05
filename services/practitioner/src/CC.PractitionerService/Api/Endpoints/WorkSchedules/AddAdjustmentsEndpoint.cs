@@ -1,30 +1,25 @@
 using CC.PractitionerService.Api.Contracts;
-using CC.PractitionerService.Application.UseCases;
 using CC.PractitionerService.Application.UseCases.WorkSchedules.AddAdjustments;
 using Mediator;
-using AdjustmentDto = CC.PractitionerService.Api.Contracts.Common.AdjustmentDto;
 
 namespace CC.PractitionerService.Api.Endpoints.WorkSchedules;
 
 public static class AddAdjustmentsEndpoint
 {
-    public static async Task<IResult> Handle(Guid id, 
-        AddAdjustmentsForScheduleRequest request,
+    public static async Task<IResult> Handle(Guid id,
+        SaveAdjustmentsForScheduleRequest request,
         IMediator mediator)
     {
-        var command = new CreateAdjustmentsForSchedule()
+        var command = new SaveAdjustmentsForSchedule()
         {
-           WorkScheduleId = id,
-           Adjustments = request.Adjustments.Select(a => new AdjustmentDto
-           {
-               AdjustmentType = a.AdjustmentType,
-               StartDate = a.StartDate,
-               EndDate = a.EndDate
-           }).ToList()
+            NewAdjustments = request.NewAdjustments,
+            RemovedAdjustments = request.RemovedAdjustments,
+            WorkScheduleId = request.WorkScheduleId,
+            WeeklyStartDate = request.StartDate
         };
-        
+
         var result = await mediator.Send(command, CancellationToken.None);
-        
+
         return Results.Ok(result);
     }
 }

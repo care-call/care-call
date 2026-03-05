@@ -19,18 +19,41 @@ public sealed class Adjustment : Entity<Guid>
         Period = period;
     }
 
-    #pragma warning disable CS8618 // Для EF core.
+#pragma warning disable CS8618 // Для EF core.
     private Adjustment(Guid id) : base(id)
     {
     }
 
     public Adjustment() : base(Guid.NewGuid())
     {
-        
     }
 
     public Guid WorkScheduleId { get; set; }
     public DateTimeRange Period { get; set; }
     public AdjustmentType Type { get; set; }
     public string? Description { get; set; }
+
+    public bool Intersects(Adjustment adjustment)
+        => adjustment.Period.From < Period.To && Period.From < adjustment.Period.To;
+}
+
+public static class AdjustmentExtensions
+{
+    extension(IEnumerable<Adjustment> adjustments)
+    {
+        public IEnumerable<Adjustment> DetermineConflicts()
+        {
+            var ordered = adjustments.OrderBy(a => a.Period.From).ThenBy(a => a.Period.To).ToList();
+            return ordered.Where(adjustment =>
+            {
+                var currentIndex = ordered.IndexOf(adjustment);
+                
+                var nextAdjustment = ordered.ElementAtOrDefault(currentIndex + 1);
+                var previousAdjustment = ordered.ElementAtOrDefault(currentIndex - 1);
+                
+                return nextAdjustment is not null && adjustment.Intersects(nextAdjustment) ||
+                       previousAdjustment is not null && adjustment.Intersects(previousAdjustment);
+            });
+        }
+    }
 }
