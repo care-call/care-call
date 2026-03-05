@@ -7,15 +7,15 @@ namespace CC.PractitionerService.Api.Endpoints.WorkSchedules;
 public static class AddAdjustmentsEndpoint
 {
     public static async Task<IResult> Handle(Guid id,
-        SaveAdjustmentsForScheduleRequest request,
+        SaveWorkScheduleAdjustmentsRequest request,
         IMediator mediator)
     {
-        var command = new SaveAdjustmentsForSchedule()
+        var command = new SaveWorkScheduleAdjustmentsForSchedule()
         {
             NewAdjustments = request.NewAdjustments,
             RemovedAdjustments = request.RemovedAdjustments,
             WorkScheduleId = request.WorkScheduleId,
-            WeeklyStartDate = request.StartDate
+            WeeklyStartDate = request.WeeklyStartDate
         };
 
         var result = await mediator.Send(command, CancellationToken.None);
