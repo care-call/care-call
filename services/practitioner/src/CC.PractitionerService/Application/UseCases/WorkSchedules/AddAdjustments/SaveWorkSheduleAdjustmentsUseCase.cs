@@ -1,6 +1,7 @@
 using CC.PractitionerService.Api.Contracts.Common;
 using CC.PractitionerService.Application.Dependencies.UnitOfWork;
 using CC.PractitionerService.Domain.WorkSchedules;
+using CC.PractitionerService.Domain.WorkSchedules.Extensions;
 using CC.PractitionerService.Domain.WorkSchedules.Repositories;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
@@ -8,7 +9,7 @@ using Mediator;
 
 namespace CC.PractitionerService.Application.UseCases.WorkSchedules.AddAdjustments;
 
-public record SaveWorkScheduleAdjustmentsForSchedule : IRequest<Result>
+public record SaveWorkScheduleAdjustments : IRequest<Result>
 {
     public required IReadOnlyCollection<AdjustmentDto> NewAdjustments { get; init; }
     public required ICollection<Guid> RemovedAdjustments { get; init; }
@@ -16,13 +17,13 @@ public record SaveWorkScheduleAdjustmentsForSchedule : IRequest<Result>
     public required Guid WorkScheduleId { get; init; }
 }
 
-public sealed class SaveAdjustmentsUseCase(
+public sealed class SaveWorkSheduleAdjustmentsUseCase(
     IAdjustmentRepository adjustmentRepository,
     IUnitOfWork unitOfWork,
     IWorkScheduleRepository workScheduleRepository
-) : IRequestHandler<SaveWorkScheduleAdjustmentsForSchedule, Result>
+) : IRequestHandler<SaveWorkScheduleAdjustments, Result>
 {
-    public async ValueTask<Result> Handle(SaveWorkScheduleAdjustmentsForSchedule command, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(SaveWorkScheduleAdjustments command, CancellationToken cancellationToken)
     {
         var schedule = await workScheduleRepository.GetAsync(command.WorkScheduleId);
         if (schedule is null)
@@ -41,22 +42,22 @@ public sealed class SaveAdjustmentsUseCase(
                 schedule.Id, a.AdjustmentType, new DateTimeRange(a.StartDate, a.EndDate))).ToList();
             
             var week = new Week(command.WeeklyStartDate);
-            if (!newAdjustments.All(a => a.Period.From >= week.StartedAt && a.Period.To <= week.EndedAt))
+            if (!newAdjustments.All(a => week.IsInclusionPeriod(a.Period)))
                 return Result.Fail("Корректировка вне недели");
             
             weeklyAdjustments.AddRange(newAdjustments);
-            var adjustments = weeklyAdjustments.DistinctBy(a => new { a.Period.From, a.Period.To, a.Type }).ToList();
+            weeklyAdjustments = weeklyAdjustments.ClearDuplicates().ToList();
             
-            var conflicts = adjustments.DetermineConflicts();
+            var conflicts = weeklyAdjustments.DetermineConflicts();
             if (conflicts.Any())
                 return Result.Fail("Конфликт с существующей корректировкой");
             
-            if (adjustments.Any(adj =>
+            if (weeklyAdjustments.Any(adj =>
                     !schedule.IsActiveOn(DateOnly.FromDateTime(adj.Period.From)) ||
                     !schedule.IsActiveOn(DateOnly.FromDateTime(adj.Period.To))))
                 return Result.Fail("Корректировка вне действия графика");
-            
-            await adjustmentRepository.AddAsync(newAdjustments);
+
+            await adjustmentRepository.AddAsync(newAdjustments.ClearDuplicates().ToList());
         }
         
         await unitOfWork.SaveAsync(cancellationToken);
