@@ -31,11 +31,15 @@ public sealed class SaveWorkScheduleAdjustmentsUseCase(
 
         var weeklyAdjustments =
             await adjustmentRepository.GetWeeklyAsync(schedule.Id, new Week(command.WeeklyStartDate));
-        
+
         if (command.RemovedAdjustments.Count != 0)
-            adjustmentRepository.Remove(
-                weeklyAdjustments.Where(a => command.RemovedAdjustments.Contains(a.Id)).ToList());
-        
+        {
+            var removedAdjustments =
+                weeklyAdjustments.Where(a => command.RemovedAdjustments.Contains(a.Id)).ToList();
+            adjustmentRepository.Remove(removedAdjustments);
+            weeklyAdjustments = weeklyAdjustments.Where(a => !removedAdjustments.Contains(a)).ToList();
+        }
+
         if (command.NewAdjustments.Count != 0)
         {
             var newAdjustments = command.NewAdjustments.Select(a => new Adjustment(Guid.CreateVersion7(),
