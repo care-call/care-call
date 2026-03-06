@@ -11,7 +11,7 @@ namespace CC.PractitionerService.Application.UseCases.WorkSchedules.AddAdjustmen
 
 public record SaveWorkScheduleAdjustments : IRequest<Result>
 {
-    public required IReadOnlyCollection<AdjustmentDto> NewAdjustments { get; init; }
+    public required IReadOnlyCollection<CreateAdjustmentDto> NewAdjustments { get; init; }
     public required IReadOnlyCollection<Guid> RemovedAdjustments { get; init; }
     public required DateTime WeeklyStartDate { get; init; }
     public required Guid WorkScheduleId { get; init; }

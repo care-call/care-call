@@ -24,10 +24,6 @@ public sealed class Adjustment : Entity<Guid>
     {
     }
 
-    public Adjustment() : base(Guid.NewGuid())
-    {
-    }
-
     public Guid WorkScheduleId { get; set; }
     public DateTimeRange Period { get; set; }
     public AdjustmentType Type { get; set; }
