@@ -1,5 +1,6 @@
 using CC.Shared.Domain;
 using CC.Shared.Domain.Exceptions;
+using CC.Shared.Domain.TimeRanges;
 
 namespace CC.PractitionerService.Domain.WorkSchedules;
 
@@ -52,4 +53,8 @@ public sealed class WorkSchedule : AggregationRoot<Guid>
 
     public bool IsActiveOn(DateOnly queryDate)
         => ValidityPeriod.IsActiveOn(queryDate);
+
+    public bool IsActiveOn(DateTimeRange period)
+        => ValidityPeriod.IsActiveOn(DateOnly.FromDateTime(period.From)) &&
+           ValidityPeriod.IsActiveOn(DateOnly.FromDateTime(period.To));
 }
