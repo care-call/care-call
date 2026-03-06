@@ -2,6 +2,9 @@ using CC.Shared.Domain.TimeRanges;
 
 namespace CC.PractitionerService.Domain.WorkSchedules;
 
+/// <summary>
+/// Правила работы на неделю
+/// </summary>
 public record WeeklyRecurrence
 {
     private WeeklyRecurrence()

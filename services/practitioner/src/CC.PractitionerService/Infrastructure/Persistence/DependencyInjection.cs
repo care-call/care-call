@@ -1,6 +1,7 @@
 using CC.PractitionerService.Application.Dependencies.UnitOfWork;
 using CC.PractitionerService.Domain.Practitioners.Repositories;
 using CC.PractitionerService.Domain.WorkSchedules.Repositories;
+using CC.PractitionerService.Infrastructure.Persistence.Adjustments;
 using CC.PractitionerService.Infrastructure.Persistence.Practitioners;
 using CC.PractitionerService.Infrastructure.Persistence.Seeding;
 using CC.PractitionerService.Infrastructure.Persistence.WorkSchedules;
@@ -34,7 +35,8 @@ public static class DependencyInjection
             return services
                 .AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddScoped<IPractitionerProfileRepository, PractitionerProfileRepository>()
-                .AddScoped<IWorkScheduleRepository, WorkScheduleRepository>();
+                .AddScoped<IWorkScheduleRepository, WorkScheduleRepository>()
+                .AddScoped<IAdjustmentRepository, AdjustmentRepository>();
         }
     }
 }

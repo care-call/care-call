@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CC.PractitionerService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CC.PractitionerService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260223163458_AddTablesAdjustments")]
+    partial class AddTablesAdjustments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,7 +63,7 @@ namespace CC.PractitionerService.Infrastructure.Persistence.Migrations
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "PhotoUrl", "CC.PractitionerService.Domain.Practitioners.PractitionerProfile.PhotoUrl#PhotoUrl", b1 =>
                         {
-                            b1.Property<string>("StartedAt")
+                            b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("photo_url");
@@ -172,7 +175,7 @@ namespace CC.PractitionerService.Infrastructure.Persistence.Migrations
                         {
                             b1.IsRequired();
 
-                            b1.Property<TimeSpan>("StartedAt")
+                            b1.Property<TimeSpan>("Value")
                                 .HasColumnType("interval")
                                 .HasColumnName("session_duration");
                         });

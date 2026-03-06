@@ -19,7 +19,7 @@ public sealed class Adjustment : Entity<Guid>
         Period = period;
     }
 
-    #pragma warning disable CS8618 // Для EF core.
+#pragma warning disable CS8618 // Для EF core.
     private Adjustment(Guid id) : base(id)
     {
     }
@@ -28,4 +28,7 @@ public sealed class Adjustment : Entity<Guid>
     public DateTimeRange Period { get; set; }
     public AdjustmentType Type { get; set; }
     public string? Description { get; set; }
+
+    public bool Intersects(Adjustment adjustment)
+        => adjustment.Period.From < Period.To && Period.From < adjustment.Period.To;
 }
