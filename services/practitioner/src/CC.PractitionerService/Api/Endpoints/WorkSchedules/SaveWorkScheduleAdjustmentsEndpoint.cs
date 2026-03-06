@@ -11,7 +11,7 @@ public static class SaveWorkScheduleAdjustmentsEndpoint
         IMediator mediator)
     {
         var mapper = new SaveWorkScheduleAdjustmentsMapper();
-        var command = mapper.MapFrom(request);
+        var command = mapper.MapFrom(request, id);
         var result = await mediator.Send(command, CancellationToken.None);
 
         return Results.Ok(result);

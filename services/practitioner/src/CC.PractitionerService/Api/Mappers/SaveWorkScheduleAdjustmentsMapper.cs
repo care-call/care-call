@@ -7,5 +7,5 @@ namespace CC.PractitionerService.Api.Mappers;
 [Mapper]
 public partial class SaveWorkScheduleAdjustmentsMapper
 {
-    public partial SaveWorkScheduleAdjustments MapFrom(SaveWorkScheduleAdjustmentsRequest request);
+    public partial SaveWorkScheduleAdjustments MapFrom(SaveWorkScheduleAdjustmentsRequest request, Guid workScheduleId);
 }
