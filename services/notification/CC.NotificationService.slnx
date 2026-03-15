@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/common/">
+    <Project Path="../common/CC.Common/CC.Common.csproj" />
+    <Project Path="../common/CC.Shared.Domain/CC.Shared.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/CC.NotificationService/CC.NotificationService.csproj" />
+  </Folder>
+</Solution>
