@@ -29,9 +29,9 @@ public sealed class YandexTelemostService(HttpClient client) : IYandexTelemostSe
                                         }
                                         """);
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        var responce = await client.PostAsync("conferences", content);
+        var response = await client.PostAsync("conferences", content);
 
-        var result = await responce.Content.ReadFromJsonAsync<CreateCallLinkResult>();
+        var result = await response.Content.ReadFromJsonAsync<CreateCallLinkResult>();
         return new CreateCallLingResponse(result!.JoinUrl);
     } 
 }

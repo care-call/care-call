@@ -1,3 +1,4 @@
+using CC.AppointmentService.Application.Dependencies.BackgroundJobs;
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
@@ -21,6 +22,7 @@ public sealed record CreateAppointment : IRequest<Result>
 public class CreateAppointmentUseCase(
     IUnitOfWork unitOfWork,
     IAppointmentsRepository appointmentsRepository,
+    ICallCreationJobRunner jobRunner,
     TimeProvider timeProvider) : IRequestHandler<CreateAppointment, Result>
 {
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
@@ -47,6 +49,7 @@ public class CreateAppointmentUseCase(
             return Result.Fail(AppointmentErrors.HasIntercepts());
 
         await appointmentsRepository.AddAsync(appointment);
+        await jobRunner.RunAsync(appointment);
         await unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();

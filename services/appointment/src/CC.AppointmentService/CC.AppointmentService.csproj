@@ -10,6 +10,8 @@
     <ItemGroup>
         <PackageReference Include="EFCore.NamingConventions" />
         <PackageReference Include="FluentResults"/>
+        <PackageReference Include="Hangfire" />
+        <PackageReference Include="Hangfire.PostgreSql" />
         <PackageReference Include="Mediator.Abstractions"/>
         <PackageReference Include="Mediator.SourceGenerator">
             <PrivateAssets>all</PrivateAssets>

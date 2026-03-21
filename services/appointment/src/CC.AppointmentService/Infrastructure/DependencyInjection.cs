@@ -1,3 +1,4 @@
+using CC.AppointmentService.Infrastructure.BackgroundJobs;
 using CC.AppointmentService.Infrastructure.Persistence;
 using CC.AppointmentService.Infrastructure.YandexTelemost;
 
@@ -11,6 +12,7 @@ public static class DependencyInjection
         {
             return services
                 .AddPersistence(configuration)
+                .AddBackgroundJobs(configuration)
                 .AddYandexTelemost(configuration);
         }
     }
