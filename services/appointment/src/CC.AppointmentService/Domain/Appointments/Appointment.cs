@@ -11,6 +11,7 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
     public required AppointmentStatus Status { get; set; }
     public required ClientSnapshot ClientSnapshot { get; init; }
     public required PractitionerSnapshot PractitionerSnapshot { get; init; }
+    public string? Url { get; set; }
     public string? CancellationReason { get; private set; }
     public DateTime? EndedAt { get; private set; }
     
