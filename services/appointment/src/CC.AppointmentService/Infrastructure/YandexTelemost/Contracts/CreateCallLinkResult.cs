@@ -3,17 +3,21 @@ using System.Text.Json.Serialization;
 namespace CC.AppointmentService.Infrastructure.YandexTelemost.Contracts;
 
 public record CreateCallLinkResult
-{ 
+{
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    [JsonRequired]
+    public required string Id { get; init; }
+    [JsonRequired]
     [JsonPropertyName("join_url")]
-    public string JoinUrl { get; set; }
+    public required string JoinUrl { get; init; }
+    [JsonRequired]
     [JsonPropertyName("live_stream")]
-    public  LiveStreamDetailsResponce LiveStreamDetails { get; set; }
+    public required LiveStreamDetailsResponce LiveStreamDetails { get; init; }
 }
 
 public record LiveStreamDetailsResponce
 {
     [JsonPropertyName("watch_url")]
-    public string AccessLevel { get; set; }
+    [JsonRequired]
+    public required string AccessLevel { get; init; }
 }

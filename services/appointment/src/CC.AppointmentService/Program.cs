@@ -1,7 +1,9 @@
 using CC.AppointmentService.Api.Endpoints.Appointments;
 using CC.AppointmentService.Application;
+using CC.AppointmentService.Application.Dependencies.YandexTelemost;
 using CC.AppointmentService.Infrastructure;
 using CC.AppointmentService.Infrastructure.OpenApi;
+using CC.AppointmentService.Infrastructure.YandexTelemost;
 using CC.Common.Json;
 using Hangfire;
 
@@ -16,6 +18,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddValidation();
 builder.Services.AddOpenApi(OpenApiConfigurator.Configure);
 
+builder.Services.AddHttpClient<IYandexTelemostService, YandexTelemostService>();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 

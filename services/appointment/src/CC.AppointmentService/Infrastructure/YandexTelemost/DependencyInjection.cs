@@ -12,12 +12,22 @@ public static class DependencyInjection
             services.Configure<YandexTelemostSettings>(configuration.GetSection("YandexTelemostSettings"));
 
             services.AddHttpClient<IYandexTelemostService, YandexTelemostService>((serviceProvider, client) =>
-            {
-                var options = serviceProvider.GetRequiredService<IOptions<YandexTelemostSettings>>().Value;
-  
-                client.DefaultRequestHeaders.Add("Authorization", options.Token);
-                client.BaseAddress = new Uri(options.BaseUrl);
-            });
+                {
+                    var options = serviceProvider.GetRequiredService<IOptions<YandexTelemostSettings>>().Value;
+
+                    client.DefaultRequestHeaders.Add("Authorization", options.Token);
+                    client.BaseAddress = new Uri(options.BaseUrl);
+                })
+                .AddStandardResilienceHandler(options =>
+                {
+                    options.Retry.MaxRetryAttempts = 2;
+
+                    options.Retry.DelayGenerator = context =>
+                    {
+                        var delay = TimeSpan.FromSeconds(Math.Pow(2, context.AttemptNumber));
+                        return new ValueTask<TimeSpan?>(delay);
+                    };
+                });
 
             return services;
         }

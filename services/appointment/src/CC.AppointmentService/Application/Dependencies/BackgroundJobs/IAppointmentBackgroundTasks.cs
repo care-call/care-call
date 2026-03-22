@@ -2,7 +2,7 @@ using CC.AppointmentService.Domain.Appointments;
 
 namespace CC.AppointmentService.Application.Dependencies.BackgroundJobs;
 
-public interface ICallCreationJobRunner
+public interface IAppointmentBackgroundTasks
 {
-    public Task RunAsync(Appointment appointment);
+    public Task ScheduleCallCreationAsync(Appointment appointment);
 }

@@ -22,7 +22,7 @@ public static class DependencyInjection
             });
 
             services.AddHangfireServer();
-            services.AddScoped<ICallCreationJobRunner, CallCreationJobRunner>();
+            services.AddScoped<IAppointmentBackgroundTasks, AppointmentBackgroundTasks>();
             services.AddScoped<CallCreationJob>();
             return services;
         }

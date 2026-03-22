@@ -4,20 +4,12 @@ using CC.AppointmentService.Infrastructure.YandexTelemost.Contracts;
 
 namespace CC.AppointmentService.Infrastructure.YandexTelemost;
 
-public sealed class YandexTelemostService(HttpClient client) : IYandexTelemostService
+public sealed class YandexTelemostService(
+    HttpClient client,
+    ILogger<YandexTelemostService> logger) : IYandexTelemostService
 {
-    public async Task<CreateCallLingResponse> CreateCallLinkAsync()
+    public async Task<CreateCallLingResponse?> CreateCallLinkAsync(CancellationToken ct)
     {
-        // var responce = await client.PostAsJsonAsync("conferences", new CreateCallLinkDto()
-        // {
-        //     RoomLevel = "PUBLIC",
-        //     LiveStreamDetails = new LiveStreamDetails()
-        //     {
-        //         AccessLevel = "PUBLIC",
-        //         Title = "Тест звонка",
-        //         Description = "Тестируем звонок в телемосте"
-        //     }
-        // } );
         var content = new StringContent("""
                                         {
                                           "waiting_room_level": "PUBLIC",
@@ -29,9 +21,17 @@ public sealed class YandexTelemostService(HttpClient client) : IYandexTelemostSe
                                         }
                                         """);
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        var response = await client.PostAsync("conferences", content);
-
-        var result = await response.Content.ReadFromJsonAsync<CreateCallLinkResult>();
+        var response = await client.PostAsync("conferences", content, ct);
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("Ошибка статус код: " +
+                            "{statusCode}, {responseContent}", response.StatusCode,
+                await response.Content.ReadAsStringAsync(ct));
+            return null;
+        }
+        
+        var result = await response.Content.ReadFromJsonAsync<CreateCallLinkResult>(ct);
         return new CreateCallLingResponse(result!.JoinUrl);
     } 
 }

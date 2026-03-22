@@ -22,7 +22,7 @@ public sealed record CreateAppointment : IRequest<Result>
 public class CreateAppointmentUseCase(
     IUnitOfWork unitOfWork,
     IAppointmentsRepository appointmentsRepository,
-    ICallCreationJobRunner jobRunner,
+    IAppointmentBackgroundTasks jobbBackgroundTasks,
     TimeProvider timeProvider) : IRequestHandler<CreateAppointment, Result>
 {
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
@@ -49,9 +49,8 @@ public class CreateAppointmentUseCase(
             return Result.Fail(AppointmentErrors.HasIntercepts());
 
         await appointmentsRepository.AddAsync(appointment);
-        await jobRunner.RunAsync(appointment);
         await unitOfWork.SaveAsync(cancellationToken);
-
+        await jobbBackgroundTasks.ScheduleCallCreationAsync(appointment);
         return Result.Ok();
     }
 }

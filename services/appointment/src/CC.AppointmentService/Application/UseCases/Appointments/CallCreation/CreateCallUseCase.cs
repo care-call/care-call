@@ -18,8 +18,11 @@ public class CreateCallUseCase(
         var appointment = await appointmentRepository.GetByIdAsync(request.AppointmentId);
         if (appointment is null)
             return Result.Fail("Такой записи нет");
-            
-        var response = await yandexTelemostService.CreateCallLinkAsync();
+ 
+        var response = await yandexTelemostService.CreateCallLinkAsync(cancellationToken);
+        
+        if (response is null)
+            return Result.Fail("Ошибка создания звонка в яндекс телемосте");
         appointment.Url = response.Url;
         
         await unitOfWork.SaveAsync(cancellationToken);

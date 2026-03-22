@@ -5,13 +5,13 @@ using Hangfire;
 
 namespace CC.AppointmentService.Infrastructure.BackgroundJobs;
 
-public class CallCreationJobRunner(
+public class AppointmentBackgroundTasks(
     IBackgroundJobClient jobClient,
-    CallCreationJob job) : ICallCreationJobRunner
+    CallCreationJob job) : IAppointmentBackgroundTasks
 {
-    public Task RunAsync(Appointment appointment)
+    public Task ScheduleCallCreationAsync(Appointment appointment)
     {
-        jobClient.Enqueue(() =>  job.Execute(appointment.Id));
+        jobClient.Enqueue(() => job.Execute(appointment.Id, CancellationToken.None));
         return Task.CompletedTask;
     }
 }
