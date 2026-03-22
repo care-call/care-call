@@ -30,6 +30,10 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("CallUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("call_url");
+
                     b.Property<string>("CancellationReason")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)")
@@ -50,10 +54,6 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer")
                         .HasColumnName("status");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("text")
-                        .HasColumnName("url");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "ClientSnapshot", "CC.AppointmentService.Domain.Appointments.Appointment.ClientSnapshot#ClientSnapshot", b1 =>
                         {

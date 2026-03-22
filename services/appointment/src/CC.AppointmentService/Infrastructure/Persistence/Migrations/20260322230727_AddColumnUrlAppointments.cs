@@ -11,7 +11,7 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "url",
+                name: "call_url",
                 table: "appointments",
                 type: "text",
                 nullable: true);
@@ -21,7 +21,7 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "url",
+                name: "call_url",
                 table: "appointments");
         }
     }

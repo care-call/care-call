@@ -20,11 +20,10 @@ public class CreateCallUseCase(
             return Result.Fail("Такой записи нет");
  
         var response = await yandexTelemostService.CreateCallLinkAsync(cancellationToken);
-        
         if (response is null)
             return Result.Fail("Ошибка создания звонка в яндекс телемосте");
-        appointment.Url = response.Url;
         
+        appointment.CallUrl = new Uri(response.Url);
         await unitOfWork.SaveAsync(cancellationToken);
         return Result.Ok();
     }

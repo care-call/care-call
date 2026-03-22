@@ -9,8 +9,11 @@ public static class DependencyInjection
     {
         public IServiceCollection AddYandexTelemost(IConfiguration configuration)
         {
-            services.Configure<YandexTelemostSettings>(configuration.GetSection("YandexTelemostSettings"));
-
+            services.AddOptions<YandexTelemostSettings>()
+                .BindConfiguration("YandexTelemostSettings")
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+            
             services.AddHttpClient<IYandexTelemostService, YandexTelemostService>((serviceProvider, client) =>
                 {
                     var options = serviceProvider.GetRequiredService<IOptions<YandexTelemostSettings>>().Value;

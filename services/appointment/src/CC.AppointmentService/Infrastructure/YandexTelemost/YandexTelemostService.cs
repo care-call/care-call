@@ -1,6 +1,6 @@
 using System.Net.Http.Headers;
+using System.Text.Json.Nodes;
 using CC.AppointmentService.Application.Dependencies.YandexTelemost;
-using CC.AppointmentService.Infrastructure.YandexTelemost.Contracts;
 
 namespace CC.AppointmentService.Infrastructure.YandexTelemost;
 
@@ -15,14 +15,12 @@ public sealed class YandexTelemostService(
                                           "waiting_room_level": "PUBLIC",
                                           "live_stream": {
                                             "access_level": "PUBLIC",
-                                            "title": "Example conference created via API",
-                                            "description": "Some description of example conference created via API"
+                                            "title": "Онлайн запись на платформе Care-Call",
                                           }
                                         }
                                         """);
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         var response = await client.PostAsync("conferences", content, ct);
-        
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Ошибка статус код: " +
@@ -30,8 +28,16 @@ public sealed class YandexTelemostService(
                 await response.Content.ReadAsStringAsync(ct));
             return null;
         }
+
+        var node = await JsonNode.ParseAsync(await response.Content.ReadAsStreamAsync(ct), cancellationToken: ct);
+        var joinUrl = node?["join_link"]?.GetValue<string>();
+        if (string.IsNullOrEmpty(joinUrl))
+        {
+            logger.LogError("Ошибка отсутствует ссылка на присоединению к звонку {responseContent}",
+                await response.Content.ReadAsStringAsync(ct));
+            return null; 
+        }
         
-        var result = await response.Content.ReadFromJsonAsync<CreateCallLinkResult>(ct);
-        return new CreateCallLingResponse(result!.JoinUrl);
+        return new CreateCallLingResponse(joinUrl);
     } 
 }

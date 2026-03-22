@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260318204030_AddColumnUrlAppointments")]
+    [Migration("20260322230727_AddColumnUrlAppointments")]
     partial class AddColumnUrlAppointments
     {
         /// <inheritdoc />
@@ -32,6 +32,10 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<string>("CallUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("call_url");
 
                     b.Property<string>("CancellationReason")
                         .HasMaxLength(2000)
@@ -53,10 +57,6 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer")
                         .HasColumnName("status");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("text")
-                        .HasColumnName("url");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "ClientSnapshot", "CC.AppointmentService.Domain.Appointments.Appointment.ClientSnapshot#ClientSnapshot", b1 =>
                         {

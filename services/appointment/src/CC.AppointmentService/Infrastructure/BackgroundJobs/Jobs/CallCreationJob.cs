@@ -10,7 +10,7 @@ public class CallCreationJob(
     public async Task Execute(Guid appointmentId, CancellationToken ct)
     {
         var jobId = Guid.CreateVersion7();
-        using var scropeLogg = logger.BeginScope(new {
+        using var loggingScope = logger.BeginScope(new {
             JobId = jobId,
             AppointmentId = appointmentId
         });
