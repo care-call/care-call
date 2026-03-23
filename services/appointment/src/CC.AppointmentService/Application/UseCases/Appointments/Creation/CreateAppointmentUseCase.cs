@@ -1,3 +1,4 @@
+using CC.AppointmentService.Application.Dependencies.BackgroundJobs;
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
@@ -21,6 +22,7 @@ public sealed record CreateAppointment : IRequest<Result>
 public class CreateAppointmentUseCase(
     IUnitOfWork unitOfWork,
     IAppointmentsRepository appointmentsRepository,
+    IAppointmentBackgroundTasks jobbBackgroundTasks,
     TimeProvider timeProvider) : IRequestHandler<CreateAppointment, Result>
 {
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
@@ -48,7 +50,7 @@ public class CreateAppointmentUseCase(
 
         await appointmentsRepository.AddAsync(appointment);
         await unitOfWork.SaveAsync(cancellationToken);
-
+        await jobbBackgroundTasks.ScheduleCallCreationAsync(appointment);
         return Result.Ok();
     }
 }

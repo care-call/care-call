@@ -1,8 +1,11 @@
 using CC.AppointmentService.Api.Endpoints.Appointments;
 using CC.AppointmentService.Application;
+using CC.AppointmentService.Application.Dependencies.YandexTelemost;
 using CC.AppointmentService.Infrastructure;
 using CC.AppointmentService.Infrastructure.OpenApi;
+using CC.AppointmentService.Infrastructure.YandexTelemost;
 using CC.Common.Json;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +26,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapHangfireDashboard();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "v1");
