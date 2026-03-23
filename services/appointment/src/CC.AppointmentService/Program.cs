@@ -18,7 +18,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddValidation();
 builder.Services.AddOpenApi(OpenApiConfigurator.Configure);
 
-builder.Services.AddHttpClient<IYandexTelemostService, YandexTelemostService>();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
