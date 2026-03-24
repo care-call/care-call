@@ -8,4 +8,6 @@ public sealed record PhotoUrl
         Value = value;
     }
     public string Value { get; private set; }
+
+    public static implicit operator string?(PhotoUrl photoUrl) => photoUrl?.Value;
 }

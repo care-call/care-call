@@ -9,4 +9,5 @@ public sealed class PractitionerProfile(Guid id) : AggregationRoot<Guid>(id)
     public FullName FullName { get; init; }
     public PractitionerProfileStatus Status { get; init; } = PractitionerProfileStatus.Draft;
     public PractitionerSpecializations Specializations { get; init; }
+    public float Rating { get; init; }
 }
