@@ -1,4 +1,5 @@
 using CC.PractitionerService.Application.Dependencies.UnitOfWork;
+using CC.PractitionerService.Application.UseCases.Practitioners;
 using CC.PractitionerService.Domain.Practitioners.Repositories;
 using CC.PractitionerService.Domain.WorkSchedules.Repositories;
 using CC.PractitionerService.Infrastructure.Persistence.Adjustments;
@@ -21,8 +22,11 @@ public static class DependencyInjection
         public IServiceCollection AddEfCore(IConfiguration configuration)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+            var conn = configuration.GetConnectionString("DefaultConnection");
+
             return services.AddNpgsql<DatabaseContext>(
-                configuration.GetConnectionString("DefaultConnection"),
+                conn,
                 _ => { },
                 dbCtxBuilder => dbCtxBuilder
                     .UseSnakeCaseNamingConvention()
@@ -36,6 +40,7 @@ public static class DependencyInjection
                 .AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddScoped<IPractitionerProfileRepository, PractitionerProfileRepository>()
                 .AddScoped<IWorkScheduleRepository, WorkScheduleRepository>()
+                .AddScoped<IPractitionerMatchingRepository, PractitionerMatchingRepository>()
                 .AddScoped<IAdjustmentRepository, AdjustmentRepository>();
         }
     }

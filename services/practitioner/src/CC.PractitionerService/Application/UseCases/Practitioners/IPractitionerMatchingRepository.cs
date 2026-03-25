@@ -1,10 +1,10 @@
-﻿using CC.PractitionerService.Application.UseCases.WorkSchedules.Dtos;
+﻿using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 
 namespace CC.PractitionerService.Application.UseCases.Practitioners;
 
 public interface IPractitionerMatchingRepository
 {
     Task<PractitionerDto[]> FindAvailableForBookingAsync(
-        FindPractitionersFilter filter,
+        MatchPractitionersFilter filter,
         CancellationToken ct);
 }

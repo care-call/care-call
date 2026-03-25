@@ -1,6 +1,4 @@
-﻿using CC.Shared.Domain.TimeRanges;
-
-namespace CC.PractitionerService.Application.UseCases.WorkSchedules.Dtos;
+﻿namespace CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 
 public sealed record PractitionerDto
 {
@@ -13,5 +11,4 @@ public sealed record PractitionerDto
     public IReadOnlyList<int> AgeGroups { get; init; }
     public IReadOnlyList<int> Languages { get; init; }
     public float Rating { get; init; }
-    public IReadOnlyList<DateTimeRange> FreeSlots { get; init; }
 }

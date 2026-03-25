@@ -1,6 +1,6 @@
 ﻿using CC.PractitionerService.Api.Mappers;
 using CC.PractitionerService.Application.UseCases.Practitioners;
-using CC.PractitionerService.Application.UseCases.WorkSchedules.Dtos;
+using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 using CC.PractitionerService.Domain.Practitioners;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +8,7 @@ namespace CC.PractitionerService.Infrastructure.Persistence.Practitioners;
 
 public sealed class PractitionerMatchingRepository(DatabaseContext _db) : IPractitionerMatchingRepository
 {
-    public Task<PractitionerDto[]> FindAvailableForBookingAsync(FindPractitionersFilter filter, CancellationToken ct)
+    public Task<PractitionerDto[]> FindAvailableForBookingAsync(MatchPractitionersFilter filter, CancellationToken ct)
     {
         var query = _db.PractitionerProfiles.Where(x => x.Status == PractitionerProfileStatus.Approved);
 
@@ -23,11 +23,9 @@ public sealed class PractitionerMatchingRepository(DatabaseContext _db) : IPract
 
         if (!string.IsNullOrWhiteSpace(filter.PractitionerFullName))
         {
-            var name = filter.PractitionerFullName;
-
             query = query.Where(p =>
                 (p.FullName.Surname + " " + p.FullName.Name + " " + (p.FullName.Patronymic ?? ""))
-                    .Contains(name)
+                    .Contains(filter.PractitionerFullName)
             );
         }
 

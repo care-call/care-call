@@ -6,8 +6,11 @@ public static class PractitionersEndpoints
     {
         public void MapPractitionersEndpoints()
         {
-            var v1Group = builder.MapGroup("api/v1/practitioners");
-            v1Group.MapPost("", FindPractitionersEndpoint.Handle);
+            var v1Group = builder.MapGroup("api/v1/practitioners")
+                .WithTags("Practitioners");
+
+            v1Group.MapPost("match", MatchPractitionersEndpoint.Handle)
+                .WithSummary("Подобрать практиканта для записи");
         }
     }
 }

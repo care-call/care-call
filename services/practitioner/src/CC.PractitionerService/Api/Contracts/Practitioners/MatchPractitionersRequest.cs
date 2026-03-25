@@ -3,7 +3,7 @@
 /// <summary>
 /// Запрос на подбор практиканта для записи.
 /// </summary>
-public sealed record FindPractitionersRequest
+public sealed record MatchPractitionersRequest
 {
     /// <summary>
     /// Интересующая дата для клиента, на которую желает записаться.

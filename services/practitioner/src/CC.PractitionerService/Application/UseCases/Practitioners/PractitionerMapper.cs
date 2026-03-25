@@ -1,4 +1,4 @@
-﻿using CC.PractitionerService.Application.UseCases.WorkSchedules.Dtos;
+﻿using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 using CC.PractitionerService.Domain.Practitioners;
 using Riok.Mapperly.Abstractions;
 
