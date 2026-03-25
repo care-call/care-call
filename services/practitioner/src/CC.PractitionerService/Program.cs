@@ -1,4 +1,5 @@
 using CC.Common.Json;
+using CC.PractitionerService.Api.Endpoints.Practitioners;
 using CC.PractitionerService.Api.Endpoints.WorkSchedules;
 using CC.PractitionerService.Application;
 using CC.PractitionerService.Infrastructure;
@@ -29,5 +30,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapWorkSchedulesEndpoints();
+app.MapPractitionersEndpoints();
 
 app.Run();
