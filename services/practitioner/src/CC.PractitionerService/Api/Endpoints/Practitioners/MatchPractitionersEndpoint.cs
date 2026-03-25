@@ -10,7 +10,7 @@ public static class MatchPractitionersEndpoint
         MatchPractitionersRequest request,
         IMediator mediator)
     {
-        var result = await mediator.Send(new MatchPractitionersFilter()
+        var result = await mediator.Send(new AvailablePractitionerFilter()
         {
             TargetDate = request.TargetDate,
             AgeGroupIds = request.AgeGroupIds,

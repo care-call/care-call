@@ -1,4 +1,5 @@
 ﻿using CC.PractitionerService.Api.Mappers;
+using CC.PractitionerService.Application.Dependencies;
 using CC.PractitionerService.Application.UseCases.Practitioners;
 using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 using CC.PractitionerService.Domain.Practitioners;
@@ -6,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CC.PractitionerService.Infrastructure.Persistence.Practitioners;
 
-public sealed class PractitionerMatchingRepository(DatabaseContext _db) : IPractitionerMatchingRepository
+public sealed class AvailablePractitionersQuery(DatabaseContext db) : IAvailablePractitionersQuery
 {
-    public Task<PractitionerDto[]> FindAvailableForBookingAsync(MatchPractitionersFilter filter, CancellationToken ct)
+    public Task<PractitionerDto[]> FindAvailableAsync(AvailablePractitionerFilter filter, CancellationToken ct)
     {
-        var query = _db.PractitionerProfiles.Where(x => x.Status == PractitionerProfileStatus.Approved);
+        var query = db.PractitionerProfiles.AsNoTracking().Where(x => x.Status == PractitionerProfileStatus.Approved);
 
         if (filter.AgeGroupIds?.Count > 0)
             query = query.Where(p => p.Specializations.AgeGroups.Any(pa => filter.AgeGroupIds.Contains(pa)));
@@ -31,6 +32,7 @@ public sealed class PractitionerMatchingRepository(DatabaseContext _db) : IPract
 
         query = query
             .OrderByDescending(x => x.Rating)
+                .ThenBy(x => x.Id)
             .Skip(filter.PageSize * filter.PageNumber)
             .Take(filter.PageSize);
 

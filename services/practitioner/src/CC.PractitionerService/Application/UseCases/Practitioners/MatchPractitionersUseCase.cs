@@ -1,10 +1,11 @@
-﻿using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
+﻿using CC.PractitionerService.Application.Dependencies;
+using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 using FluentResults;
 using Mediator;
 
 namespace CC.PractitionerService.Application.UseCases.Practitioners;
 
-public sealed record MatchPractitionersFilter : IRequest<Result<PractitionerDto[]>>
+public sealed record AvailablePractitionerFilter : IRequest<Result<PractitionerDto[]>>
 {
     public DateOnly? TargetDate { get; init; }
     public IReadOnlyCollection<int>? AgeGroupIds { get; init; }
@@ -15,11 +16,11 @@ public sealed record MatchPractitionersFilter : IRequest<Result<PractitionerDto[
     public int PageNumber { get; init; }
 }
 
-public sealed class MatchPractitionersUseCase(IPractitionerMatchingRepository _practitionerMatchingRepository) : IRequestHandler<MatchPractitionersFilter, Result<PractitionerDto[]>>
+public sealed class MatchPractitionersUseCase(IAvailablePractitionersQuery availablePractitionersQuery) : IRequestHandler<AvailablePractitionerFilter, Result<PractitionerDto[]>>
 {
-    public async ValueTask<Result<PractitionerDto[]>> Handle(MatchPractitionersFilter filter, CancellationToken ct)
+    public async ValueTask<Result<PractitionerDto[]>> Handle(AvailablePractitionerFilter filter, CancellationToken ct)
     {
-        var practitioners = await _practitionerMatchingRepository.FindAvailableForBookingAsync(filter, ct);
+        var practitioners = await availablePractitionersQuery.FindAvailableAsync(filter, ct);
 
         if (filter.TargetDate is not null)
         {
