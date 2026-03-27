@@ -8,9 +8,7 @@ public static class LoggingExtensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddLogger(
-            IConfiguration configuration
-        )
+        public IServiceCollection AddLogger(IConfiguration configuration)
         {
             services.AddSerilog((serviceProvider, loggerConfiguration) =>
             {
@@ -23,5 +21,4 @@ public static class LoggingExtensions
             return services;
         }
     }
-    
 }
