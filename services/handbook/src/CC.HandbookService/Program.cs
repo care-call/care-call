@@ -1,44 +1,47 @@
-using CC.HandbookService;
+using CC.HandbookService.Application.Import;
+using CC.HandbookService.Infastructure;
+using CC.HandbookService.Validate;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSingleton<ValidateCsvFile>();
+builder.Services.AddSingleton<HandbookInMemoryStore>();
+builder.Services.AddScoped<ICsvImportService, ImportCsvFile>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(options => { options.SwaggerEndpoint("/openapi/v1.json", "Handbook API v1"); });
 }
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+var MapGroup = app.MapGroup("api/import").WithTags("ImportCsvFiles");
 
-app.MapGet("/weatherforecast", () =>
+MapGroup.MapPost("/{handbook}", async (
+    string handbook,
+    IFormFile file,
+    ICsvImportService csvImportService,
+    CancellationToken token) =>
+{
+    if (file.Length == 0)
     {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
+        return Results.BadRequest(new { Message = "File is empty" });
+    }
+
+    if (!Enum.TryParse<HandbookType>(handbook, true, out var parsedHandbookType))
+    {
+        return Results.BadRequest(new
+        {
+            Message = "Unknown handbook type. Allowed values: language, age, problems"
+        });
+    }
+
+    await using var stream = file.OpenReadStream();
+    var result = await csvImportService.ImportAsyncFile(stream, parsedHandbookType, token);
+    return Results.Ok(result);
+}).DisableAntiforgery();
 
 app.Run();
-
-namespace CC.HandbookService
-{
-    record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-    {
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-}
