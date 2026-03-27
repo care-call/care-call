@@ -53,7 +53,7 @@ public class ValidateCsvFile
     }
 
     /// <summary>
-    /// Проверка дубликатов по ключу (Language, Problem, AgeGroup, Key)
+    /// Проверка дубликатов
     /// </summary>
     public List<ImportValidateError> ValidateLines(List<ImportFile> importFiles)
     {
