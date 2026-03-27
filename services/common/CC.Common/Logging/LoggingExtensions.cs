@@ -8,7 +8,7 @@ public static class LoggingExtensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddLogging(
+        public IServiceCollection AddLogger(
             IConfiguration configuration
         )
         {

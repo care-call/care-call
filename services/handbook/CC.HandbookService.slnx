@@ -2,4 +2,5 @@
   <Folder Name="/src/">
     <Project Path="src/CC.HandbookService/CC.HandbookService.csproj" />
   </Folder>
+  <Project Path="../common/CC.Common/CC.Common.csproj" />
 </Solution>

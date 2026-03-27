@@ -1,4 +1,5 @@
 using CC.Common.Json;
+using CC.Common.Logging;
 using CC.PractitionerService.Api.Endpoints.WorkSchedules;
 using CC.PractitionerService.Application;
 using CC.PractitionerService.Infrastructure;
@@ -16,7 +17,8 @@ builder.Services.AddOpenApi(OpenApiConfigurator.Configure);
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-
+builder.Logging.ClearProviders();
+builder.Services.AddLogger(builder.Configuration);
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

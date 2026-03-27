@@ -17,7 +17,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddValidation();
 builder.Services.AddOpenApi(OpenApiConfigurator.Configure);
 builder.Logging.ClearProviders();
-builder.Services.AddLogging(builder.Configuration);
+builder.Services.AddLogger(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 

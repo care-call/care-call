@@ -1,3 +1,4 @@
+using CC.Common.Logging;
 using CC.HandbookService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Logging.ClearProviders();
+builder.Services.AddLogger(builder.Configuration);
 
 var app = builder.Build();
 
