@@ -1,4 +1,5 @@
 using CC.Common.Json;
+using CC.Common.Logging;
 using CC.NotificationService.Api.Endpoints.WebNotifications;
 using CC.NotificationService.Application;
 using CC.NotificationService.Infrastructure;
@@ -14,7 +15,8 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 builder.Services.AddValidation();
 builder.Services.AddOpenApi(OpenApiConfigurator.Configure);
-
+builder.Logging.ClearProviders();
+builder.Services.AddLogger(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
