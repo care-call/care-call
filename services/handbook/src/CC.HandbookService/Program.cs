@@ -8,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<ValidateCsvFile>();
-builder.Services.AddSingleton<HandbookInMemoryStore>();
 builder.Services.AddScoped<ICsvImportService, ImportCsvFile>();
 builder.Services.AddDbContext<HandbookDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("HandbookDb")));

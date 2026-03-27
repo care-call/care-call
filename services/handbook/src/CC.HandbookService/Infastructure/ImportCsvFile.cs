@@ -5,10 +5,11 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using CsvHelper.TypeConversion;
+using Microsoft.EntityFrameworkCore;
 
 namespace CC.HandbookService.Infastructure;
 
-public class ImportCsvFile(ValidateCsvFile validate, HandbookInMemoryStore store) : ICsvImportService
+public class ImportCsvFile(ValidateCsvFile validate, HandbookDbContext dbContext) : ICsvImportService
 {
     private sealed class CsvInputModel
     {
@@ -88,14 +89,43 @@ public class ImportCsvFile(ValidateCsvFile validate, HandbookInMemoryStore store
 
         error.AddRange(validate.ValidateLines(importFile, handbookType));
 
-        var validLineNumbers = error.Select(x => x.LineNumber).Where(x => x > 0).ToHashSet();
+        var invalidLineNumbers = error.Select(x => x.LineNumber).Where(x => x > 0).ToHashSet();
         var validImportFile = importFile
-            .Where((_, index) => !validLineNumbers.Contains(index + 2))
+            .Where((_, index) => !invalidLineNumbers.Contains(index + 2))
             .ToList();
 
         if (validImportFile.Count > 0)
         {
-            store.Save(handbookType, validImportFile);
+            var externalIds = validImportFile
+                .Select(x => x.Id!)
+                .Distinct(StringComparer.Ordinal)
+                .ToList();
+
+            var existingRecords = await dbContext.HandbookRecords
+                .Where(x => x.HandbookType == handbookType && externalIds.Contains(x.ExternalId))
+                .ToListAsync(token);
+
+            var byExternalId = existingRecords.ToDictionary(x => x.ExternalId, StringComparer.Ordinal);
+
+            foreach (var item in validImportFile)
+            {
+                if (byExternalId.TryGetValue(item.Id!, out var existing))
+                {
+                    existing.Name = item.Name!;
+                    existing.Code = item.Code!;
+                    continue;
+                }
+
+                dbContext.HandbookRecords.Add(new HandbookRecord
+                {
+                    HandbookType = handbookType,
+                    ExternalId = item.Id!,
+                    Name = item.Name!,
+                    Code = item.Code!
+                });
+            }
+
+            await dbContext.SaveChangesAsync(token);
         }
 
         return new ResultImportFile
