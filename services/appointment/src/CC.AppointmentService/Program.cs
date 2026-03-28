@@ -1,4 +1,5 @@
 using CC.AppointmentService.Api.Endpoints.Appointments;
+using CC.AppointmentService.Api.Endpoints.SessionReview;
 using CC.AppointmentService.Application;
 using CC.AppointmentService.Application.Dependencies.YandexTelemost;
 using CC.AppointmentService.Infrastructure;
@@ -34,5 +35,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapAppointmentsEndpoints();
-
+app.MapSessionReviewEndpoint();
 app.Run();

@@ -25,16 +25,13 @@
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+        <PackageReference Include="Vogen" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Api\Endpoints\" />
     </ItemGroup>
 
     <ItemGroup>
