@@ -125,7 +125,27 @@ public class ImportCsvFile(ValidateCsvFile validate, HandbookDbContext dbContext
                 });
             }
 
-            await dbContext.SaveChangesAsync(token);
+            try
+            {
+                await dbContext.SaveChangesAsync(token);
+            }
+            catch (DbUpdateException)
+            {
+                error.Add(new ImportValidateError
+                {
+                    LineNumber = 0,
+                    ColumnName = string.Empty,
+                    Code = "database_conflict",
+                    Message = "One or more records could not be imported due to a database constraint conflict."
+                });
+
+                return new ResultImportFile
+                {
+                    ImportFileCount = importFile.Count,
+                    ImportedCount = 0,
+                    Errors = error
+                };
+            }
         }
 
         return new ResultImportFile
