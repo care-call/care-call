@@ -20,9 +20,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options => { options.SwaggerEndpoint("/openapi/v1.json", "Handbook API v1"); });
 }
 
-var MapGroup = app.MapGroup("api/import").WithTags("ImportCsvFiles");
+var mapGroup = app.MapGroup("api/import").WithTags("ImportCsvFiles");
 
-MapGroup.MapPost("/{handbook}", async (
+mapGroup.MapPost("/{handbook}", async (
     string handbook,
     IFormFile file,
     ICsvImportService csvImportService,
