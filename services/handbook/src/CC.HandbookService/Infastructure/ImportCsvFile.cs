@@ -41,9 +41,9 @@ public class ImportCsvFile(ValidateCsvFile validate, HandbookDbContext dbContext
             {
                 importFile.Add(new ImportFile
                 {
-                    Id = row.Id,
-                    Name = row.Name,
-                    Code = row.Code
+                    Id = row.Id?.Trim(),
+                    Name = row.Name?.Trim(),
+                    Code = row.Code?.Trim()
                 });
             }
         }
