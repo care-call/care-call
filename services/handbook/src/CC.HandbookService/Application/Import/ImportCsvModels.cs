@@ -17,8 +17,8 @@ public sealed class ImportFile
 public sealed class ImportValidateError
 {
     public int LineNumber { get; init; }
-    public string ColumnName { get; init; }
-    public string Code { get; init; }
+    public string ColumnName { get; init; } = string.Empty;
+    public string Code { get; init; } = string.Empty;
     public string Message { get; init; } = string.Empty;
 }
 
