@@ -55,34 +55,6 @@ public class ValidateCsvFile
     /// <summary>
     /// Проверка дубликатов
     /// </summary>
-    public List<ImportValidateError> ValidateLines(List<ImportFile> importFiles)
-    {
-        var errors = new List<ImportValidateError>();
-        var seenKeys = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-
-        for (int i = 0; i < importFiles.Count; i++)
-        {
-            var importFile = importFiles[i];
-            var key = $"{importFile.Id} {importFile.Code}";
-
-            if (seenKeys.TryGetValue(key, out var firstOccurrenceLineNumber))
-            {
-                errors.Add(new ImportValidateError
-                {
-                    LineNumber = i + 2,
-                    ColumnName = nameof(importFile.Code),
-                    Code = "duplicate_key",
-                    Message = $"Duplicate key found. First occurrence at line {firstOccurrenceLineNumber}"
-                });
-            }
-            else
-            {
-                seenKeys[key] = i + 2;
-            }
-        }
-        return errors;
-    }
-
     public List<ImportValidateError> ValidateLines(List<ImportFile> importFiles, HandbookType handbookType)
     {
         var errors = new List<ImportValidateError>();
