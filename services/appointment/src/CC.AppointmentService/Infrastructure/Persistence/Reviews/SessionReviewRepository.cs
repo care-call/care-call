@@ -11,4 +11,7 @@ public class SessionReviewRepository(DatabaseContext db) : ISessionReviewReposit
 
     public async Task<SessionReview?> GetByIdAsync(Guid id) 
         => await db.SessionReviews.FirstOrDefaultAsync(s => s.Id == id);
+
+    public async Task<SessionReview?> GetByAppointmentIdAsync(Guid appointmentId)
+        => await db.SessionReviews.FirstOrDefaultAsync(u => u.AppointmentId == appointmentId);
 }

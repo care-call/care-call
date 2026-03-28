@@ -1,5 +1,6 @@
 using CC.AppointmentService.Api.Contracts;
 using CC.AppointmentService.Application.UseCases;
+using CC.AppointmentService.Application.UseCases.SessionReview.Creation;
 using CC.AppointmentService.Domain.Reviews.ValueObjects;
 using Mediator;
 
@@ -13,10 +14,10 @@ public static class CreateSessionReviewEndpoint
         {
             AppointmentId = request.AppointmentId,
             UserId = request.UserId,
-            EmpthyRating = EmpathyRating.From(request.EmpthyRating),
+            EmpathyRating = EmpathyRating.From(request.EmpathyRating),
             ProfessionalismRating = ProfessionalismRating.From(request.ProfessionalismRating),
             ComfortRating = ComfortRating.From(request.ComfortRating),
-            ReviewComment = ReviewComment.From(request.ReviewComment)
+            ReviewComment = ReviewComment.From(request.ReviewComment ?? string.Empty)
         });
         
         return Results.Ok(result);

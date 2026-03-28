@@ -15,9 +15,9 @@ public class SessionReviewRulesTests
     {
         var appointment = CreateScheduledAppointment(3);
 
-        var result = SessionReviewRules.CanCreate(appointment);
+        var result = SessionReviewRules.IsStatusCreatable(appointment);
 
-        result.IsSuccess.ShouldBeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -25,9 +25,9 @@ public class SessionReviewRulesTests
     {
         var appointment = CreateScheduledAppointment(3, AppointmentStatus.Cancelled);
 
-        var result = SessionReviewRules.CanCreate(appointment);
+        var result = SessionReviewRules.IsStatusCreatable(appointment);
 
-        result.IsSuccess.ShouldBeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -35,9 +35,9 @@ public class SessionReviewRulesTests
     {
         var appointment = CreateCompletedAppointment(1);
 
-        var result = SessionReviewRules.CanCreate(appointment);
+        var result = SessionReviewRules.IsWithinAllowedReviewing(appointment);
 
-        result.IsSuccess.ShouldBeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -45,9 +45,9 @@ public class SessionReviewRulesTests
     {
         var appointment = CreateCompletedAppointment(3);
 
-        var result = SessionReviewRules.CanCreate(appointment);
+        var result = SessionReviewRules.IsWithinAllowedReviewing(appointment);
 
-        result.IsSuccess.ShouldBeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -58,9 +58,9 @@ public class SessionReviewRulesTests
             DateTime.Now.AddHours(-1),
             AppointmentStatus.Completed);
 
-        var result = SessionReviewRules.CanCreate(appointment);
+        var result = SessionReviewRules.IsWithinAllowedReviewing(appointment);
 
-        result.IsSuccess.ShouldBeFalse();
+        result.ShouldBeFalse();
     }
 
     private static Appointment CreateCompletedAppointment(int endedDaysAgo)
