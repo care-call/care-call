@@ -7,5 +7,6 @@ public sealed record CreateSessionReviewRequest
     public required int EmpathyRating { get; init; }
     public required int ComfortRating { get; init; }
     public required int ProfessionalismRating { get; init; }
+    public required IReadOnlyCollection<Guid> Tags { get; init; }
     public required string? ReviewComment { get; init; }
 }

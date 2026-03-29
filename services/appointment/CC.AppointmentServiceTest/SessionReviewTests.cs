@@ -5,6 +5,7 @@ using CC.AppointmentService.Domain.Reviews.ValueObjects;
 using CC.Shared.Domain;
 using CC.Shared.Domain.TimeRanges;
 using Shouldly;
+using TagValue = CC.AppointmentService.Domain.Reviews.ValueObjects.Tags.Tag;
 
 namespace CC.AppointmentServiceTest;
 
@@ -31,23 +32,23 @@ public class SessionReviewRulesTests
     }
 
     [Fact]
-    public void Review_is_available_for_completed_appointment_within_two_days()
+    public void Review_is_not_available_for_completed_appointment_within_two_days()
     {
         var appointment = CreateCompletedAppointment(1);
 
         var result = SessionReviewRules.IsWithinAllowedReviewing(appointment);
 
-        result.ShouldBeTrue();
+        result.ShouldBeFalse();
     }
 
     [Fact]
-    public void Review_is_not_available_for_completed_appointment_after_two_days()
+    public void Review_is_available_for_completed_appointment_after_two_days()
     {
         var appointment = CreateCompletedAppointment(3);
 
         var result = SessionReviewRules.IsWithinAllowedReviewing(appointment);
 
-        result.ShouldBeFalse();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -140,6 +141,7 @@ public class SessionReviewStateTests
             EmpathyRating = EmpathyRating.From(5),
             ProfessionalismRating = ProfessionalismRating.From(5),
             ComfortRating = ComfortRating.From(5),
+            Tags = [TagValue.From(Guid.NewGuid())],
             ReviewComment = null
         };
     }

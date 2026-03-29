@@ -14,4 +14,11 @@ public class SessionReviewRepository(DatabaseContext db) : ISessionReviewReposit
 
     public async Task<SessionReview?> GetByAppointmentIdAsync(Guid appointmentId)
         => await db.SessionReviews.FirstOrDefaultAsync(u => u.AppointmentId == appointmentId);
+
+    public async Task<IReadOnlyCollection<SessionReview>> GetPendingAsync(CancellationToken ct)
+        => await db.SessionReviews
+            .AsNoTracking()
+            .Where(x => x.Status == SessionReviewStatus.Pending)
+            .OrderBy(x => x.Id)
+            .ToListAsync(ct);
 }

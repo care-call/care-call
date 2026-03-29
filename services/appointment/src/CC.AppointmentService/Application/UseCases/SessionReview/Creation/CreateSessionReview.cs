@@ -7,6 +7,7 @@ using CC.AppointmentService.Domain.Reviews.Rules;
 using CC.AppointmentService.Domain.Reviews.ValueObjects;
 using FluentResults;
 using Mediator;
+using TagValue = CC.AppointmentService.Domain.Reviews.ValueObjects.Tags.Tag;
 
 namespace CC.AppointmentService.Application.UseCases.SessionReview.Creation;
 
@@ -17,7 +18,8 @@ public sealed record CreateSessionReview : IRequest<Result>
     public required EmpathyRating EmpathyRating { get; init; }
     public required ComfortRating ComfortRating { get; init; }
     public required ProfessionalismRating ProfessionalismRating { get; init; }
-    public required ReviewComment ReviewComment { get; init; }
+    public required IReadOnlyCollection<TagValue> Tags { get; init; }
+    public required ReviewComment? ReviewComment { get; init; }
 }
 
 public class CreateSessionReviewUseCase(
@@ -54,10 +56,22 @@ public class CreateSessionReviewUseCase(
             EmpathyRating = request.EmpathyRating,
             ProfessionalismRating = request.ProfessionalismRating,
             ComfortRating = request.ComfortRating,
+            Tags = request.Tags.Distinct().ToList(),
             ReviewComment = request.ReviewComment,
         };
         
         await sessionReviewRepository.AddAsync(review);
+
+        await uow.SaveAsync(cancellationToken);
+
+        if (SessionReviewModerationRules.ShouldBeSentToManualReview(review.ReviewComment))
+        {
+            review.MarkManualReview();
+        }
+        else
+        {
+            review.MarkPublished();
+        }
         
         await uow.SaveAsync(cancellationToken);
         

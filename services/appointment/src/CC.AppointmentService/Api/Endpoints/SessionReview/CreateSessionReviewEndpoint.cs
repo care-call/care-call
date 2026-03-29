@@ -1,8 +1,8 @@
 using CC.AppointmentService.Api.Contracts;
-using CC.AppointmentService.Application.UseCases;
 using CC.AppointmentService.Application.UseCases.SessionReview.Creation;
 using CC.AppointmentService.Domain.Reviews.ValueObjects;
 using Mediator;
+using TagValue = CC.AppointmentService.Domain.Reviews.ValueObjects.Tags.Tag;
 
 namespace CC.AppointmentService.Api.Endpoints.SessionReview;
 
@@ -17,7 +17,10 @@ public static class CreateSessionReviewEndpoint
             EmpathyRating = EmpathyRating.From(request.EmpathyRating),
             ProfessionalismRating = ProfessionalismRating.From(request.ProfessionalismRating),
             ComfortRating = ComfortRating.From(request.ComfortRating),
-            ReviewComment = ReviewComment.From(request.ReviewComment ?? string.Empty)
+            Tags = request.Tags.Select(TagValue.From).Distinct().ToArray(),
+            ReviewComment = string.IsNullOrWhiteSpace(request.ReviewComment)
+                ? null
+                : ReviewComment.From(request.ReviewComment)
         });
         
         return Results.Ok(result);

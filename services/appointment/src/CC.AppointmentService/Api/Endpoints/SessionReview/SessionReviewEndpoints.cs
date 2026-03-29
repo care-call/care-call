@@ -8,6 +8,7 @@ public static class SessionReviewEndpoints
         {
             var v1Group = builder.MapGroup("/api/v1/sessionreview");
             v1Group.MapPost("", CreateSessionReviewEndpoint.Handle);
+            v1Group.MapGet("pending", GetPendingSessionReviewsEndpoint.Handle);
         }
     }
 }
