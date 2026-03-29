@@ -1,3 +1,4 @@
+using CC.PractitionerService.Application.Dependencies;
 using CC.PractitionerService.Application.Dependencies.UnitOfWork;
 using CC.PractitionerService.Domain.Practitioners.Repositories;
 using CC.PractitionerService.Domain.WorkSchedules.Repositories;
@@ -21,6 +22,7 @@ public static class DependencyInjection
         public IServiceCollection AddEfCore(IConfiguration configuration)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             return services.AddNpgsql<DatabaseContext>(
                 configuration.GetConnectionString("DefaultConnection"),
                 _ => { },
@@ -36,6 +38,7 @@ public static class DependencyInjection
                 .AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddScoped<IPractitionerProfileRepository, PractitionerProfileRepository>()
                 .AddScoped<IWorkScheduleRepository, WorkScheduleRepository>()
+                .AddScoped<IAvailablePractitionersQuery, AvailablePractitionersQuery>()
                 .AddScoped<IAdjustmentRepository, AdjustmentRepository>();
         }
     }

@@ -1,21 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>ba8ae88b-c166-49b5-a7db-62f51b92bc99</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="EFCore.NamingConventions" />
-        <PackageReference Include="FluentResults"/>
-        <PackageReference Include="Mediator.Abstractions"/>
+        <PackageReference Include="FluentResults" />
+        <PackageReference Include="Mediator.Abstractions" />
         <PackageReference Include="Mediator.SourceGenerator">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
