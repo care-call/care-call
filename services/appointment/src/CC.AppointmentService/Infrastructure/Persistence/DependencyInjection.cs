@@ -1,6 +1,8 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Domain.Appointments.Repositories;
+using CC.AppointmentService.Domain.Reviews.Repositories;
 using CC.AppointmentService.Infrastructure.Persistence.Appointments;
+using CC.AppointmentService.Infrastructure.Persistence.Reviews;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.AppointmentService.Infrastructure.Persistence;
@@ -28,7 +30,8 @@ public static class DependencyInjection
         {
             return services
                 .AddScoped<IUnitOfWork, UnitOfWork>()
-                .AddScoped<IAppointmentsRepository, AppointmentsRepository>();
+                .AddScoped<IAppointmentsRepository, AppointmentsRepository>()
+                .AddScoped<IReviewRepository, ReviewRepository>();
         }
     }
 }
