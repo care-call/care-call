@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddReview : Migration
+    public partial class AddFeedback : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

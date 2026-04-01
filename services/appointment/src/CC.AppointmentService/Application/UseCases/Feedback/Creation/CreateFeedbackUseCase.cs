@@ -1,12 +1,15 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Domain.Appointments.Repositories;
 using CC.AppointmentService.Domain.Errors;
-using CC.AppointmentService.Domain.Reviews;
-using CC.AppointmentService.Domain.Reviews.Repositories;
+using CC.AppointmentService.Domain.Feedback;
+using CC.AppointmentService.Domain.Feedback.Repositories;
 using FluentResults;
 using Mediator;
+using ComfortScore = CC.AppointmentService.Domain.Feedback.ComfortScore;
+using EmpathyScore = CC.AppointmentService.Domain.Feedback.EmpathyScore;
+using ProfessionalismScore = CC.AppointmentService.Domain.Feedback.ProfessionalismScore;
 
-namespace CC.AppointmentService.Application.UseCases.Reviews.Creation;
+namespace CC.AppointmentService.Application.UseCases.Feedback.Creation;
 
 public sealed record CreateReview : IRequest<Result>
 {
@@ -15,10 +18,10 @@ public sealed record CreateReview : IRequest<Result>
     public byte ComfortScore { get; init; }
     public byte ProfessionalismScore { get; init; }
     public byte EmpathyScore { get; init; }
-    public IReadOnlyCollection<Guid> Tags { get; init; }
+    public IReadOnlyCollection<Guid>? Tags { get; init; }
 }
 
-public sealed class CreateReviewUseCase(
+public sealed class CreateFeedbackUseCase(
     IUnitOfWork unitOfWork,
     IAppointmentsRepository appointmentsRepository,
     IReviewRepository reviewRepository,
@@ -41,8 +44,10 @@ public sealed class CreateReviewUseCase(
             empathyScore: EmpathyScore.From(command.EmpathyScore),
             timeProvider.GetUtcNow().DateTime
         );
-
-        review.AddTags(command.Tags);
+        
+        if(command.Tags is not null)
+            review.AddTags(command.Tags);
+        
         await reviewRepository.AddAsync(review);
         await unitOfWork.SaveAsync(cancellationToken);
 

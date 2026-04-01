@@ -1,4 +1,4 @@
-namespace CC.AppointmentService.Domain.Reviews;
+namespace CC.AppointmentService.Domain.Feedback;
 
 public enum ModerationStatus
 {

@@ -1,6 +1,6 @@
 using Vogen;
 
-namespace CC.AppointmentService.Domain.Reviews;
+namespace CC.AppointmentService.Domain.Feedback;
 
 [ValueObject<byte>]
 public readonly partial struct ProfessionalismScore

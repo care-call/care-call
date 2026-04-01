@@ -1,8 +1,11 @@
-using CC.AppointmentService.Domain.Reviews;
+using CC.AppointmentService.Domain.Feedback;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ComfortScore = CC.AppointmentService.Domain.Feedback.ComfortScore;
+using EmpathyScore = CC.AppointmentService.Domain.Feedback.EmpathyScore;
+using ProfessionalismScore = CC.AppointmentService.Domain.Feedback.ProfessionalismScore;
 
-namespace CC.AppointmentService.Infrastructure.Persistence.Reviews.EntityTypeConfigurations;
+namespace CC.AppointmentService.Infrastructure.Persistence.Feedback.EntityTypeConfigurations;
 
 public sealed class ReviewConfiguration : IEntityTypeConfiguration<Review>
 {

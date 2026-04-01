@@ -1,4 +1,4 @@
-namespace CC.AppointmentService.Domain.Reviews.Repositories;
+namespace CC.AppointmentService.Domain.Feedback.Repositories;
 
 public interface IReviewRepository
 {

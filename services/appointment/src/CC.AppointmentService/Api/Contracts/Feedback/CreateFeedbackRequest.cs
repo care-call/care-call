@@ -1,6 +1,6 @@
-namespace CC.AppointmentService.Api.Contracts.Reviews;
+namespace CC.AppointmentService.Api.Contracts.Feedback;
 
-public record CreateReviewRequest(
+public record CreateFeedbackRequest(
     Guid AppointmentId,
     Guid ClientId,
     byte ComfortScore, 

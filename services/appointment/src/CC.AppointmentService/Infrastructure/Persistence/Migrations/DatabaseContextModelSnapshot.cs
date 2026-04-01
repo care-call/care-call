@@ -114,7 +114,7 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                     b.ToTable("appointments", (string)null);
                 });
 
-            modelBuilder.Entity("CC.AppointmentService.Domain.Reviews.Review", b =>
+            modelBuilder.Entity("CC.AppointmentService.Domain.Feedback.Review", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

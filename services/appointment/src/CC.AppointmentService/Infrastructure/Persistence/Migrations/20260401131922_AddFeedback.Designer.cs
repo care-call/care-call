@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260331150402_AddReview")]
-    partial class AddReview
+    [Migration("20260401131922_AddFeedback")]
+    partial class AddFeedback
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -117,7 +117,7 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                     b.ToTable("appointments", (string)null);
                 });
 
-            modelBuilder.Entity("CC.AppointmentService.Domain.Reviews.Review", b =>
+            modelBuilder.Entity("CC.AppointmentService.Domain.Feedback.Review", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

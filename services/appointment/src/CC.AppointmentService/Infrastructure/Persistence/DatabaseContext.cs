@@ -1,5 +1,5 @@
 using CC.AppointmentService.Domain.Appointments;
-using CC.AppointmentService.Domain.Reviews;
+using CC.AppointmentService.Domain.Feedback;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.AppointmentService.Infrastructure.Persistence;

@@ -1,17 +1,16 @@
-﻿using CC.AppointmentService.Api.Contracts.Reviews;
-using CC.AppointmentService.Application.UseCases.Reviews.Creation;
+﻿using CC.AppointmentService.Application.UseCases.Feedback.Creation;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
 using CC.Shared.Domain.TimeRanges;
 
 namespace CC.AppointmentTests;
 
-public class UnitTest1
+public class CreateFeedbackTest
 {
     [Fact]
     public async Task ShouldFailWhenEndAtIsExceedTwoDays()
     {
-        var useCase = new CreateReviewUseCase(null, new FakeRepository(new(2026, 03, 29)), null, new FakeTimeProvider());
+        var useCase = new CreateFeedbackUseCase(null, new FakeRepository(new(2026, 03, 29)), null, new FakeTimeProvider());
         
         var result = await useCase.Handle(new CreateReview()
         {

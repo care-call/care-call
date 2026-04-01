@@ -1,5 +1,5 @@
 using CC.AppointmentService.Api.Endpoints.Appointments;
-using CC.AppointmentService.Api.Endpoints.Reviews;
+using CC.AppointmentService.Api.Endpoints.Feedback;
 using CC.AppointmentService.Application;
 using CC.AppointmentService.Infrastructure;
 using CC.AppointmentService.Infrastructure.OpenApi;
