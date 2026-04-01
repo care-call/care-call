@@ -13,7 +13,7 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
     public required PractitionerSnapshot PractitionerSnapshot { get; init; }
     public Uri? CallUrl { get; set; }
     public string? CancellationReason { get; private set; }
-    public DateTime? EndedAt { get; private set; }
+    public DateTime? EndedAt { get; set; }
     
     public void Cancel(string reason)
     {

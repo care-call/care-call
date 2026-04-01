@@ -1,8 +1,8 @@
-using CC.AppointmentService.Api.Contracts.Review;
+using CC.AppointmentService.Api.Contracts.Reviews;
 using CC.AppointmentService.Application.UseCases.Reviews.Creation;
 using Riok.Mapperly.Abstractions;
 
-namespace CC.AppointmentService.Api.Endpoints.Review.Mapper;
+namespace CC.AppointmentService.Api.Endpoints.Reviews.Mapper;
 [Mapper]
 public static partial class ReviewMapper
 {

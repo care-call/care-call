@@ -1,4 +1,4 @@
-namespace CC.AppointmentService.Api.Endpoints.Review;
+namespace CC.AppointmentService.Api.Endpoints.Reviews;
 
 public static class ReviewEndpoints
 {

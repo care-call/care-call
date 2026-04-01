@@ -10,11 +10,12 @@ namespace CC.AppointmentService.Application.UseCases.Reviews.Creation;
 
 public sealed record CreateReview : IRequest<Result>
 {
-    public required Guid AppointmentId { get; init; }
-    public required byte ComfortScore { get; init; }
-    public required byte ProfessionalismScore { get; init; }
-    public required byte EmpathyScore { get; init; }
-    public required List<Guid> Tags { get; init; }
+    public Guid AppointmentId { get; init; }
+    public Guid ClientId { get; init; }
+    public byte ComfortScore { get; init; }
+    public byte ProfessionalismScore { get; init; }
+    public byte EmpathyScore { get; init; }
+    public IReadOnlyCollection<Guid> Tags { get; init; }
 }
 
 public sealed class CreateReviewUseCase(
@@ -26,20 +27,20 @@ public sealed class CreateReviewUseCase(
     public async ValueTask<Result> Handle(CreateReview command, CancellationToken cancellationToken)
     {
         var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId);
-        if (appointment is null) 
+        if (appointment is null || appointment.ClientId != command.ClientId) 
             return Result.Fail(AppointmentErrors.NotFound());
-        
-        if (appointment.EndedAt.HasValue && appointment.EndedAt.Value < timeProvider.GetUtcNow().AddDays(2))
+
+        if (appointment.EndedAt.HasValue && timeProvider.GetUtcNow().Date >= appointment.EndedAt.Value.Date.AddDays(2))
             return Result.Fail(ReviewError.TooLate);
-        
-        var review = new Review(Guid.CreateVersion7())
-        {
-            AppointmentId = command.AppointmentId,
-            ComfortScore = ComfortScore.From(command.ComfortScore),
-            ProfessionalismScore = ProfessionalismScore.From(command.ProfessionalismScore),
-            EmpathyScore = EmpathyScore.From(command.EmpathyScore),
-            CreatedAt = timeProvider.GetUtcNow().DateTime
-        };
+
+        var review = new Review(
+            Guid.CreateVersion7(),
+            appointmentId: command.AppointmentId,
+            comfortScore: ComfortScore.From(command.ComfortScore),
+            professionalismScore: ProfessionalismScore.From(command.ProfessionalismScore),
+            empathyScore: EmpathyScore.From(command.EmpathyScore),
+            timeProvider.GetUtcNow().DateTime
+        );
 
         review.AddTags(command.Tags);
         await reviewRepository.AddAsync(review);

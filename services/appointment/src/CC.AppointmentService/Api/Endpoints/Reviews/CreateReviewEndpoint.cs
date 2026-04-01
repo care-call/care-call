@@ -1,8 +1,8 @@
-using CC.AppointmentService.Api.Contracts.Review;
-using CC.AppointmentService.Api.Endpoints.Review.Mapper;
+using CC.AppointmentService.Api.Contracts.Reviews;
+using CC.AppointmentService.Api.Endpoints.Reviews.Mapper;
 using Mediator;
 
-namespace CC.AppointmentService.Api.Endpoints.Review;
+namespace CC.AppointmentService.Api.Endpoints.Reviews;
 
 public static class CreateReviewEndpoint
 {

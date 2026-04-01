@@ -1,6 +1,5 @@
 using CC.AppointmentService.Api.Endpoints.Appointments;
-using CC.AppointmentService.Api.Endpoints.Review;
-using CC.AppointmentService.Api.Endpoints.Review.Mapper;
+using CC.AppointmentService.Api.Endpoints.Reviews;
 using CC.AppointmentService.Application;
 using CC.AppointmentService.Infrastructure;
 using CC.AppointmentService.Infrastructure.OpenApi;
@@ -18,7 +17,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 builder.Services.AddValidation();
 builder.Services.AddOpenApi(OpenApiConfigurator.Configure);
-
 builder.Logging.ClearProviders();
 builder.Services.AddLogger(builder.Configuration);
 builder.Services.AddApplication();

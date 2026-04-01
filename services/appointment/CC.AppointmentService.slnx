@@ -6,4 +6,7 @@
   <Folder Name="/src/">
     <Project Path="src/CC.AppointmentService/CC.AppointmentService.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="CC.AppointmentTests/CC.AppointmentTests.csproj" />
+  </Folder>
 </Solution>

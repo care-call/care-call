@@ -1,6 +1,6 @@
 using Vogen;
-
 namespace CC.AppointmentService.Domain.Reviews;
+
 [ValueObject<string>]
 public readonly partial struct ReviewComment
 {

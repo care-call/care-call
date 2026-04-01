@@ -1,8 +1,9 @@
-namespace CC.AppointmentService.Api.Contracts.Review;
+namespace CC.AppointmentService.Api.Contracts.Reviews;
 
 public record CreateReviewRequest(
     Guid AppointmentId,
+    Guid ClientId,
     byte ComfortScore, 
     byte ProfessionalismScore, 
     byte EmpathyScore, 
-    List<Guid> Tags);
+    IReadOnlyCollection<Guid> Tags);

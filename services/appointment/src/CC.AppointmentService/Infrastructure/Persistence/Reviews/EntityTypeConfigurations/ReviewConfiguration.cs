@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CC.AppointmentService.Infrastructure.Persistence.Reviews.EntityTypeConfigurations;
 
-public sealed class SessionReviewConfiguration : IEntityTypeConfiguration<Review>
+public sealed class ReviewConfiguration : IEntityTypeConfiguration<Review>
 {
     public void Configure(EntityTypeBuilder<Review> builder)
     {
