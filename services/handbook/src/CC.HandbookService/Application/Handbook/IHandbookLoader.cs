@@ -5,5 +5,5 @@ namespace CC.HandbookService.Application.Handbook;
 
 public interface IHandbookLoader
 {
-    public Task<Result> LoadAsync<T>(Stream stream) where T : VersionedHandbookItem;
+    public Task<Result> LoadAsync<T>(Stream stream) where T : HandbookItem;
 }

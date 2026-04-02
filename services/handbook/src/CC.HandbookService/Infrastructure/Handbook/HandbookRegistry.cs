@@ -1,20 +1,32 @@
 using CC.HandbookService.Application.Handbook;
 using CC.HandbookService.Domain.Handbooks;
+using FluentResults;
 
-namespace CC.HandbookService.Infrastructure.Csv;
+namespace CC.HandbookService.Infrastructure.Handbook;
 
 public class HandbookRegistry : IHandbookRegistry
 {
-    private readonly List<string> _handbooks;
+    private readonly Dictionary<string, Func<Stream, Task<Result>>> _handbookLoaders = [];
 
-    public HandbookRegistry()
+    public HandbookRegistry(IHandbookLoader loader)
     {
-        var assembly = typeof(HandbookItem).Assembly;
+        AddHandbookLoader<Language>("languages", loader);
+        AddHandbookLoader<AgeGroup>("agegroups", loader);
+        AddHandbookLoader<ProblemArea>("problemareas", loader);
+    }
+
+    public Func<Stream, Task<Result>>? GetHandbookLoader(string handbookTitle)
+    {
+        if (_handbookLoaders.TryGetValue(handbookTitle, out var handler))
+            return handler;
         
-        var handbookTypes = assembly
-            .GetTypes()
-            .Where(type => type.IsSubclassOf(typeof(HandbookItem)));
-        
-        _handbooks = handbookTypes.Select(type => type.Name).ToList();
+        return null;
+    }
+
+    private void AddHandbookLoader<HandbookType>(
+        string handbookTitle,
+        IHandbookLoader loader) where HandbookType : HandbookItem
+    {
+        _handbookLoaders[handbookTitle] = loader.LoadAsync<HandbookType>;
     }
 }

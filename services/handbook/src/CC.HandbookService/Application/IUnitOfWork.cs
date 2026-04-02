@@ -1,6 +1,6 @@
 namespace CC.HandbookService.Application;
 
-public class IUnitOfWork
+public interface IUnitOfWork
 {
-    
+    public Task SaveAsync(CancellationToken ct = default);
 }

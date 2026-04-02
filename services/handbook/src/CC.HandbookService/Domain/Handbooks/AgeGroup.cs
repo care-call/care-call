@@ -5,5 +5,5 @@ namespace CC.HandbookService.Domain.Handbooks;
 /// </summary>
 public class AgeGroup : HandbookItem
 {
-    public int Id { get; set; }
+    
 }

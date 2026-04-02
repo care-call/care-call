@@ -1,33 +1,80 @@
-using System.Data;
 using System.Globalization;
-using CC.HandbookService.Application.Csv;
+using System.Text;
+using CC.HandbookService.Application.Handbook;
+using CC.HandbookService.Domain.Handbooks;
+using CC.HandbookService.Infrastructure.Handbook.HandbookMaps;
 using CsvHelper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore;
+using MissingFieldException = CsvHelper.MissingFieldException;
 
-namespace CC.HandbookService.Infrastructure.Csv;
+namespace CC.HandbookService.Infrastructure.Handbook;
 
-public class CsvLoader(DbContext context) : ICsvLoader
+public class HandbookLoader(DatabaseContext context) : IHandbookLoader
 {
-    public async Task<Result> LoadFileAsync<T>(Stream stream)
+    public async Task<Result> LoadAsync<T>(Stream stream) where T : HandbookItem
     {
         var streamReader = new StreamReader(stream);
-        var csvReader = new CsvReader(streamReader, CultureInfo.CurrentCulture);
-
+        using var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture);
+        csvReader.Context.RegisterClassMap<HandbookItemMap>();
+        
+        var records = new List<T>();
         try
         {
-            
+            await foreach (var record in csvReader.GetRecordsAsync<T>())
+                records.Add(record);
         }
-        catch (CsvHelperException ex)
+        catch (MissingFieldException ex)
         {
-            
+            var cellName = TryGetCellName(ex);
+            return cellName != null 
+                ? Result.Fail($"Пропущенно поле в ячейке {cellName}") 
+                : Result.Fail("Непредвиденная ошибка");
+        }
+        catch (ValidationException ex)
+        {
+            var cellName = TryGetCellName(ex);
+            return cellName != null
+                ? Result.Fail($"Не заполнено обязательное поле в ячейке {cellName}")
+                : Result.Fail("Непредвиденная ошибка");
         }
         
-        return Result.Ok()
-    }
+        await context.Set<T>().ExecuteDeleteAsync();
+        context.Set<T>().AddRange(records); 
 
-    private static string GetCellName(int index)
+        return Result.Ok();
+    }
+    
+    private static string? TryGetCellName(CsvHelperException ex)
     {
-                
+        if (ex.Context == null || ex.Context.Parser == null || ex.Context.Reader == null)
+            return null;
+        return GetCellName(ex.Context.Parser.Row, ex.Context.Reader.CurrentIndex + 1);
+    }
+    
+    private static string GetCellName(int rowIndex, int columnIndex)
+    {
+        const int enLettersCount = 26;
+
+        var stack = new Stack<char>();
+        var sb = new StringBuilder();
+
+        while (columnIndex > 0)
+        {
+            columnIndex--;
+            
+            var remainder = columnIndex % enLettersCount;
+            var letter = (char)('A' + remainder);
+            stack.Push(letter);
+
+            columnIndex /= enLettersCount;
+        }
+        
+        while (stack.Count > 0)
+            sb.Append(stack.Pop());
+        
+        sb.Append(rowIndex);
+        
+        return sb.ToString();
     }
 }

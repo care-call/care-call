@@ -5,5 +5,5 @@ namespace CC.HandbookService.Domain.Handbooks;
 /// </summary>
 public class Language : HandbookItem
 {
-    public short Id { get; set; }
+    
 }

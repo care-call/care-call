@@ -1,6 +1,8 @@
+using FluentResults;
+
 namespace CC.HandbookService.Application.Handbook;
 
-public class IHandbookRegistry
+public interface IHandbookRegistry
 {
-    
+    public Func<Stream, Task<Result>>? GetHandbookLoader(string handbookTitle);
 }
