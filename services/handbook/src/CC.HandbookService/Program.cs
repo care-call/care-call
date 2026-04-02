@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
-builder.Services.AddAntiforgery();
 builder.Logging.ClearProviders();
 builder.Services.AddLogger(builder.Configuration);
 
@@ -22,14 +21,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseAntiforgery();
-
-app.MapGet("/api/v1/languages", async (DatabaseContext db) =>
-{
-    var languages = await db.Languages.ToListAsync();
-    return Results.Ok(languages);
-});
 
 using (var scope = app.Services.CreateScope())
 {
