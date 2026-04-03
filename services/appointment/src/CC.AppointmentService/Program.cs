@@ -35,6 +35,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapAppointmentsEndpoints();
-app.MapReviewsEndpoints();
+app.MapFeedbackEndpoints();
 
 app.Run();

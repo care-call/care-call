@@ -1,6 +1,7 @@
 using Vogen;
 
-namespace CC.AppointmentService.Domain.Feedback;
+namespace CC.AppointmentService.Domain.Feedbacks;
+
 [ValueObject<byte>]
 public readonly partial struct EmpathyScore
 {

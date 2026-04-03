@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260401131922_AddFeedback")]
+    [Migration("20260403143007_AddFeedback")]
     partial class AddFeedback
     {
         /// <inheritdoc />
@@ -117,7 +117,7 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                     b.ToTable("appointments", (string)null);
                 });
 
-            modelBuilder.Entity("CC.AppointmentService.Domain.Feedback.Review", b =>
+            modelBuilder.Entity("CC.AppointmentService.Domain.Feedbacks.Feedback", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -154,9 +154,9 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                         .HasColumnName("tags");
 
                     b.HasKey("Id")
-                        .HasName("pk_reviews");
+                        .HasName("pk_feedbacks");
 
-                    b.ToTable("reviews", (string)null);
+                    b.ToTable("feedbacks", (string)null);
                 });
 #pragma warning restore 612, 618
         }

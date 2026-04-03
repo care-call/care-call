@@ -1,15 +1,12 @@
-using CC.AppointmentService.Domain.Feedback;
+using CC.AppointmentService.Domain.Feedbacks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ComfortScore = CC.AppointmentService.Domain.Feedback.ComfortScore;
-using EmpathyScore = CC.AppointmentService.Domain.Feedback.EmpathyScore;
-using ProfessionalismScore = CC.AppointmentService.Domain.Feedback.ProfessionalismScore;
 
-namespace CC.AppointmentService.Infrastructure.Persistence.Feedback.EntityTypeConfigurations;
+namespace CC.AppointmentService.Infrastructure.Persistence.Feedbacks.EntityTypeConfigurations;
 
-public sealed class ReviewConfiguration : IEntityTypeConfiguration<Review>
+public sealed class FeedbackConfiguration : IEntityTypeConfiguration<Feedback>
 {
-    public void Configure(EntityTypeBuilder<Review> builder)
+    public void Configure(EntityTypeBuilder<Feedback> builder)
     {
         builder.Property(e => e.AppointmentId).IsRequired();
 

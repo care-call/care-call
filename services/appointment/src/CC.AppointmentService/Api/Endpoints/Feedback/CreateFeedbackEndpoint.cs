@@ -4,13 +4,14 @@ using Mediator;
 
 namespace CC.AppointmentService.Api.Endpoints.Feedback;
 
-public static class FeedbackReviewEndpoint
+public static class CreateFeedbackEndpoint
 {
     public static async Task<IResult> Handle(
         CreateFeedbackRequest feedbackRequest,
-        IMediator mediator)
+        IMediator mediator,
+        CancellationToken ct)
     {
-        var result = await mediator.Send(FeedbackMapper.ToUseCase(feedbackRequest), CancellationToken.None);
+        var result = await mediator.Send(FeedbackMapper.ToUseCase(feedbackRequest), ct);
 
         return result.IsSuccess
             ? Results.Ok()

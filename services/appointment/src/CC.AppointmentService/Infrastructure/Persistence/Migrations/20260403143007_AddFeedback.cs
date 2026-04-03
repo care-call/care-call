@@ -12,7 +12,7 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "reviews",
+                name: "feedbacks",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -26,7 +26,7 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_reviews", x => x.id);
+                    table.PrimaryKey("pk_feedbacks", x => x.id);
                 });
         }
 
@@ -34,7 +34,7 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "reviews");
+                name: "feedbacks");
         }
     }
 }
