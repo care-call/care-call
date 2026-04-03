@@ -1,4 +1,5 @@
 using CC.AppointmentService.Api.Contracts;
+using CC.AppointmentService.Api.Contracts.Appointments;
 using CC.AppointmentService.Application.UseCases.Appointments.Cancellation;
 using Mediator;
 
