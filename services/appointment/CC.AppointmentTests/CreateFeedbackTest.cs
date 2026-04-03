@@ -22,13 +22,12 @@ public class CreateFeedbackTest
     private readonly Guid _appointmentId = Guid.NewGuid();
     private readonly Guid _clientId = Guid.NewGuid();
 
-    private CreateFeedbackUseCase BuildSut(DateTimeOffset endedAt, AppointmentStatus status = AppointmentStatus.Completed)
+    private CreateFeedbackUseCase BuildSut(DateTime endedAt, AppointmentStatus status = AppointmentStatus.Completed)
     {
         _timeProvider.GetUtcNow().Returns(_fixedNow);
 
         var appointment = new Appointment(_appointmentId)
         {
-            EndedAt = endedAt.UtcDateTime,
             ClientId = _clientId,
             PractitionerId = Guid.NewGuid(),
             TimeSlot = new DateTimeRange(
@@ -39,7 +38,7 @@ public class CreateFeedbackTest
             PractitionerSnapshot = new PractitionerSnapshot { FullName = new FullName("Test", "Doctor", null) },
             CallUrl = null
         };
-
+        appointment.Complete(endedAt);
         _appointments.GetByIdAsync(_appointmentId).Returns(appointment);
         _feedbacks.ExistsByAppointmentIdAsync(_appointmentId).Returns(false);
 
@@ -49,7 +48,7 @@ public class CreateFeedbackTest
     [Fact]
     public async Task ShouldFailWhenTooLate()
     {
-        var sut = BuildSut(_fixedNow.AddDays(-3));
+        var sut = BuildSut(_fixedNow.AddDays(-3).DateTime);
 
         var result = await sut.Handle(new CreateFeedback
         {
