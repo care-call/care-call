@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace CC.HandbookService.Infrastructure.Services;
+namespace CC.HandbookService.Infrastructure.Services.CsvParsing;
 
 public static class CsvCellHelper
 {

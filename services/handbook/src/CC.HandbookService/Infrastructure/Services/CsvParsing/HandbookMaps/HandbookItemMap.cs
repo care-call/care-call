@@ -1,7 +1,7 @@
 using CC.HandbookService.Domain.Handbooks;
 using CsvHelper.Configuration;
 
-namespace CC.HandbookService.Infrastructure.Persistence.Handbook.HandbookMaps;
+namespace CC.HandbookService.Infrastructure.Services.HandbookMaps;
 
 public sealed class HandbookItemMap : ClassMap<HandbookItem>
 {

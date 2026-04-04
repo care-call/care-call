@@ -1,15 +1,14 @@
 using System.Globalization;
-using System.Text;
-using CC.HandbookService.Application.Dependencies.Handbook;
+using CC.HandbookService.Application.Dependencies;
 using CC.HandbookService.Domain.Handbooks;
 using CC.HandbookService.Infrastructure.Persistence;
-using CC.HandbookService.Infrastructure.Persistence.Handbook.HandbookMaps;
+using CC.HandbookService.Infrastructure.Services.CsvParsing.HandbookMaps;
 using CsvHelper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore;
 using MissingFieldException = CsvHelper.MissingFieldException;
 
-namespace CC.HandbookService.Infrastructure.Services.Handbook;
+namespace CC.HandbookService.Infrastructure.Services.CsvParsing;
 
 public class HandbookLoader(DatabaseContext context) : IHandbookLoader
 {
