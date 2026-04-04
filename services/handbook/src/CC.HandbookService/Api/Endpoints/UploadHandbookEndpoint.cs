@@ -1,4 +1,4 @@
-using CC.HandbookService.Application.Dependencies.Handbook;
+using CC.HandbookService.Application.Dependencies;
 using CC.HandbookService.Application.UseCases;
 using Mediator;
 

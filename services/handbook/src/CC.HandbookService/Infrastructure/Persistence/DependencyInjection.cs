@@ -1,6 +1,4 @@
 using CC.HandbookService.Application;
-using CC.HandbookService.Application.Dependencies.Handbook;
-using CC.HandbookService.Infrastructure.Services.Handbook;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.HandbookService.Infrastructure.Persistence;

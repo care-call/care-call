@@ -1,6 +1,4 @@
-using System.Text.Json.Serialization;
-
-namespace CC.HandbookService.Application.Dependencies.Handbook;
+namespace CC.HandbookService.Application.Dependencies;
 
 public enum HandbookType
 {

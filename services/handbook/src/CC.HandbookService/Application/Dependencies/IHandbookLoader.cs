@@ -1,9 +1,9 @@
 using CC.HandbookService.Domain.Handbooks;
 using FluentResults;
 
-namespace CC.HandbookService.Application.Dependencies.Handbook;
+namespace CC.HandbookService.Application.Dependencies;
 
 public interface IHandbookLoader
 {
-    public Task<Result> LoadAsync<T>(Stream stream) where T : HandbookItem;
+    public Task<Result> LoadAsync(Stream stream);
 }

@@ -3,7 +3,6 @@ using CC.HandbookService.Application;
 using CC.HandbookService.Infrastructure;
 using CC.HandbookService.Api.Endpoints;
 using CC.HandbookService.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

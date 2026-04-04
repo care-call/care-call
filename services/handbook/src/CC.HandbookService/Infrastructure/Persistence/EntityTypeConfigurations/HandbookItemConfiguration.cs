@@ -2,7 +2,7 @@ using CC.HandbookService.Domain.Handbooks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CC.HandbookService.Infrastructure.Persistence.Handbook.EntityTypeConfigurations;
+namespace CC.HandbookService.Infrastructure.Persistence.EntityTypeConfigurations;
 
 public class HandbookItemConfiguration : IEntityTypeConfiguration<HandbookItem>
 {

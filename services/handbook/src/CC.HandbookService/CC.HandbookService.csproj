@@ -33,8 +33,4 @@
       <ProjectReference Include="..\..\..\common\CC.Common\CC.Common.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Application\Dependencies\" />
-    </ItemGroup>
-
 </Project>
