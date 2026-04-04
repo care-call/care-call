@@ -2,13 +2,14 @@ using System.Globalization;
 using System.Text;
 using CC.HandbookService.Application.Handbook;
 using CC.HandbookService.Domain.Handbooks;
-using CC.HandbookService.Infrastructure.Handbook.HandbookMaps;
+using CC.HandbookService.Infrastructure.Persistence;
+using CC.HandbookService.Infrastructure.Persistence.Handbooks.HandbookMaps;
 using CsvHelper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore;
 using MissingFieldException = CsvHelper.MissingFieldException;
 
-namespace CC.HandbookService.Infrastructure.Handbook;
+namespace CC.HandbookService.Infrastructure.Services.Handbooks;
 
 public class HandbookLoader(DatabaseContext context) : IHandbookLoader
 {
@@ -38,7 +39,7 @@ public class HandbookLoader(DatabaseContext context) : IHandbookLoader
                 ? Result.Fail($"Не заполнено обязательное поле в ячейке {cellName}")
                 : Result.Fail("Непредвиденная ошибка");
         }
-        
+            
         await context.Set<T>().ExecuteDeleteAsync();
         context.Set<T>().AddRange(records); 
 

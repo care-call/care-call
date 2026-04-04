@@ -2,7 +2,7 @@ using CC.HandbookService.Application.Handbook;
 using CC.HandbookService.Domain.Handbooks;
 using FluentResults;
 
-namespace CC.HandbookService.Infrastructure.Handbook;
+namespace CC.HandbookService.Infrastructure.Services.Handbooks;
 
 public class HandbookRegistry : IHandbookRegistry
 {
