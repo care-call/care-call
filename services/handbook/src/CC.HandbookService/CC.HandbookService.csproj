@@ -16,12 +16,10 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     </ItemGroup>
 
@@ -33,6 +31,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\CC.Common\CC.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Application\Dependencies\" />
     </ItemGroup>
 
 </Project>

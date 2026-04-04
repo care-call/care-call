@@ -1,9 +1,8 @@
 using CC.Common.Logging;
 using CC.HandbookService.Application;
 using CC.HandbookService.Infrastructure;
-using CC.HandbookService.Infrastructure.Handbook;
 using CC.HandbookService.Api.Endpoints;
-using CC.HandbookService.Application.Handbook;
+using CC.HandbookService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,11 +21,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-    db.Database.Migrate();
-}
+await app.Services.ApplyMigrationsAsync();
 
 app.MapHandbookEndpoints();
 

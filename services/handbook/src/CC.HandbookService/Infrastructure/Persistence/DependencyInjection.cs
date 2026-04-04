@@ -1,15 +1,15 @@
 using CC.HandbookService.Application;
-using CC.HandbookService.Application.Handbook;
-using CC.HandbookService.Infrastructure.Handbook;
+using CC.HandbookService.Application.Dependencies.Handbook;
+using CC.HandbookService.Infrastructure.Services.Handbook;
 using Microsoft.EntityFrameworkCore;
 
-namespace CC.HandbookService.Infrastructure;
+namespace CC.HandbookService.Infrastructure.Persistence;
 
 public static class DependencyInjection
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddInfrastructure(IConfiguration configuration)
+        public IServiceCollection AddPersistence(IConfiguration configuration)
         {
             return services.AddEfCore(configuration).AddRepositories();
         }
@@ -26,10 +26,7 @@ public static class DependencyInjection
 
         public IServiceCollection AddRepositories()
         {
-            return services
-                .AddScoped<IUnitOfWork, UnitOfWork>()
-                .AddScoped<IHandbookRegistry, HandbookRegistry>()
-                .AddScoped<IHandbookLoader, HandbookLoader>();
+            return services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

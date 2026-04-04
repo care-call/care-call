@@ -1,7 +1,7 @@
 using CC.HandbookService.Domain.Handbooks;
 using FluentResults;
 
-namespace CC.HandbookService.Application.Handbook;
+namespace CC.HandbookService.Application.Dependencies.Handbook;
 
 public interface IHandbookLoader
 {

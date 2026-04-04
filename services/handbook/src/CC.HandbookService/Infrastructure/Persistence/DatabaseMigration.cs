@@ -1,4 +1,6 @@
-namespace CC.HandbookService.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+
+namespace CC.HandbookService.Infrastructure.Persistence;
 
 public static class DatabaseMigration
 {

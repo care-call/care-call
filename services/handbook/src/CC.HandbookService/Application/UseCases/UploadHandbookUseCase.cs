@@ -1,4 +1,4 @@
-using CC.HandbookService.Application.Handbook;
+using CC.HandbookService.Application.Dependencies.Handbook;
 using FluentResults;
 using Mediator;
 
@@ -6,7 +6,7 @@ namespace CC.HandbookService.Application.UseCases;
 
 public sealed record UploadHandbook : IRequest<Result>
 {
-    public required string HandbookTitle { get; init; }
+    public required HandbookType HandbookType { get; init; }
     public required Stream HandbookFileStream { get; init; }
 }
 
@@ -17,16 +17,23 @@ public class UploadHandbookUseCase(
 {
     public async ValueTask<Result> Handle(UploadHandbook command, CancellationToken cancellationToken)
     {
-        var handbookLoader = registry.GetHandbookLoader(command.HandbookTitle);
-        if (handbookLoader == null)
-            return Result.Fail($"Справочник «{command.HandbookTitle}» не существует");
+        var handbookLoader = registry.GetHandbookLoader(command.HandbookType);
         
-        var result = await handbookLoader.Invoke(command.HandbookFileStream);
-        if (!result.IsSuccess)
-            return Result.Fail(result.Errors);
+        await using var transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            var result = await handbookLoader.Invoke(command.HandbookFileStream);
+            if (!result.IsSuccess)
+                return Result.Fail(result.Errors);
 
-        await unitOfWork.SaveAsync(cancellationToken);
-        
-        return Result.Ok();
+            await unitOfWork.SaveAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            
+            return Result.Ok();
+        }
+        catch (Exception)
+        {
+            return Result.Fail("Ошибка при загрузке справочника");
+        }
     }
 }

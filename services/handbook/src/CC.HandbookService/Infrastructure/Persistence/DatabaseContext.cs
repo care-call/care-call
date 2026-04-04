@@ -1,7 +1,7 @@
 using CC.HandbookService.Domain.Handbooks;
 using Microsoft.EntityFrameworkCore;
 
-namespace CC.HandbookService.Infrastructure;
+namespace CC.HandbookService.Infrastructure.Persistence;
 
 public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbContext(options)
 {

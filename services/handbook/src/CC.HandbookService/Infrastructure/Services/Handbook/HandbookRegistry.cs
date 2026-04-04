@@ -1,32 +1,27 @@
-using CC.HandbookService.Application.Handbook;
+using CC.HandbookService.Application.Dependencies.Handbook;
 using CC.HandbookService.Domain.Handbooks;
 using FluentResults;
 
-namespace CC.HandbookService.Infrastructure.Services.Handbooks;
+namespace CC.HandbookService.Infrastructure.Services.Handbook;
 
 public class HandbookRegistry : IHandbookRegistry
 {
-    private readonly Dictionary<string, Func<Stream, Task<Result>>> _handbookLoaders = [];
+    private readonly Dictionary<HandbookType, Func<Stream, Task<Result>>> _handbookLoaders = [];
 
     public HandbookRegistry(IHandbookLoader loader)
     {
-        AddHandbookLoader<Language>("languages", loader);
-        AddHandbookLoader<AgeGroup>("agegroups", loader);
-        AddHandbookLoader<ProblemArea>("problemareas", loader);
+        AddHandbookLoader<Language>(HandbookType.Languages, loader);
+        AddHandbookLoader<AgeGroup>(HandbookType.AgeGroups, loader);
+        AddHandbookLoader<ProblemArea>(HandbookType.ProblemAreas, loader);
     }
 
-    public Func<Stream, Task<Result>>? GetHandbookLoader(string handbookTitle)
-    {
-        if (_handbookLoaders.TryGetValue(handbookTitle, out var handler))
-            return handler;
-        
-        return null;
-    }
+    public Func<Stream, Task<Result>> GetHandbookLoader(HandbookType handbookType)
+        => _handbookLoaders[handbookType];
 
-    private void AddHandbookLoader<HandbookType>(
-        string handbookTitle,
-        IHandbookLoader loader) where HandbookType : HandbookItem
+    private void AddHandbookLoader<H>(
+        HandbookType handbookType,
+        IHandbookLoader loader) where H : HandbookItem
     {
-        _handbookLoaders[handbookTitle] = loader.LoadAsync<HandbookType>;
+        _handbookLoaders[handbookType] = loader.LoadAsync<H>;
     }
 }

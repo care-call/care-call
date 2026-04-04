@@ -1,15 +1,15 @@
 using System.Globalization;
 using System.Text;
-using CC.HandbookService.Application.Handbook;
+using CC.HandbookService.Application.Dependencies.Handbook;
 using CC.HandbookService.Domain.Handbooks;
 using CC.HandbookService.Infrastructure.Persistence;
-using CC.HandbookService.Infrastructure.Persistence.Handbooks.HandbookMaps;
+using CC.HandbookService.Infrastructure.Persistence.Handbook.HandbookMaps;
 using CsvHelper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore;
 using MissingFieldException = CsvHelper.MissingFieldException;
 
-namespace CC.HandbookService.Infrastructure.Services.Handbooks;
+namespace CC.HandbookService.Infrastructure.Services.Handbook;
 
 public class HandbookLoader(DatabaseContext context) : IHandbookLoader
 {
@@ -50,32 +50,6 @@ public class HandbookLoader(DatabaseContext context) : IHandbookLoader
     {
         if (ex.Context == null || ex.Context.Parser == null || ex.Context.Reader == null)
             return null;
-        return GetCellName(ex.Context.Parser.Row, ex.Context.Reader.CurrentIndex + 1);
-    }
-    
-    private static string GetCellName(int rowIndex, int columnIndex)
-    {
-        const int enLettersCount = 26;
-
-        var stack = new Stack<char>();
-        var sb = new StringBuilder();
-
-        while (columnIndex > 0)
-        {
-            columnIndex--;
-            
-            var remainder = columnIndex % enLettersCount;
-            var letter = (char)('A' + remainder);
-            stack.Push(letter);
-
-            columnIndex /= enLettersCount;
-        }
-        
-        while (stack.Count > 0)
-            sb.Append(stack.Pop());
-        
-        sb.Append(rowIndex);
-        
-        return sb.ToString();
+        return CsvCellHelper.GetCellName(ex.Context.Parser.Row, ex.Context.Reader.CurrentIndex + 1);
     }
 }
