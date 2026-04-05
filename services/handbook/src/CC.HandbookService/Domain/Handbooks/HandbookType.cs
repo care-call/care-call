@@ -1,4 +1,4 @@
-namespace CC.HandbookService.Application.Dependencies;
+namespace CC.HandbookService.Domain.Handbooks;
 
 public enum HandbookType
 {

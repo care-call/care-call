@@ -1,4 +1,5 @@
 using CC.HandbookService.Application.Dependencies;
+using CC.HandbookService.Domain.Handbooks;
 using FluentResults;
 using Mediator;
 
@@ -6,7 +7,6 @@ namespace CC.HandbookService.Application.UseCases;
 
 public sealed record UploadHandbook : IRequest<Result>
 {
-
     public required HandbookType HandbookType { get; init; }
     public required Stream HandbookFileStream { get; init; }
 }

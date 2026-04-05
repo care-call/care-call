@@ -1,5 +1,5 @@
-using CC.HandbookService.Application.Dependencies;
 using CC.HandbookService.Application.UseCases;
+using CC.HandbookService.Domain.Handbooks;
 using Mediator;
 
 namespace CC.HandbookService.Api.Endpoints;
