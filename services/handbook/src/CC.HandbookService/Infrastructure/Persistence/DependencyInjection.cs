@@ -1,4 +1,7 @@
 using CC.HandbookService.Application;
+using CC.HandbookService.Domain.Handbooks;
+using CC.HandbookService.Domain.Repositories;
+using CC.HandbookService.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.HandbookService.Infrastructure.Persistence;
@@ -24,7 +27,9 @@ public static class DependencyInjection
 
         public IServiceCollection AddRepositories()
         {
-            return services.AddScoped<IUnitOfWork, UnitOfWork>();
+            return services
+                .AddScoped<IUnitOfWork, UnitOfWork>()
+                .AddScoped(typeof(IHandbookRepository<>), typeof(HandbookRepository<>));
         }
     }
 }
