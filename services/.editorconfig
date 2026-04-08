@@ -7,4 +7,4 @@ dotnet_diagnostic.CCA0001.severity = error
 dotnet_code_quality.CCA0001.domain_ns = Domain
 dotnet_code_quality.CCA0001.app_ns = Application
 dotnet_code_quality.CCA0001.infra_ns = Infrastructure
-dotnet_code_quality.CCA0001.api_ns = Api
+dotnet_code_quality.CCA0001.api_ns = Api, Controller

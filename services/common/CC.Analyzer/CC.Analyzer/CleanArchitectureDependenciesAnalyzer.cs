@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Collections.Concurrent;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -26,26 +27,38 @@ public class CleanArchitectureDependenciesAnalyzer : DiagnosticAnalyzer
    {
        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
        context.EnableConcurrentExecution();
-       
-       context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.IdentifierName);
-   }
 
-   private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
+       context.RegisterCompilationStartAction(startContext =>
+       {
+           var configByTree = new ConcurrentDictionary<SyntaxTree, LayerNamespaceConfig>();
+           startContext.RegisterSyntaxNodeAction(
+               syntaxContext => AnalyzeNode(syntaxContext, configByTree),
+               SyntaxKind.IdentifierName);
+       });
+    }
+
+   private static void AnalyzeNode(
+       SyntaxNodeAnalysisContext context,
+       ConcurrentDictionary<SyntaxTree, LayerNamespaceConfig> configByTree)
    {
        var identifier = (IdentifierNameSyntax)context.Node;
        
        if (identifier.Parent is BaseNamespaceDeclarationSyntax) return;
-       
-       var options = context.Options.AnalyzerConfigOptionsProvider.GetOptions(context.Node.SyntaxTree);
+
+       var config = configByTree.GetOrAdd(context.Node.SyntaxTree, syntaxTree =>
+       {
+           var options = context.Options.AnalyzerConfigOptionsProvider.GetOptions(syntaxTree);
+           return LayerNamespaceConfig.From(options);
+       });
 
        var enclosingSymbol = context.ContainingSymbol;
 
-       var sourceLayer = enclosingSymbol?.GetLayer(options);
+       var sourceLayer = enclosingSymbol?.GetLayer(config);
        if (!sourceLayer.HasValue) return;
 
        var symbol = context.SemanticModel.GetSymbolInfo(identifier, context.CancellationToken).Symbol;
 
-       var targetLayer = symbol?.GetLayer(options);
+       var targetLayer = symbol?.GetLayer(config);
        if (targetLayer.HasValue && sourceLayer.Value.IsForbiddenDependency(targetLayer.Value))
        {
            context.ReportDiagnostic(Diagnostic.Create(

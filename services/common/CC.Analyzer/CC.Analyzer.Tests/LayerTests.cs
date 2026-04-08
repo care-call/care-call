@@ -49,4 +49,39 @@ dotnet_code_quality.CCA0001.infra_ns = Infrastructure
 
         await test.RunAsync();
     }
+    [Fact]
+    public async Task Infrastructure_Does_Not_Violate_When_Using_ThirdParty_Namespace_Containing_Layer_Name_As_Substring()
+    {
+        var source = @"
+namespace Infrastructure.OpenApi
+{
+    using Microsoft.OpenApi;
+
+    public class MyConfigurator
+    {
+        public Info GetInfo() => new Info();
+    }
+}
+
+namespace Microsoft.OpenApi
+{
+    public class Info { }
+}
+";
+
+        var test = new CSharpAnalyzerTest<CleanArchitectureDependenciesAnalyzer, DefaultVerifier>
+        {
+            TestCode = source
+        };
+
+        test.TestState.AnalyzerConfigFiles.Add(("/.editorconfig", @"
+root = true
+[*.cs]
+dotnet_code_quality.CCA0001.infra_ns = Infrastructure
+dotnet_code_quality.CCA0001.api_ns = Api
+"));
+
+        // Диагностик быть не должно — Microsoft.OpenApi не является слоем Api
+        await test.RunAsync();
+    }
 }
