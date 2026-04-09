@@ -1,0 +1,9 @@
+# .editorconfig
+root = true
+[*.cs]
+dotnet_sort_system_directives_first = true
+
+dotnet_diagnostic.CCA0001.severity = error
+dotnet_code_quality.CCA0001.Domain = Application, Infrastructure
+dotnet_code_quality.CCA0001.Application = Infrastructure
+dotnet_code_quality.CCA0001.Infrastructure = Api, Controller

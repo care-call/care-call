@@ -1,3 +1,4 @@
+using CC.AppointmentService.Api.Endpoints.Appointments;
 using CC.AppointmentService.Domain.Appointments.Rules;
 using CC.Common.Errors;
 using FluentResults;
