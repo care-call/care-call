@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using CC.Common.Models;
 using CC.HandbookService.Application.Enums;
 using CC.HandbookService.Domain.Handbooks;
@@ -18,19 +17,13 @@ public class HandbookRepository<T>(DatabaseContext context): IHandbookRepository
         SortOrder? sortOrder)
     {
         IQueryable<T> query = context.Set<T>();
-
-        try
-        {
-            if (searchName != null && searchValue != null)
-                query = query.ApplySearch(searchName, searchValue);
         
-            if (sortBy != null && sortOrder != null)
-                query = query.ApplySort(sortBy, sortOrder.Value);
-        }
-        catch (ArgumentException)
-        {
-            throw new ValidationException("Query validation error");
-        }
+        if (searchName != null && searchValue != null)
+            query = query.ApplySearch(searchName, searchValue);
+    
+        if (sortBy != null && sortOrder != null)
+            query = query.ApplySort(sortBy, sortOrder.Value);
+
 
         return query.ToPagedResultAsync(pageInfo);
     }

@@ -1,5 +1,6 @@
 using System.Globalization;
 using CC.HandbookService.Application.Dependencies;
+using CC.HandbookService.Domain.Errors;
 using CC.HandbookService.Domain.Handbooks;
 using CC.HandbookService.Infrastructure.Services.CsvParsing.HandbookMaps;
 using CsvHelper;
@@ -27,15 +28,15 @@ public class HandbookParser : IHandbookParser
         {
             var cellName = TryGetCellName(ex);
             return cellName != null
-                ? Result.Fail($"Пропущенно поле в ячейке {cellName}")
-                : Result.Fail("Непредвиденная ошибка");
+                ? Result.Fail(HandbookErrors.MissingField(cellName))
+                : Result.Fail(HandbookErrors.Unexpected());
         }
         catch (ValidationException ex)
         {
             var cellName = TryGetCellName(ex);
             return cellName != null
-                ? Result.Fail($"Не заполнено обязательное поле в ячейке {cellName}")
-                : Result.Fail("Непредвиденная ошибка");
+                ? Result.Fail(HandbookErrors.EmptyField(cellName))
+                : Result.Fail(HandbookErrors.Unexpected());
         }
         
         return Result.Ok<IEnumerable<T>>(records);

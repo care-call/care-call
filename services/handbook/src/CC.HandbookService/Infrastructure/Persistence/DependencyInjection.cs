@@ -1,5 +1,4 @@
 using CC.HandbookService.Application;
-using CC.HandbookService.Domain.Handbooks;
 using CC.HandbookService.Domain.Repositories;
 using CC.HandbookService.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;

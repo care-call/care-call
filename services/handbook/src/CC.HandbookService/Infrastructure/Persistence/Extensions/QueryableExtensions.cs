@@ -28,7 +28,7 @@ public static class QueryableExtensions
         var param = Expression.Parameter(typeof(T));
         var property = Expression.Property(param, propertyInfo);
         
-        var underlyingType  = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+        var underlyingType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
         if (!TryConvert(searchValue, underlyingType, out var convertedValue))
             throw new ArgumentException($"Invalid value '{searchValue}' for property '{searchBy}' of type '{underlyingType.Name}'");
         

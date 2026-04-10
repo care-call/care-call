@@ -1,8 +1,5 @@
 using CC.HandbookService.Api.Binding;
-using CC.HandbookService.Api.Contracts;
 using CC.HandbookService.Application.UseCases;
-using CC.HandbookService.Domain.Errors;
-using CC.HandbookService.Domain.Handbooks;
 using Mediator;
 
 namespace CC.HandbookService.Api.Endpoints;

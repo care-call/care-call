@@ -1,4 +1,3 @@
-using System.Collections;
 using CC.Common.Models;
 using CC.HandbookService.Application.Dependencies;
 using CC.HandbookService.Application.Enums;

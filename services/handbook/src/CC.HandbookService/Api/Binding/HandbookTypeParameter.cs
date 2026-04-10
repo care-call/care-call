@@ -15,9 +15,6 @@ public sealed record HandbookTypeParameter(HandbookType HandbookType) : IParsabl
         if (Enum.TryParse<HandbookType>(handbook, true, out var result))
             return new HandbookTypeParameter(result);
         
-        if (int.TryParse(handbook, out var handbookNumber))
-            return new HandbookTypeParameter((HandbookType)handbookNumber);
-
         throw new Exception("Unknown handbook type: " + handbook);
     }
 

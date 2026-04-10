@@ -2,8 +2,6 @@ using CC.Common.Models;
 using CC.HandbookService.Application.Dependencies;
 using CC.HandbookService.Application.Enums;
 using CC.HandbookService.Domain.Handbooks;
-using CC.HandbookService.Domain.Repositories;
-using FluentResults;
 using Mediator;
 
 namespace CC.HandbookService.Application.UseCases;
