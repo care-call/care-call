@@ -1,4 +1,7 @@
+using CC.HandbookService.Api.Binding;
+using CC.HandbookService.Api.Contracts;
 using CC.HandbookService.Application.UseCases;
+using CC.HandbookService.Domain.Errors;
 using CC.HandbookService.Domain.Handbooks;
 using Mediator;
 
@@ -7,12 +10,12 @@ namespace CC.HandbookService.Api.Endpoints;
 public static class UploadHandbookEndpoint
 {
     public static async Task<IResult> Handle(
-        string handbook,
+        HandbookTypeParameter handbookTypeParameter,
         HttpRequest request,
         IMediator mediator)
     {
-        if (!Enum.TryParse<HandbookType>(handbook, true, out var handbookType))
-            return Results.BadRequest($"Справочник «{handbook}» не существует");
+        if (handbookTypeParameter.Error is not null)
+            return Results.BadRequest(handbookTypeParameter.Error);
         
         var form = await request.ReadFormAsync();
         var handbookFile = form.Files.GetFile("handbookFile");
@@ -27,7 +30,7 @@ public static class UploadHandbookEndpoint
         
         var result = await mediator.Send(new UploadHandbook
         {
-            HandbookType = handbookType,
+            HandbookType = handbookTypeParameter.HandbookType,
             HandbookFileStream = stream
         });
         

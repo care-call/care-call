@@ -1,10 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices.JavaScript;
 using CC.HandbookService.Domain.Errors;
 using CC.HandbookService.Domain.Handbooks;
 using FluentResults;
 
-namespace CC.HandbookService.Api.Contracts;
+namespace CC.HandbookService.Api.Binding;
 
 public sealed record HandbookTypeParameter(HandbookType HandbookType) : IParsable<HandbookTypeParameter>
 {

@@ -1,9 +1,8 @@
 using CC.Common.Models;
 using CC.HandbookService.Api.Contracts;
 using CC.HandbookService.Application.UseCases;
-using CC.HandbookService.Domain.Handbooks;
 using Mediator;
-using Microsoft.AspNetCore.Mvc;
+
 
 namespace CC.HandbookService.Api.Endpoints;
 
@@ -13,12 +12,12 @@ public static class GetHandbookEndpoint
         [AsParameters] GetHandbookRequest request, 
         IMediator mediator)
     {
-        if (!Enum.TryParse<HandbookType>(request.Handbook, true, out var handbookType))
-            return Results.BadRequest($"Справочник «{request.Handbook}» не существует");
-        
+        if (request.HandbookTypeParameter.Error is not null)
+            return Results.BadRequest(request.HandbookTypeParameter.Error);
+            
         var result = await mediator.Send(new GetHandbook
         {
-            HandbookType = handbookType,
+            HandbookType = request.HandbookTypeParameter.HandbookType,
             PageInfo = new PageInfo(request.PageNumber, request.PageSize),
             SearchName = request.SearchName,
             SearchValue = request.SearchValue,

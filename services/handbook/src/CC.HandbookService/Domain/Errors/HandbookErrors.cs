@@ -1,6 +1,8 @@
+using FluentResults;
+
 namespace CC.HandbookService.Domain.Errors;
 
-public class HandbookErrors
+public static class HandbookErrors
 {
-    
+    public static Error NotExist(string handbookTitle) => new Error($"Справочник «{handbookTitle}» не существует");
 }

@@ -21,9 +21,6 @@ public static class QueryableExtensions
     
     public static IQueryable<T> ApplySearch<T>(this IQueryable<T> query, string searchBy, string searchValue)
     {
-        if (string.IsNullOrWhiteSpace(searchBy) || searchValue == null)
-            return query;
-
         var propertyInfo = typeof(T).GetProperty(searchBy);
         if (propertyInfo is null)
             throw new ArgumentException($"Property {searchBy} not found");
@@ -31,15 +28,9 @@ public static class QueryableExtensions
         var param = Expression.Parameter(typeof(T));
         var property = Expression.Property(param, propertyInfo);
         
-        object? convertedValue;
         var underlyingType  = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
-        
-        if (underlyingType == typeof(Guid))
-            convertedValue = Guid.Parse(searchValue);
-        else if (underlyingType.IsEnum)
-            convertedValue = Enum.Parse(underlyingType, searchValue);
-        else
-            convertedValue = Convert.ChangeType(searchValue, underlyingType);
+        if (!TryConvert(searchValue, underlyingType, out var convertedValue))
+            throw new ArgumentException($"Invalid value '{searchValue}' for property '{searchBy}' of type '{underlyingType.Name}'");
         
         var equal = Expression.Equal(property, Expression.Constant(convertedValue, propertyInfo.PropertyType));
         
@@ -50,9 +41,6 @@ public static class QueryableExtensions
     
     public static IQueryable<T> ApplySort<T>(this IQueryable<T> query, string sortBy, SortOrder sortOrder)
     {
-        if (string.IsNullOrWhiteSpace(sortBy))
-            return query;
-        
         var propertyInfo = typeof(T).GetProperty(sortBy);
         if (propertyInfo is null)
             throw new ArgumentException($"Property {sortBy} not found");
@@ -68,5 +56,34 @@ public static class QueryableExtensions
             return query.OrderBy(lambda);
 
         return query.OrderByDescending(lambda);
+    }
+    
+    private static bool TryConvert(string value, Type targetType, out object? result)
+    {
+        result = null;
+        
+        try
+        {
+            if (targetType == typeof(Guid))
+            {
+                if (!Guid.TryParse(value, out var guid)) return false;
+                result = guid;
+                return true;
+            }
+
+            if (targetType.IsEnum)
+            {
+                if (!Enum.TryParse(targetType, value, ignoreCase: true, out var parsed)) return false;
+                result = parsed;
+                return true;
+            }
+
+            result = Convert.ChangeType(value, targetType);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
