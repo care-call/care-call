@@ -6,9 +6,9 @@ public static class PractitionerAppointmentEndpoints
     {
         public void MapPractitionerAppointmentEndpoints()
         {
-            var v1Group = builder.MapGroup("api/v1/practitioner");
+            var v1Group = builder.MapGroup("api/v1/practitioners");
             
-            v1Group.MapGet("", GetPractitionerAppointmentsEndpoint.Handle);
+            v1Group.MapGet("{practitionerId}/appointments", GetPractitionerAppointmentsEndpoint.Handle);
         }
     }
 }

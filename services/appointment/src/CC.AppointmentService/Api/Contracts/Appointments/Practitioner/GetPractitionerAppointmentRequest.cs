@@ -1,15 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using CC.AppointmentService.Application.UseCases.Appointments.Getting;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CC.AppointmentService.Api.Contracts.Appointments.Practitioner;
 
 public sealed record GetPractitionerAppointmentRequest : IValidatableObject
 {
+    [FromRoute]
     public Guid PractitionerId { get; init; }
     public PractitionerAppointmentsDateFilter DateFilter { get; init; } = PractitionerAppointmentsDateFilter.All;
-
-    public PractitionerAppointmentsStateFilter StateFilter { get; init; } =
-        PractitionerAppointmentsStateFilter.Upcoming;
+    public PractitionerAppointmentsStateFilter StateFilter { get; init; } = PractitionerAppointmentsStateFilter.Upcoming;
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

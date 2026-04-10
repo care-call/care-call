@@ -10,11 +10,11 @@ internal sealed class PractitionerAppointmentsQuery(
     DatabaseContext db,
     TimeProvider timeProvider) : IPractitionerAppointmentsQuery
 {
-    public async Task<AppointmentListItem[]> GetAsync(GetPractitionerAppointments query, CancellationToken ct)
+    public Task<AppointmentListItem[]> GetAsync(GetPractitionerAppointments query, CancellationToken ct)
     {
         var todayStart = timeProvider.GetLocalNow().Date;
 
-        return await db.Appointments
+        return db.Appointments
             .AsNoTracking()
             .Where(x => x.PractitionerId == query.PractitionerId)
             .Where(BuildDateFilter(query.DateFilter, todayStart))
