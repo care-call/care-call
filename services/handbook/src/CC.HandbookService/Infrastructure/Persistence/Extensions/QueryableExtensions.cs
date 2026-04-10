@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CC.HandbookService.Infrastructure.Persistence.Extensions;
 
-public static class IQueryableExtensions
+public static class QueryableExtensions
 {
     public static async Task<PagedResult<T>> ToPagedResultAsync<T>(this IQueryable<T> query, PageInfo pageInfo)
     {
@@ -64,7 +64,7 @@ public static class IQueryableExtensions
             Expression.Convert(property, typeof(object)), 
             param);
         
-        if (sortOrder == SortOrder.Asc)
+        if (sortOrder == SortOrder.Ascending)
             return query.OrderBy(lambda);
 
         return query.OrderByDescending(lambda);
