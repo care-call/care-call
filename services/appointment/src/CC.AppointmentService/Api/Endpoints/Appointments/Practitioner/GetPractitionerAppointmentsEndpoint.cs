@@ -1,9 +1,8 @@
 using CC.AppointmentService.Api.Contracts.Appointments.Practitioner;
 using CC.AppointmentService.Api.Endpoints.Appointments.Mapper;
 using Mediator;
-using Microsoft.AspNetCore.Mvc;
 
-namespace CC.AppointmentService.Api.Endpoints.Appointments;
+namespace CC.AppointmentService.Api.Endpoints.Appointments.Practitioner;
 
 public static class GetPractitionerAppointmentsEndpoint
 {

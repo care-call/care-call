@@ -1,4 +1,5 @@
 using CC.AppointmentService.Api.Endpoints.Appointments;
+using CC.AppointmentService.Api.Endpoints.Appointments.Practitioner;
 using CC.AppointmentService.Api.Endpoints.Feedback;
 using CC.AppointmentService.Application;
 using CC.AppointmentService.Infrastructure;
@@ -33,7 +34,7 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", "v1");
     });
 }
-
+app.MapPractitionerAppointmentEndpoints();
 app.MapAppointmentsEndpoints();
 app.MapFeedbackEndpoints();
 
