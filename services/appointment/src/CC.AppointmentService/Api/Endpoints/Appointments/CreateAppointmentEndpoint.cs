@@ -1,8 +1,8 @@
-using CC.AppointmentService.Api.Contracts;
 using CC.AppointmentService.Api.Contracts.Appointments;
 using CC.AppointmentService.Application.UseCases.Appointments.Creation;
 using CC.Shared.Domain.TimeRanges;
-using Mediator;
+using FluentResults;
+using Wolverine;
 
 namespace CC.AppointmentService.Api.Endpoints.Appointments;
 
@@ -10,9 +10,9 @@ public static class CreateAppointmentEndpoint
 {
     public static async Task<IResult> Handle(
         CreateAppointmentRequest request,
-        IMediator mediator)
+        IMessageBus bus)
     {
-        var result = await mediator.Send(new CreateAppointment
+        var result = await bus.InvokeAsync<Result>(new CreateAppointment
         {
             PractitionerId = request.PractitionerId,
             ClientId = request.ClientId,
@@ -20,6 +20,6 @@ public static class CreateAppointmentEndpoint
             ClientSnapshot = request.ClientSnapshot,
             PractitionerSnapshot = request.PractitionerSnapshot
         });
-        return Results.Ok(result);
+        return result.IsSuccess ? Results.Created() : Results.BadRequest(result.Errors);
     }
 }

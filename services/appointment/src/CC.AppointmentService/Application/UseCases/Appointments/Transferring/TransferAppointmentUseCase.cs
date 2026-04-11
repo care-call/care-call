@@ -5,11 +5,10 @@ using CC.AppointmentService.Domain.Appointments.Rules;
 using CC.AppointmentService.Domain.Errors;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
-using Mediator;
 
 namespace CC.AppointmentService.Application.UseCases.Appointments.Transferring;
 
-public sealed record TransferAppointment : IRequest<Result>
+public sealed record TransferAppointment
 {
     public required Guid AppointmentId { get; init; }
     public required DateTimeRange TimeSlot { get; init; }
@@ -20,7 +19,6 @@ public class TransferAppointmentUseCase(
     IAppointmentsRepository appointmentsRepository,
     IUnitOfWork unitOfWork,
     TimeProvider timeProvider)
-    : IRequestHandler<TransferAppointment, Result>
 {
     public async ValueTask<Result> Handle(TransferAppointment command, CancellationToken cancellationToken)
     {
