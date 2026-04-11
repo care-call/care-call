@@ -1,5 +1,4 @@
 using CC.AppointmentService.Domain.Appointments;
-using CC.AppointmentService.Domain.Errors;
 using CC.Shared.Domain;
 using FluentResults;
 
@@ -31,9 +30,9 @@ public class Feedback(
         DateTime now,
         IReadOnlyCollection<Guid>? tags = null)
     {
-        if (appointment.Status != AppointmentStatus.Completed)
+        if (appointment.Completion is null)
             return Result.Fail(FeedbackError.AppointmentNotCompleted);
-        if (now > appointment.EndedAt!.Value.AddDays(CreationWindowDays))
+        if (now > appointment.Completion.EndedAt.AddDays(CreationWindowDays))
             return Result.Fail(FeedbackError.TooLate);
 
         var feedback = new Feedback(

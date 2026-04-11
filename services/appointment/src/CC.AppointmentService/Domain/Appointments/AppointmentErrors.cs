@@ -1,8 +1,7 @@
-using CC.AppointmentService.Domain.Appointments;
 using CC.Common.Errors;
 using FluentResults;
 
-namespace CC.AppointmentService.Domain.Errors;
+namespace CC.AppointmentService.Domain.Appointments;
 
 public static class AppointmentErrors
 {

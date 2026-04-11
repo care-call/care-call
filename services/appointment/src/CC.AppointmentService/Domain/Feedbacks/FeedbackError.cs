@@ -1,8 +1,7 @@
-﻿using CC.AppointmentService.Domain.Feedbacks;
-using CC.Common.Errors;
+﻿using CC.Common.Errors;
 using FluentResults;
 
-namespace CC.AppointmentService.Domain.Errors;
+namespace CC.AppointmentService.Domain.Feedbacks;
 
 public static class FeedbackError
 {

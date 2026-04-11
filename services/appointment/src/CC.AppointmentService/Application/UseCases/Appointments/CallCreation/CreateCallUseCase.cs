@@ -1,7 +1,7 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Application.Dependencies.YandexTelemost;
+using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
-using CC.AppointmentService.Domain.Errors;
 using FluentResults;
 
 namespace CC.AppointmentService.Application.UseCases.Appointments.CallCreation;

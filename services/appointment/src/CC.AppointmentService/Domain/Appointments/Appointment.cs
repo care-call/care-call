@@ -1,4 +1,3 @@
-using CC.AppointmentService.Domain.Errors;
 using CC.Shared.Domain;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
@@ -16,8 +15,9 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
     public required ClientSnapshot ClientSnapshot { get; init; }
     public required PractitionerSnapshot PractitionerSnapshot { get; init; }
     public Uri? CallUrl { get; set; }
-    public string? CancellationReason { get; private set; }
-    public DateTime? EndedAt { get; private set; }
+    public CancellationReason? CancellationReason { get; private set; }
+    /// <summary>Данные завершения. Null означает что запись ещё не завершена.</summary>
+    public AppointmentCompletion? Completion { get; private set; }
 
     public static Result<Appointment> Create(
         Guid clientId,
@@ -41,7 +41,7 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
         };
     }
 
-    public Result Cancel(string reason, DateTime now)
+    public Result Cancel(CancellationReason reason, DateTime now)
     {
         if (Status != AppointmentStatus.Planned)
             return Result.Fail(AppointmentErrors.InvalidStatusForCancel());
@@ -59,7 +59,7 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
             return Result.Fail(AppointmentErrors.InvalidStatusForComplete());
 
         Status = AppointmentStatus.Completed;
-        EndedAt = endedAt;
+        Completion = new AppointmentCompletion(endedAt);
         return Result.Ok();
     }
 

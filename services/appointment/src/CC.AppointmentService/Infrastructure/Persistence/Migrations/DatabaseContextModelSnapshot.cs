@@ -18,7 +18,7 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.1")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -42,10 +42,6 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uuid")
                         .HasColumnName("client_id");
-
-                    b.Property<DateTime?>("EndedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("ended_at");
 
                     b.Property<Guid>("PractitionerId")
                         .HasColumnType("uuid")
@@ -72,7 +68,16 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                                         .IsRequired();
                                 });
 
-                            b1.ToJson("client_snapshot");
+                            b1
+                                .ToJson("client_snapshot")
+                                .HasColumnType("jsonb");
+                        });
+
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "Completion", "CC.AppointmentService.Domain.Appointments.Appointment.Completion#AppointmentCompletion", b1 =>
+                        {
+                            b1.Property<DateTime>("EndedAt")
+                                .HasColumnType("timestamp without time zone")
+                                .HasColumnName("ended_at");
                         });
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "PractitionerSnapshot", "CC.AppointmentService.Domain.Appointments.Appointment.PractitionerSnapshot#PractitionerSnapshot", b1 =>
@@ -92,7 +97,9 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                                         .IsRequired();
                                 });
 
-                            b1.ToJson("practitioner_snapshot");
+                            b1
+                                .ToJson("practitioner_snapshot")
+                                .HasColumnType("jsonb");
                         });
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "TimeSlot", "CC.AppointmentService.Domain.Appointments.Appointment.TimeSlot#DateTimeRange", b1 =>
