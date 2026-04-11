@@ -8,12 +8,14 @@ namespace CC.AppointmentService.Application.UseCases.Appointments.CallCreation;
 
 public sealed record CreateCall(Guid AppointmentId);
 
-public class CreateCallUseCase(
-    IUnitOfWork unitOfWork,
-    IYandexTelemostService yandexTelemostService,
-    IAppointmentsRepository appointmentRepository)
+public static class CreateCallUseCase
 {
-    public async ValueTask<Result> Handle(CreateCall request, CancellationToken cancellationToken)
+    public static async ValueTask<Result> Handle(
+        CreateCall request,
+        IUnitOfWork unitOfWork,
+        IYandexTelemostService yandexTelemostService,
+        IAppointmentsRepository appointmentRepository,
+        CancellationToken cancellationToken)
     {
         var appointment = await appointmentRepository.GetByIdAsync(request.AppointmentId);
         if (appointment is null)

@@ -20,11 +20,11 @@ public sealed record AppointmentListItem
     public AppointmentStatus Status { get; init; }
 }
 
-public sealed class GetPractitionerAppointmentsUseCase(
-    IPractitionerAppointmentsQuery appointmentsQuery)
+public static class GetPractitionerAppointmentsUseCase
 {
-    public async ValueTask<Result<AppointmentListItem[]>> Handle(
-        GetPractitionerAppointments request, 
+    public static async ValueTask<Result<AppointmentListItem[]>> Handle(
+        GetPractitionerAppointments request,
+        IPractitionerAppointmentsQuery appointmentsQuery,
         CancellationToken cancellationToken)
     {
         return Result.Ok(await appointmentsQuery.GetAsync(request, cancellationToken));

@@ -12,18 +12,20 @@ public sealed record CancelAppointment
     public required string Reason { get; init; }
 }
 
-public class CancelAppointmentUseCase(
-    IUnitOfWork unitOfWork,
-    IAppointmentsRepository appointmentsRepository,
-    TimeProvider timeProvider)
+public static class CancelAppointmentUseCase
 {
-    public async ValueTask<Result> Handle(CancelAppointment command, CancellationToken cancellationToken)
+    public static async ValueTask<Result> Handle(
+        CancelAppointment command,
+        IUnitOfWork unitOfWork,
+        IAppointmentsRepository appointmentsRepository,
+        DateTime now,
+        CancellationToken cancellationToken)
     {
         var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId);
         if (appointment is null || appointment.ClientId != command.ClientId)
             return Result.Fail(AppointmentErrors.NotFound());
 
-        var result = appointment.Cancel(CancellationReason.From(command.Reason), timeProvider.GetUtcNow().DateTime);
+        var result = appointment.Cancel(CancellationReason.From(command.Reason), now);
         if (result.IsFailed)
             return result;
 

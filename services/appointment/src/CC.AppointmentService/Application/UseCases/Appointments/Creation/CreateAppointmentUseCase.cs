@@ -16,16 +16,16 @@ public sealed record CreateAppointment
     public required PractitionerSnapshot PractitionerSnapshot { get; init; }
 }
 
-public class CreateAppointmentUseCase(
-    IUnitOfWork unitOfWork,
-    IAppointmentsRepository appointmentsRepository,
-    IAppointmentBackgroundTasks jobbBackgroundTasks,
-    TimeProvider timeProvider)
+public static class CreateAppointmentUseCase
 {
-    public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
+    public static async ValueTask<Result> Handle(
+        CreateAppointment command,
+        IUnitOfWork unitOfWork,
+        IAppointmentsRepository appointmentsRepository,
+        IAppointmentBackgroundTasks jobBackgroundTasks,
+        DateTime now,
+        CancellationToken cancellationToken)
     {
-        var now = timeProvider.GetUtcNow().DateTime;
-
         var appointmentResult = Appointment.Create(
             command.ClientId,
             command.PractitionerId,
@@ -49,7 +49,7 @@ public class CreateAppointmentUseCase(
 
         await appointmentsRepository.AddAsync(appointment);
         await unitOfWork.SaveAsync(cancellationToken);
-        await jobbBackgroundTasks.ScheduleCallCreationAsync(appointment);
+        await jobBackgroundTasks.ScheduleCallCreationAsync(appointment);
         return Result.Ok();
     }
 }

@@ -11,18 +11,20 @@ public sealed record CompleteAppointment
     public required Guid PractitionerId { get; init; }
 }
 
-public class CompleteAppointmentUseCase(
-    IUnitOfWork unitOfWork,
-    IAppointmentsRepository appointmentsRepository,
-    TimeProvider timeProvider)
+public static class CompleteAppointmentUseCase
 {
-    public async ValueTask<Result> Handle(CompleteAppointment command, CancellationToken cancellationToken)
+    public static async ValueTask<Result> Handle(
+        CompleteAppointment command,
+        IUnitOfWork unitOfWork,
+        IAppointmentsRepository appointmentsRepository,
+        DateTime now,
+        CancellationToken cancellationToken)
     {
         var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId);
         if (appointment is null || appointment.PractitionerId != command.PractitionerId)
             return Result.Fail(AppointmentErrors.NotFound());
 
-        var result = appointment.Complete(timeProvider.GetUtcNow().UtcDateTime);
+        var result = appointment.Complete(now);
         if (result.IsFailed)
             return result;
 
