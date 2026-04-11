@@ -1,4 +1,5 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
+using CC.AppointmentService.Application.Dependencies;
 using CC.AppointmentService.Domain.Appointments.Repositories;
 using CC.AppointmentService.Domain.Feedbacks.Repositories;
 using CC.AppointmentService.Infrastructure.Persistence.Appointments;
@@ -30,6 +31,7 @@ public static class DependencyInjection
         {
             return services
                 .AddScoped<IUnitOfWork, UnitOfWork>()
+                .AddScoped<IPractitionerAppointmentsQuery, PractitionerAppointmentsQuery>()
                 .AddScoped<IAppointmentsRepository, AppointmentsRepository>()
                 .AddScoped<IFeedbackRepository, FeedbackRepository>();
         }
