@@ -11,6 +11,7 @@ public sealed record GetPractitionerAppointments : IRequest<Result<AppointmentLi
     public Guid PractitionerId { get; init; }
     public PractitionerAppointmentsDateFilter DateFilter { get; init; }
     public PractitionerAppointmentsStateFilter StateFilter { get; init; }
+    public PractitionerAppointmentOrderFilter OrderFilter { get; init; }
 }
 
 public sealed record AppointmentListItem

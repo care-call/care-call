@@ -10,6 +10,7 @@ public sealed record GetPractitionerAppointmentRequest : IValidatableObject
     public Guid PractitionerId { get; init; }
     public PractitionerAppointmentsDateFilter DateFilter { get; init; } = PractitionerAppointmentsDateFilter.All;
     public PractitionerAppointmentsStateFilter StateFilter { get; init; } = PractitionerAppointmentsStateFilter.Upcoming;
+    public PractitionerAppointmentOrderFilter OrderFilter { get; init; } = PractitionerAppointmentOrderFilter.Ascending;
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

@@ -14,12 +14,12 @@ internal sealed class PractitionerAppointmentsQuery(
     {
         var todayStart = timeProvider.GetLocalNow().Date;
 
-        return db.Appointments
+        return ApplyOrderByTimeSlot(db.Appointments
             .AsNoTracking()
             .Where(x => x.PractitionerId == query.PractitionerId)
             .Where(BuildDateFilter(query.DateFilter, todayStart))
-            .Where(BuildStateFilter(query.StateFilter))
-            .OrderBy(x => x.TimeSlot.From)
+            .Where(BuildStateFilter(query.StateFilter)),
+                query.OrderFilter)
             .Select(x => new AppointmentListItem
             {
                 StartedAt = x.TimeSlot.From,
@@ -39,13 +39,22 @@ internal sealed class PractitionerAppointmentsQuery(
 
         return filter switch
         {
-            PractitionerAppointmentsDateFilter.Today =>
-                x => x.TimeSlot.From.Date == today,
-            PractitionerAppointmentsDateFilter.Tomorrow =>
-                x => x.TimeSlot.From.Date == tomorrow,
-            PractitionerAppointmentsDateFilter.Week =>
-                x => x.TimeSlot.From.Date >= today && x.TimeSlot.From.Date <= weekEnd,
+            PractitionerAppointmentsDateFilter.Today => x => x.TimeSlot.From.Date == today,
+            PractitionerAppointmentsDateFilter.Tomorrow => x => x.TimeSlot.From.Date == tomorrow,
+            PractitionerAppointmentsDateFilter.Week => x => x.TimeSlot.From.Date >= today && x.TimeSlot.From.Date <= weekEnd,
             _ => x => true
+        };
+    }
+
+    private static IOrderedQueryable<Appointment> ApplyOrderByTimeSlot(
+        IQueryable<Appointment> query,
+        PractitionerAppointmentOrderFilter filter
+    )
+    {
+        return filter switch
+        {
+            PractitionerAppointmentOrderFilter.Descending => query.OrderByDescending(x => x.TimeSlot.From),
+            _ => query.OrderBy(x => x.TimeSlot.From)
         };
     }
 
