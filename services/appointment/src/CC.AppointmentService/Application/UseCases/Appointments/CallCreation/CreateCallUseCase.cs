@@ -1,6 +1,7 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Application.Dependencies.YandexTelemost;
 using CC.AppointmentService.Domain.Appointments.Repositories;
+using CC.AppointmentService.Domain.Errors;
 using FluentResults;
 
 namespace CC.AppointmentService.Application.UseCases.Appointments.CallCreation;
@@ -16,7 +17,7 @@ public class CreateCallUseCase(
     {
         var appointment = await appointmentRepository.GetByIdAsync(request.AppointmentId);
         if (appointment is null)
-            return Result.Fail("Такой записи нет");
+            return Result.Fail(AppointmentErrors.NotFound());
  
         var response = await yandexTelemostService.CreateCallLinkAsync(cancellationToken);
         if (response is null)

@@ -1,4 +1,4 @@
-﻿using CC.AppointmentService.Domain.Feedbacks.Rules;
+﻿using CC.AppointmentService.Domain.Feedbacks;
 using CC.Common.Errors;
 using FluentResults;
 
@@ -7,7 +7,7 @@ namespace CC.AppointmentService.Domain.Errors;
 public static class FeedbackError
 {
     public static Error TooLate =>
-        new Error($"Вы можете оставить отзыв только в течение {FeedbackCreationRules.CreationWindowDays} суток")
+        new Error($"Вы можете оставить отзыв только в течение {Feedback.CreationWindowDays} суток")
             .WithErrorCode("F101");
 
     public static Error AppointmentNotCompleted =>

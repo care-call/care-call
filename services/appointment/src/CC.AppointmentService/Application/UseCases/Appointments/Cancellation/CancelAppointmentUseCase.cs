@@ -1,7 +1,5 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
-using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
-using CC.AppointmentService.Domain.Appointments.Rules;
 using CC.AppointmentService.Domain.Errors;
 using FluentResults;
 
@@ -25,13 +23,9 @@ public class CancelAppointmentUseCase(
         if (appointment is null || appointment.ClientId != command.ClientId)
             return Result.Fail(AppointmentErrors.NotFound());
 
-        if (appointment.Status != AppointmentStatus.Planned)
-            return Result.Fail(AppointmentErrors.InvalidStatusForCancel());
-
-        if (!AppointmentsTimeRules.IsCancellationAllowed(appointment, timeProvider.GetUtcNow().DateTime))
-            return Result.Fail(AppointmentErrors.CancellationDeadlineExceeded);
-
-        appointment.Cancel(command.Reason);
+        var result = appointment.Cancel(command.Reason, timeProvider.GetUtcNow().DateTime);
+        if (result.IsFailed)
+            return result;
 
         await unitOfWork.SaveAsync(cancellationToken);
         return Result.Ok();

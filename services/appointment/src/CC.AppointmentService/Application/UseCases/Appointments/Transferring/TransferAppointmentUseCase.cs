@@ -1,7 +1,5 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
-using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
-using CC.AppointmentService.Domain.Appointments.Rules;
 using CC.AppointmentService.Domain.Errors;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
@@ -26,25 +24,17 @@ public class TransferAppointmentUseCase(
         if (appointment is null || appointment.ClientId != command.ClientId)
             return Result.Fail(AppointmentErrors.NotFound());
 
-        if (appointment.Status != AppointmentStatus.Planned)
-            return Result.Fail(AppointmentErrors.InvalidStatusForTransfer());
+        var result = appointment.Transfer(command.TimeSlot, timeProvider.GetUtcNow().DateTime);
+        if (result.IsFailed)
+            return result;
 
-        var currentTime = timeProvider.GetUtcNow().DateTime;
-
-        if (!AppointmentsTimeRules.IsWithinAllowedShift(appointment, command.TimeSlot.From))
-            return Result.Fail(AppointmentErrors.NotWithinAllowedShift);
-
-        appointment.TimeSlot = command.TimeSlot;
-        
-        if (AppointmentsTimeRules.IsTransferAllowed(appointment, currentTime))
-            return Result.Fail(AppointmentErrors.TooSoon);
-
+        // Проверка пересечений после применения нового слота,
+        // но до сохранения — откат происходит неявно через отказ от SaveAsync.
         var hasIntersections = await appointmentsRepository.HasInterceptsAsync(appointment);
         if (hasIntersections)
             return Result.Fail(AppointmentErrors.HasIntercepts());
 
         await unitOfWork.SaveAsync(cancellationToken);
-
         return Result.Ok();
     }
 }

@@ -2,7 +2,6 @@ using CC.AppointmentService.Application.Dependencies.BackgroundJobs;
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
-using CC.AppointmentService.Domain.Appointments.Rules;
 using CC.AppointmentService.Domain.Errors;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
@@ -26,21 +25,23 @@ public class CreateAppointmentUseCase(
 {
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
     {
-        var appointment = new Appointment(Guid.CreateVersion7())
-        {
-            ClientId = command.ClientId,
-            PractitionerId = command.PractitionerId,
-            TimeSlot = command.TimeSlot,
-            Status = AppointmentStatus.Planned,
-            ClientSnapshot = command.ClientSnapshot,
-            PractitionerSnapshot = command.PractitionerSnapshot
-        };
+        var now = timeProvider.GetUtcNow().DateTime;
 
-        if (AppointmentsTimeRules.IsCreationAllowed(appointment, timeProvider.GetUtcNow().DateTime))
-            return Result.Fail(AppointmentErrors.TooSoon);
+        var appointmentResult = Appointment.Create(
+            command.ClientId,
+            command.PractitionerId,
+            command.TimeSlot,
+            command.ClientSnapshot,
+            command.PractitionerSnapshot,
+            now);
+
+        if (appointmentResult.IsFailed)
+            return appointmentResult.ToResult();
+
+        var appointment = appointmentResult.Value;
 
         var lastAppointment = await appointmentsRepository.GetLastAppointmentAsync(command.ClientId);
-        if (lastAppointment != null && AppointmentsTimeRules.HasInsufficientBreak(lastAppointment, appointment))
+        if (lastAppointment is not null && appointment.HasInsufficientBreakAfter(lastAppointment))
             return Result.Fail(AppointmentErrors.MinBreakBetweenAppointments);
 
         var hasIntercept = await appointmentsRepository.HasInterceptsAsync(appointment);

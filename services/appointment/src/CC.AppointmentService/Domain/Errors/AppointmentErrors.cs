@@ -1,5 +1,4 @@
-using CC.AppointmentService.Api.Endpoints.Appointments;
-using CC.AppointmentService.Domain.Appointments.Rules;
+using CC.AppointmentService.Domain.Appointments;
 using CC.Common.Errors;
 using FluentResults;
 
@@ -7,23 +6,24 @@ namespace CC.AppointmentService.Domain.Errors;
 
 public static class AppointmentErrors
 {
+    private static readonly AppointmentPolicy Policy = AppointmentPolicy.Default;
+
     // A1xx - Ошибки валидации времени
     public static Error TooSoon =>
-        new Error($"Время между созданием записи и началом должно" +
-                  $" быть не меньше {AppointmentsTimeRules.MinHoursBeforeStart} часа(ов)")
+        new Error($"До начала записи должно оставаться не менее {Policy.MinLeadTime.TotalHours} часа(ов)")
             .WithErrorCode("A101");
 
     public static Error NotWithinAllowedShift =>
-        new Error($"Максимальная дальность переноса записи не больше " +
-                  $"{AppointmentsTimeRules.MaxTransferringShiftDays} дн. от текущей даты").WithErrorCode("A102");
+        new Error($"Максимальная дальность переноса — {Policy.MaxTransferShift.TotalDays} дн.")
+            .WithErrorCode("A102");
 
     public static Error MinBreakBetweenAppointments =>
-        new Error($"Минимальный интервал между записями — " +
-                  $"{AppointmentsTimeRules.MinBreakBetweenAppointmentsMinutes} минут").WithErrorCode("A103");
+        new Error($"Минимальный интервал между записями — {Policy.MinBreakBetweenAppointments.TotalMinutes} минут")
+            .WithErrorCode("A103");
 
     public static Error CancellationDeadlineExceeded =>
-        new Error($"Минимальный интервал для отмены записи — " +
-                  $"{AppointmentsTimeRules.MinHoursBeforeCancellation} часа(ов)").WithErrorCode("A104");
+        new Error($"Для отмены записи должно оставаться не менее {Policy.MinCancellationNotice.TotalHours} часа(ов)")
+            .WithErrorCode("A104");
 
     // A2xx - Ошибки пересечений и состояния
     public static Error HasIntercepts() =>
