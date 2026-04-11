@@ -1,11 +1,10 @@
 ﻿using CC.PractitionerService.Application.Dependencies;
 using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 using FluentResults;
-using Mediator;
 
 namespace CC.PractitionerService.Application.UseCases.Practitioners;
 
-public sealed record AvailablePractitionerFilter : IRequest<Result<PractitionerDto[]>>
+public sealed record AvailablePractitionerFilter
 {
     public DateOnly? TargetDate { get; init; }
     public IReadOnlyCollection<int>? AgeGroupIds { get; init; }
@@ -16,7 +15,7 @@ public sealed record AvailablePractitionerFilter : IRequest<Result<PractitionerD
     public int PageNumber { get; init; }
 }
 
-public sealed class MatchPractitionersUseCase(IAvailablePractitionersQuery availablePractitionersQuery) : IRequestHandler<AvailablePractitionerFilter, Result<PractitionerDto[]>>
+public sealed class MatchPractitionersUseCase(IAvailablePractitionersQuery availablePractitionersQuery)
 {
     public async ValueTask<Result<PractitionerDto[]>> Handle(AvailablePractitionerFilter filter, CancellationToken ct)
     {

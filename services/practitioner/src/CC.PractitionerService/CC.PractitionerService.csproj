@@ -11,11 +11,6 @@
     <ItemGroup>
         <PackageReference Include="EFCore.NamingConventions" />
         <PackageReference Include="FluentResults" />
-        <PackageReference Include="Mediator.Abstractions" />
-        <PackageReference Include="Mediator.SourceGenerator">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
           <PrivateAssets>all</PrivateAssets>
@@ -24,6 +19,7 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
         <PackageReference Include="Riok.Mapperly" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+        <PackageReference Include="WolverineFx" />
     </ItemGroup>
 
     <ItemGroup>

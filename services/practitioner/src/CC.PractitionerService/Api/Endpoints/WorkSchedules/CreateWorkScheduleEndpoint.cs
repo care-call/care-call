@@ -2,7 +2,8 @@ using CC.PractitionerService.Api.Contracts;
 using CC.PractitionerService.Application.UseCases.WorkSchedules.Creation;
 using CC.PractitionerService.Domain.WorkSchedules;
 using CC.Shared.Domain.TimeRanges;
-using Mediator;
+using FluentResults;
+using Wolverine;
 
 namespace CC.PractitionerService.Api.Endpoints.WorkSchedules;
 
@@ -11,9 +12,9 @@ public static class CreateWorkScheduleEndpoint
     public static async Task<IResult> Handle(
         CreateWorkScheduleRequest request,
         Guid practitionerId,
-        IMediator mediator)
+        IMessageBus bus)
     {
-        var result = await mediator.Send(new CreateWorkSchedule
+        var result = await bus.InvokeAsync<Result>(new CreateWorkSchedule
         {
             PractitionerId = practitionerId,
             TimeZoneId = request.TimeZoneId,

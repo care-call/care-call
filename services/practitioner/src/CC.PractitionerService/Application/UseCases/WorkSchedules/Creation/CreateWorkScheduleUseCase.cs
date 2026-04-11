@@ -2,11 +2,10 @@ using CC.PractitionerService.Application.Dependencies.UnitOfWork;
 using CC.PractitionerService.Domain.WorkSchedules;
 using CC.PractitionerService.Domain.WorkSchedules.Repositories;
 using FluentResults;
-using Mediator;
 
 namespace CC.PractitionerService.Application.UseCases.WorkSchedules.Creation;
 
-public record CreateWorkSchedule : IRequest<Result>
+public record CreateWorkSchedule
 {
     public required Guid PractitionerId { get; init; }
     public required WorkScheduleValidityPeriod ValidityPeriod { get; init; }
@@ -18,7 +17,7 @@ public record CreateWorkSchedule : IRequest<Result>
 public class CreateWorkScheduleUseCase(
     TimeProvider timeProvider,
     IUnitOfWork unitOfWork,
-    IWorkScheduleRepository workScheduleRepository) : IRequestHandler<CreateWorkSchedule, Result>
+    IWorkScheduleRepository workScheduleRepository)
 {
     public async ValueTask<Result> Handle(CreateWorkSchedule command, CancellationToken cancellationToken)
     {
