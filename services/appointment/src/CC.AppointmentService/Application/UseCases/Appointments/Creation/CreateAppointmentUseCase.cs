@@ -6,11 +6,10 @@ using CC.AppointmentService.Domain.Appointments.Rules;
 using CC.AppointmentService.Domain.Errors;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
-using Mediator;
 
 namespace CC.AppointmentService.Application.UseCases.Appointments.Creation;
 
-public sealed record CreateAppointment : IRequest<Result>
+public sealed record CreateAppointment
 {
     public required Guid ClientId { get; init; }
     public required Guid PractitionerId { get; init; }
@@ -23,7 +22,7 @@ public class CreateAppointmentUseCase(
     IUnitOfWork unitOfWork,
     IAppointmentsRepository appointmentsRepository,
     IAppointmentBackgroundTasks jobbBackgroundTasks,
-    TimeProvider timeProvider) : IRequestHandler<CreateAppointment, Result>
+    TimeProvider timeProvider)
 {
     public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
     {

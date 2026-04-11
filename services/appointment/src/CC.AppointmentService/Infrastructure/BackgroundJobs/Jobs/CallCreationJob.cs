@@ -1,11 +1,12 @@
 using CC.AppointmentService.Application.UseCases.Appointments.CallCreation;
-using Mediator;
+using FluentResults;
+using Wolverine;
 
 namespace CC.AppointmentService.Infrastructure.BackgroundJobs.Jobs;
 
 public class CallCreationJob(
     ILogger<CallCreationJob> logger,
-    IMediator mediator)
+    IMessageBus bus)
 {
     public async Task Execute(Guid appointmentId, CancellationToken ct)
     {
@@ -18,15 +19,13 @@ public class CallCreationJob(
         {
             logger.LogInformation("Запуск джобы создания звонка в яндекс телемосте {appointmentId}",
                 appointmentId);
-            var result = await mediator.Send(new CreateCall(appointmentId), ct);
-            if(result.IsFailed)
+            var result = await bus.InvokeAsync<Result>(new CreateCall(appointmentId), ct);
+            if (result.IsFailed)
                 logger.LogError("Ошибка создания звонка {errors}", result.Errors);
         }
-        
         catch (Exception ex)
         {
             logger.LogError(ex, "Критическая ошибка");
-            
             throw;
         }
     }

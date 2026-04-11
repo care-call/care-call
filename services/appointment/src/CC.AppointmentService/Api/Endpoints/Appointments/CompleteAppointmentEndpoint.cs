@@ -1,21 +1,18 @@
 using CC.AppointmentService.Application.UseCases.Appointments.Complete;
-using Mediator;
+using FluentResults;
+using Wolverine;
 
 namespace CC.AppointmentService.Api.Endpoints.Appointments;
 
-public class CompleteAppointmentEndpoint
+public static class CompleteAppointmentEndpoint
 {
-    public static async Task<IResult> Handle(Guid id, Guid practitionerId, IMediator mediator)
+    public static async Task<IResult> Handle(Guid id, Guid practitionerId, IMessageBus bus)
     {
-        var result = new CompleteAppointment
+        var result = await bus.InvokeAsync<Result>(new CompleteAppointment
         {
             AppointmentId = id,
             PractitionerId = practitionerId
-        };
-        var response = await mediator.Send(result);
-        if (response.IsSuccess)
-            return Results.Ok();
-        
-        return Results.BadRequest(response.Errors);
+        });
+        return result.IsSuccess ? Results.Ok() : Results.BadRequest(result.Errors);
     }
 }

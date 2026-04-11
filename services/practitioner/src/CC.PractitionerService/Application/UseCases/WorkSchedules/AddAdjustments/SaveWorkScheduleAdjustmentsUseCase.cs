@@ -5,11 +5,10 @@ using CC.PractitionerService.Domain.WorkSchedules.Extensions;
 using CC.PractitionerService.Domain.WorkSchedules.Repositories;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
-using Mediator;
 
 namespace CC.PractitionerService.Application.UseCases.WorkSchedules.AddAdjustments;
 
-public record SaveWorkScheduleAdjustments : IRequest<Result>
+public record SaveWorkScheduleAdjustments
 {
     public required IReadOnlyCollection<CreateAdjustmentDto> NewAdjustments { get; init; }
     public required IReadOnlyCollection<Guid> RemovedAdjustments { get; init; }
@@ -20,8 +19,7 @@ public record SaveWorkScheduleAdjustments : IRequest<Result>
 public sealed class SaveWorkScheduleAdjustmentsUseCase(
     IAdjustmentRepository adjustmentRepository,
     IUnitOfWork unitOfWork,
-    IWorkScheduleRepository workScheduleRepository
-) : IRequestHandler<SaveWorkScheduleAdjustments, Result>
+    IWorkScheduleRepository workScheduleRepository)
 {
     public async ValueTask<Result> Handle(SaveWorkScheduleAdjustments command, CancellationToken cancellationToken)
     {

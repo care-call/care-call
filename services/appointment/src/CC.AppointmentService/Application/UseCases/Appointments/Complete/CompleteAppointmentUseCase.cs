@@ -3,11 +3,10 @@ using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
 using CC.AppointmentService.Domain.Errors;
 using FluentResults;
-using Mediator;
 
 namespace CC.AppointmentService.Application.UseCases.Appointments.Complete;
 
-public sealed record CompleteAppointment : IRequest<Result>
+public sealed record CompleteAppointment
 {
     public required Guid AppointmentId { get; init; }
     public required Guid PractitionerId { get; init; }
@@ -16,7 +15,7 @@ public sealed record CompleteAppointment : IRequest<Result>
 public class CompleteAppointmentUseCase(
     IUnitOfWork unitOfWork,
     IAppointmentsRepository appointmentsRepository,
-    TimeProvider timeProvider) : IRequestHandler<CompleteAppointment, Result>
+    TimeProvider timeProvider)
 {
     public async ValueTask<Result> Handle(CompleteAppointment command, CancellationToken cancellationToken)
     {

@@ -1,5 +1,4 @@
-﻿using CC.PractitionerService.Api.Mappers;
-using CC.PractitionerService.Application.Dependencies;
+﻿using CC.PractitionerService.Application.Dependencies;
 using CC.PractitionerService.Application.UseCases.Practitioners;
 using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 using CC.PractitionerService.Domain.Practitioners;

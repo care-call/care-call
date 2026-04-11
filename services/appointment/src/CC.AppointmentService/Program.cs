@@ -7,6 +7,7 @@ using CC.AppointmentService.Infrastructure.OpenApi;
 using CC.Common.Json;
 using CC.Common.Logging;
 using Hangfire;
+using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,11 @@ builder.Logging.ClearProviders();
 builder.Services.AddLogger(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Host.UseWolverine(opts =>
+{
+    opts.Discovery.CustomizeHandlerDiscovery(t => t.Includes.WithNameSuffix("UseCase"));
+});
 
 var app = builder.Build();
 

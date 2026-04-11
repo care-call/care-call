@@ -1,6 +1,8 @@
 ﻿using CC.PractitionerService.Api.Contracts.Practitioners;
 using CC.PractitionerService.Application.UseCases.Practitioners;
-using Mediator;
+using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
+using FluentResults;
+using Wolverine;
 
 namespace CC.PractitionerService.Api.Endpoints.Practitioners;
 
@@ -8,9 +10,9 @@ public static class MatchPractitionersEndpoint
 {
     public static async Task<IResult> Handle(
         MatchPractitionersRequest request,
-        IMediator mediator)
+        IMessageBus bus)
     {
-        var result = await mediator.Send(new AvailablePractitionerFilter()
+        var result = await bus.InvokeAsync<Result<PractitionerDto[]>>(new AvailablePractitionerFilter()
         {
             TargetDate = request.TargetDate,
             AgeGroupIds = request.AgeGroupIds,

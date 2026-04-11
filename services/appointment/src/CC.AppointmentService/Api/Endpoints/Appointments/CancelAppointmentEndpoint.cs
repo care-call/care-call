@@ -1,7 +1,7 @@
-using CC.AppointmentService.Api.Contracts;
 using CC.AppointmentService.Api.Contracts.Appointments;
 using CC.AppointmentService.Application.UseCases.Appointments.Cancellation;
-using Mediator;
+using FluentResults;
+using Wolverine;
 
 namespace CC.AppointmentService.Api.Endpoints.Appointments;
 
@@ -9,14 +9,14 @@ public static class CancelAppointmentEndpoint
 {
     public static async Task<IResult> Handle(
         CancelAppointmentRequest request,
-        IMediator mediator)
+        IMessageBus bus)
     {
-        var result = await mediator.Send(new CancelAppointment()
+        var result = await bus.InvokeAsync<Result>(new CancelAppointment
         {
-           AppointmentId =  request.AppointmentId,
-           ClientId = request.ClientId,
-           Reason =  request.Reason,
+            AppointmentId = request.AppointmentId,
+            ClientId = request.ClientId,
+            Reason = request.Reason,
         });
-        return Results.Ok(result);
+        return result.IsSuccess ? Results.Ok() : Results.BadRequest(result.Errors);
     }
 }

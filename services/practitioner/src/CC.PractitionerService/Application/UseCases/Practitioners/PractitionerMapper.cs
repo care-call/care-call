@@ -2,7 +2,7 @@
 using CC.PractitionerService.Domain.Practitioners;
 using Riok.Mapperly.Abstractions;
 
-namespace CC.PractitionerService.Api.Mappers;
+namespace CC.PractitionerService.Application.UseCases.Practitioners;
 
 [Mapper]
 public partial class PractitionerMapper

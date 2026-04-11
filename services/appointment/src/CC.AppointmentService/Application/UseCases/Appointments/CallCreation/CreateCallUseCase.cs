@@ -2,16 +2,15 @@ using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Application.Dependencies.YandexTelemost;
 using CC.AppointmentService.Domain.Appointments.Repositories;
 using FluentResults;
-using Mediator;
 
 namespace CC.AppointmentService.Application.UseCases.Appointments.CallCreation;
 
-public sealed record CreateCall(Guid AppointmentId) : IRequest<Result>;
+public sealed record CreateCall(Guid AppointmentId);
 
 public class CreateCallUseCase(
-    IUnitOfWork unitOfWork, 
+    IUnitOfWork unitOfWork,
     IYandexTelemostService yandexTelemostService,
-    IAppointmentsRepository appointmentRepository) : IRequestHandler<CreateCall, Result>
+    IAppointmentsRepository appointmentRepository)
 {
     public async ValueTask<Result> Handle(CreateCall request, CancellationToken cancellationToken)
     {

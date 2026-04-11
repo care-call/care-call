@@ -1,6 +1,8 @@
 using CC.AppointmentService.Api.Contracts.Appointments.Practitioner;
 using CC.AppointmentService.Api.Endpoints.Appointments.Mapper;
-using Mediator;
+using CC.AppointmentService.Application.UseCases.Appointments.Getting;
+using FluentResults;
+using Wolverine;
 
 namespace CC.AppointmentService.Api.Endpoints.Appointments.Practitioner;
 
@@ -8,10 +10,11 @@ public static class GetPractitionerAppointmentsEndpoint
 {
     public static async Task<IResult> Handle(
         [AsParameters] GetPractitionerAppointmentRequest request,
-        IMediator mediator,
+        IMessageBus bus,
         CancellationToken ct)
     {
-        var result = await mediator.Send(GetPractitionerAppointmentsMapper.ToUseCase(request), ct);
+        var result = await bus.InvokeAsync<Result<AppointmentListItem[]>>(
+            GetPractitionerAppointmentsMapper.ToUseCase(request), ct);
 
         return result.IsSuccess
             ? Results.Ok(result.Value)

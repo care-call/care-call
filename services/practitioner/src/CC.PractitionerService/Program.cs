@@ -5,6 +5,7 @@ using CC.PractitionerService.Api.Endpoints.WorkSchedules;
 using CC.PractitionerService.Application;
 using CC.PractitionerService.Infrastructure;
 using CC.PractitionerService.Infrastructure.OpenApi;
+using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,12 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Logging.ClearProviders();
 builder.Services.AddLogger(builder.Configuration);
+
+builder.Host.UseWolverine(opts =>
+{
+    opts.Discovery.CustomizeHandlerDiscovery(t => t.Includes.WithNameSuffix("UseCase"));
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
