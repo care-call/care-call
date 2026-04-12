@@ -1,10 +1,8 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
-using CC.AppointmentService.Domain.Errors;
 using CC.AppointmentService.Domain.Feedbacks;
 using CC.AppointmentService.Domain.Feedbacks.Repositories;
-using CC.AppointmentService.Domain.Feedbacks.Rules;
 using FluentResults;
 
 namespace CC.AppointmentService.Application.UseCases.Feedbacks.Creation;
@@ -19,45 +17,37 @@ public sealed record CreateFeedback
     public IReadOnlyCollection<Guid>? Tags { get; init; }
 }
 
-public sealed class CreateFeedbackUseCase(
-    IUnitOfWork unitOfWork,
-    IAppointmentsRepository appointmentsRepository,
-    IFeedbackRepository feedbackRepository,
-    TimeProvider timeProvider)
+public static class CreateFeedbackUseCase
 {
-    public async ValueTask<Result> Handle(CreateFeedback command, CancellationToken cancellationToken)
+    public static async ValueTask<Result> Handle(
+        CreateFeedback command,
+        IUnitOfWork unitOfWork,
+        IAppointmentsRepository appointmentsRepository,
+        IFeedbackRepository feedbackRepository,
+        DateTime now,
+        CancellationToken cancellationToken)
     {
-
         var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId);
-        if (appointment is null || appointment.ClientId != command.ClientId) 
+        if (appointment is null || appointment.ClientId != command.ClientId)
             return Result.Fail(AppointmentErrors.NotFound());
-
-        if (appointment.Status != AppointmentStatus.Completed)
-            return Result.Fail(FeedbackError.AppointmentNotCompleted);
 
         var feedbackExists = await feedbackRepository.ExistsByAppointmentIdAsync(command.AppointmentId);
         if (feedbackExists)
             return Result.Fail(FeedbackError.AlreadyExists);
 
-        var nowUtc = timeProvider.GetUtcNow().UtcDateTime;
-        if (!FeedbackCreationRules.IsWithinCreationWindow(appointment, nowUtc))
-            return Result.Fail(FeedbackError.TooLate);
+        var feedbackResult = Feedback.Create(
+            appointment,
+            ComfortScore.From(command.ComfortScore),
+            ProfessionalismScore.From(command.ProfessionalismScore),
+            EmpathyScore.From(command.EmpathyScore),
+            now,
+            command.Tags);
 
-        var feedback = new Feedback(
-            Guid.CreateVersion7(),
-            appointmentId: command.AppointmentId,
-            comfortScore: ComfortScore.From(command.ComfortScore),
-            professionalismScore: ProfessionalismScore.From(command.ProfessionalismScore),
-            empathyScore: EmpathyScore.From(command.EmpathyScore),
-            nowUtc
-        );
-        
-        if(command.Tags is not null)
-            feedback.AddTags(command.Tags);
-        
-        await feedbackRepository.AddAsync(feedback);
+        if (feedbackResult.IsFailed)
+            return feedbackResult.ToResult();
+
+        await feedbackRepository.AddAsync(feedbackResult.Value);
         await unitOfWork.SaveAsync(cancellationToken);
-
         return Result.Ok();
     }
 }
