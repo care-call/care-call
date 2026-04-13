@@ -2,15 +2,12 @@ using CC.AppointmentService.Application.Dependencies.BackgroundJobs;
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Domain.Appointments.Repositories;
-using CC.AppointmentService.Domain.Appointments.Rules;
-using CC.AppointmentService.Domain.Errors;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
-using Mediator;
 
 namespace CC.AppointmentService.Application.UseCases.Appointments.Creation;
 
-public sealed record CreateAppointment : IRequest<Result>
+public sealed record CreateAppointment
 {
     public required Guid ClientId { get; init; }
     public required Guid PractitionerId { get; init; }
@@ -19,29 +16,31 @@ public sealed record CreateAppointment : IRequest<Result>
     public required PractitionerSnapshot PractitionerSnapshot { get; init; }
 }
 
-public class CreateAppointmentUseCase(
-    IUnitOfWork unitOfWork,
-    IAppointmentsRepository appointmentsRepository,
-    IAppointmentBackgroundTasks jobbBackgroundTasks,
-    TimeProvider timeProvider) : IRequestHandler<CreateAppointment, Result>
+public static class CreateAppointmentUseCase
 {
-    public async ValueTask<Result> Handle(CreateAppointment command, CancellationToken cancellationToken)
+    public static async ValueTask<Result> Handle(
+        CreateAppointment command,
+        IUnitOfWork unitOfWork,
+        IAppointmentsRepository appointmentsRepository,
+        IAppointmentBackgroundTasks jobBackgroundTasks,
+        DateTime now,
+        CancellationToken cancellationToken)
     {
-        var appointment = new Appointment(Guid.CreateVersion7())
-        {
-            ClientId = command.ClientId,
-            PractitionerId = command.PractitionerId,
-            TimeSlot = command.TimeSlot,
-            Status = AppointmentStatus.Planned,
-            ClientSnapshot = command.ClientSnapshot,
-            PractitionerSnapshot = command.PractitionerSnapshot
-        };
+        var appointmentResult = Appointment.Create(
+            command.ClientId,
+            command.PractitionerId,
+            command.TimeSlot,
+            command.ClientSnapshot,
+            command.PractitionerSnapshot,
+            now);
 
-        if (AppointmentsTimeRules.IsCreationAllowed(appointment, timeProvider.GetUtcNow().DateTime))
-            return Result.Fail(AppointmentErrors.TooSoon);
+        if (appointmentResult.IsFailed)
+            return appointmentResult.ToResult();
+
+        var appointment = appointmentResult.Value;
 
         var lastAppointment = await appointmentsRepository.GetLastAppointmentAsync(command.ClientId);
-        if (lastAppointment != null && AppointmentsTimeRules.HasInsufficientBreak(lastAppointment, appointment))
+        if (lastAppointment is not null && appointment.HasInsufficientBreakAfter(lastAppointment))
             return Result.Fail(AppointmentErrors.MinBreakBetweenAppointments);
 
         var hasIntercept = await appointmentsRepository.HasInterceptsAsync(appointment);
@@ -50,7 +49,7 @@ public class CreateAppointmentUseCase(
 
         await appointmentsRepository.AddAsync(appointment);
         await unitOfWork.SaveAsync(cancellationToken);
-        await jobbBackgroundTasks.ScheduleCallCreationAsync(appointment);
+        await jobBackgroundTasks.ScheduleCallCreationAsync(appointment);
         return Result.Ok();
     }
 }

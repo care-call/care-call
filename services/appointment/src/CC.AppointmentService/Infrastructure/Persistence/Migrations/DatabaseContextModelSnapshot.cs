@@ -18,7 +18,7 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.1")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -42,10 +42,6 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uuid")
                         .HasColumnName("client_id");
-
-                    b.Property<DateTime?>("EndedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("ended_at");
 
                     b.Property<Guid>("PractitionerId")
                         .HasColumnType("uuid")
@@ -72,7 +68,16 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                                         .IsRequired();
                                 });
 
-                            b1.ToJson("client_snapshot");
+                            b1
+                                .ToJson("client_snapshot")
+                                .HasColumnType("jsonb");
+                        });
+
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "Completion", "CC.AppointmentService.Domain.Appointments.Appointment.Completion#AppointmentCompletion", b1 =>
+                        {
+                            b1.Property<DateTime>("EndedAt")
+                                .HasColumnType("timestamp without time zone")
+                                .HasColumnName("ended_at");
                         });
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "PractitionerSnapshot", "CC.AppointmentService.Domain.Appointments.Appointment.PractitionerSnapshot#PractitionerSnapshot", b1 =>
@@ -92,7 +97,9 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                                         .IsRequired();
                                 });
 
-                            b1.ToJson("practitioner_snapshot");
+                            b1
+                                .ToJson("practitioner_snapshot")
+                                .HasColumnType("jsonb");
                         });
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "TimeSlot", "CC.AppointmentService.Domain.Appointments.Appointment.TimeSlot#DateTimeRange", b1 =>
@@ -112,6 +119,48 @@ namespace CC.AppointmentService.Infrastructure.Persistence.Migrations
                         .HasName("pk_appointments");
 
                     b.ToTable("appointments", (string)null);
+                });
+
+            modelBuilder.Entity("CC.AppointmentService.Domain.Feedbacks.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AppointmentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("appointment_id");
+
+                    b.Property<byte>("ComfortScore")
+                        .HasColumnType("smallint")
+                        .HasColumnName("comfort_score");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<byte>("EmpathyScore")
+                        .HasColumnType("smallint")
+                        .HasColumnName("empathy_score");
+
+                    b.Property<int>("ModerationStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("moderation_status");
+
+                    b.Property<byte>("ProfessionalismScore")
+                        .HasColumnType("smallint")
+                        .HasColumnName("professionalism_score");
+
+                    b.PrimitiveCollection<Guid[]>("Tags")
+                        .IsRequired()
+                        .HasColumnType("uuid[]")
+                        .HasColumnName("tags");
+
+                    b.HasKey("Id")
+                        .HasName("pk_feedbacks");
+
+                    b.ToTable("feedbacks", (string)null);
                 });
 #pragma warning restore 612, 618
         }

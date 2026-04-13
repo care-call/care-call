@@ -10,17 +10,13 @@
     <ItemGroup>
         <PackageReference Include="CsvHelper" />
         <PackageReference Include="EFCore.NamingConventions" />
-        <PackageReference Include="Mediator.Abstractions" />
-        <PackageReference Include="Mediator.SourceGenerator">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools"/>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="WolverineFx" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,6 +27,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\CC.Common\CC.Common.csproj" />
+      <ProjectReference Include="..\..\..\common\CC.Analyzer\CC.Analyzer\CC.Analyzer.csproj"
+                        OutputItemType="Analyzer"
+                        ReferenceOutputAssembly="false" />
     </ItemGroup>
-
 </Project>

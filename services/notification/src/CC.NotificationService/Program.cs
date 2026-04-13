@@ -4,6 +4,7 @@ using CC.NotificationService.Api.Endpoints.WebNotifications;
 using CC.NotificationService.Application;
 using CC.NotificationService.Infrastructure;
 using CC.NotificationService.Infrastructure.OpenApi;
+using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,11 @@ builder.Logging.ClearProviders();
 builder.Services.AddLogger(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Host.UseWolverine(opts =>
+{
+    opts.Discovery.CustomizeHandlerDiscovery(t => t.Includes.WithNameSuffix("UseCase"));
+});
 
 var app = builder.Build();
 

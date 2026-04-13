@@ -12,11 +12,6 @@
         <PackageReference Include="FluentResults"/>
         <PackageReference Include="Hangfire" />
         <PackageReference Include="Hangfire.PostgreSql" />
-        <PackageReference Include="Mediator.Abstractions"/>
-        <PackageReference Include="Mediator.SourceGenerator">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
             <PrivateAssets>all</PrivateAssets>
@@ -24,7 +19,11 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Riok.Mapperly" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+        <PackageReference Include="Vogen" />
+        <PackageReference Include="Vogen.Serialization" />
+        <PackageReference Include="WolverineFx" />
     </ItemGroup>
 
     <ItemGroup>
@@ -40,6 +39,9 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\CC.Common\CC.Common.csproj" />
       <ProjectReference Include="..\..\..\common\CC.Shared.Domain\CC.Shared.Domain.csproj" />
+      <ProjectReference Include="..\..\..\common\CC.Analyzer\CC.Analyzer\CC.Analyzer.csproj"
+                        OutputItemType="Analyzer"
+                        ReferenceOutputAssembly="false" />
     </ItemGroup>
 
 </Project>

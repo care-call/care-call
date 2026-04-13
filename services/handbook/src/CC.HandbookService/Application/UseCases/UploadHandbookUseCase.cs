@@ -1,11 +1,10 @@
 using CC.HandbookService.Application.Dependencies;
 using CC.HandbookService.Domain.Handbooks;
 using FluentResults;
-using Mediator;
 
 namespace CC.HandbookService.Application.UseCases;
 
-public sealed record UploadHandbook : IRequest<Result>
+public sealed record UploadHandbook
 {
     public required HandbookType HandbookType { get; init; }
     public required Stream HandbookFileStream { get; init; }
@@ -13,10 +12,9 @@ public sealed record UploadHandbook : IRequest<Result>
 
 public class UploadHandbookUseCase(
     IServiceProvider keyedProvider,
-    IUnitOfWork unitOfWork
-    ) : IRequestHandler<UploadHandbook, Result>
+    IUnitOfWork unitOfWork)
 {
-    public async ValueTask<Result> Handle(UploadHandbook command, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UploadHandbook command, CancellationToken cancellationToken)
     {
         var handbookLoader = keyedProvider.GetRequiredKeyedService<IHandbookLoader>(command.HandbookType);
         

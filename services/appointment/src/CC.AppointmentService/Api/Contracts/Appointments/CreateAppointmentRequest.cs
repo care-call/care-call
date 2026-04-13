@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using CC.AppointmentService.Domain.Appointments;
 
-namespace CC.AppointmentService.Api.Contracts;
+namespace CC.AppointmentService.Api.Contracts.Appointments;
 
 public sealed record CreateAppointmentRequest : IValidatableObject
 {

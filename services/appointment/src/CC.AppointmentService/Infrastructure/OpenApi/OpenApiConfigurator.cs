@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using CC.Common.Json;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
@@ -10,6 +11,8 @@ public static class OpenApiConfigurator
     {
         options.AddSchemaTransformer((schema, context, _) =>
         {
+            var type = Nullable.GetUnderlyingType(context.JsonTypeInfo.Type) ?? context.JsonTypeInfo.Type;
+
             if (context.JsonTypeInfo.Type == typeof(DateOnly))
             {
                 schema.Type = JsonSchemaType.String;
@@ -24,6 +27,14 @@ public static class OpenApiConfigurator
                 schema.Example = "14:30:00";
             }
 
+            if (type.IsEnum)
+            {
+                schema.Type = JsonSchemaType.String;
+                schema.Enum = Enum.GetNames(type)
+                    .Select(x => JsonValue.Create(x))
+                    .Cast<JsonNode>()
+                    .ToList();
+            }
             if (context.JsonTypeInfo.Type  == typeof(TimeSpan))
             {
                 schema.Type = JsonSchemaType.String;

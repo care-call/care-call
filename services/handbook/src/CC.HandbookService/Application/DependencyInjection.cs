@@ -6,12 +6,6 @@ public static class DependencyInjection
     {
         public IServiceCollection AddApplication()
         {
-            services.AddMediator(opts =>
-            {
-                opts.ServiceLifetime = ServiceLifetime.Scoped;
-                opts.Assemblies = [typeof(DependencyInjection).Assembly];
-            });
-            
             return services;
         }
     }

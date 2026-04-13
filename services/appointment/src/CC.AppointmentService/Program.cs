@@ -1,10 +1,13 @@
 using CC.AppointmentService.Api.Endpoints.Appointments;
+using CC.AppointmentService.Api.Endpoints.Appointments.Practitioner;
+using CC.AppointmentService.Api.Endpoints.Feedback;
 using CC.AppointmentService.Application;
 using CC.AppointmentService.Infrastructure;
 using CC.AppointmentService.Infrastructure.OpenApi;
 using CC.Common.Json;
 using CC.Common.Logging;
 using Hangfire;
+using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,11 @@ builder.Services.AddLogger(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Host.UseWolverine(opts =>
+{
+    opts.Discovery.CustomizeHandlerDiscovery(t => t.Includes.WithNameSuffix("UseCase"));
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -32,7 +40,8 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", "v1");
     });
 }
-
+app.MapPractitionerAppointmentEndpoints();
 app.MapAppointmentsEndpoints();
+app.MapFeedbackEndpoints();
 
 app.Run();
