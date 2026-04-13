@@ -6,7 +6,7 @@ public static class HandbookEndpoints
     {
         public void MapHandbookEndpoints()
         {
-            var v1Group = builder.MapGroup("api/v1/{handbookTypeParameter}");
+            var v1Group = builder.MapGroup("api/v1/handbook/{handbookTypeParameter}");
             
             v1Group.MapGet("", GetHandbookEndpoint.Handle);
             v1Group.MapPost("upload", UploadHandbookEndpoint.Handle);
