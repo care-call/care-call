@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using CC.Common.Models;
-using CC.HandbookService.Application.Enums;
+using CC.HandbookService.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.HandbookService.Infrastructure.Persistence.Extensions;

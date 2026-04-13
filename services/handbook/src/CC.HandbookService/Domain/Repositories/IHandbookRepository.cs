@@ -1,5 +1,5 @@
 using CC.Common.Models;
-using CC.HandbookService.Application.Enums;
+using CC.HandbookService.Domain.Enums;
 
 namespace CC.HandbookService.Domain.Repositories;
 

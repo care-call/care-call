@@ -1,13 +1,12 @@
 using CC.Common.Models;
 using CC.HandbookService.Application.Dependencies;
-using CC.HandbookService.Application.Enums;
+using CC.HandbookService.Domain.Enums;
 using CC.HandbookService.Domain.Handbooks;
-using Mediator;
 
 namespace CC.HandbookService.Application.UseCases;
 
-public sealed record GetHandbook : IRequest<PagedResult<HandbookItem>>
-{
+public sealed record GetHandbook
+{   
     public required HandbookType HandbookType { get; init; }
     public PageInfo PageInfo { get; init; }
     public string? SearchName { get; init; }
@@ -16,8 +15,7 @@ public sealed record GetHandbook : IRequest<PagedResult<HandbookItem>>
     public SortOrder? SortOrder { get; init; }
 }
 
-public class GetHandbookUseCase(
-    IServiceProvider serviceProvider) : IRequestHandler<GetHandbook, PagedResult<HandbookItem>>
+public class GetHandbookUseCase(IServiceProvider serviceProvider) 
 {
     public async ValueTask<PagedResult<HandbookItem>> Handle(GetHandbook command, CancellationToken cancellationToken)
     {
