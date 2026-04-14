@@ -4,12 +4,9 @@ using CC.NotificationService.Api.Endpoints.WebNotifications;
 using CC.NotificationService.Application;
 using CC.NotificationService.Infrastructure;
 using CC.NotificationService.Infrastructure.OpenApi;
-using CC.ServiceDefaults;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.AddServiceDefaults();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
