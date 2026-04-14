@@ -35,4 +35,7 @@
                         OutputItemType="Analyzer"
                         ReferenceOutputAssembly="false" />
     </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\common\CC.ServiceDefaults\CC.ServiceDefaults.csproj" />
+    </ItemGroup>
 </Project>

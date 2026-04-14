@@ -4,12 +4,16 @@ using CC.AppointmentService.Api.Endpoints.Feedback;
 using CC.AppointmentService.Application;
 using CC.AppointmentService.Infrastructure;
 using CC.AppointmentService.Infrastructure.OpenApi;
+using CC.AppointmentService.Infrastructure.Persistence;
 using CC.Common.Json;
 using CC.Common.Logging;
+using CC.ServiceDefaults;
 using Hangfire;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {

@@ -28,5 +28,7 @@
     <ItemGroup>
       <Folder Include="Application\UseCases\" />
     </ItemGroup>
-
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\common\CC.ServiceDefaults\CC.ServiceDefaults.csproj" />
+    </ItemGroup>
 </Project>
