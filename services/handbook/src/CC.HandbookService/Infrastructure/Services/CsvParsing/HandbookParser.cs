@@ -1,6 +1,8 @@
 using System.Globalization;
 using CC.HandbookService.Application.Dependencies;
+using CC.HandbookService.Domain.Errors;
 using CC.HandbookService.Domain.Handbooks;
+using CC.HandbookService.Infrastructure.Services.CsvParsing.Errors;
 using CC.HandbookService.Infrastructure.Services.CsvParsing.HandbookMaps;
 using CsvHelper;
 using FluentResults;
@@ -25,26 +27,22 @@ public class HandbookParser : IHandbookParser
         }
         catch (MissingFieldException ex)
         {
-            var cellName = TryGetCellName(ex);
-            return cellName != null
-                ? Result.Fail($"Пропущенно поле в ячейке {cellName}")
-                : Result.Fail("Непредвиденная ошибка");
+            var cellName = GetCellName(ex);
+            return Result.Fail(ParserErrors.MissingField(cellName));
         }
         catch (ValidationException ex)
         {
-            var cellName = TryGetCellName(ex);
-            return cellName != null
-                ? Result.Fail($"Не заполнено обязательное поле в ячейке {cellName}")
-                : Result.Fail("Непредвиденная ошибка");
+            var cellName = GetCellName(ex);
+            return Result.Fail(ParserErrors.EmptyField(cellName));
         }
         
         return Result.Ok<IEnumerable<T>>(records);
     }
     
-    private static string? TryGetCellName(CsvHelperException ex)
+    private static string GetCellName(CsvHelperException ex)
     {
         if (ex.Context == null || ex.Context.Parser == null || ex.Context.Reader == null)
-            return null;
+            throw new InvalidOperationException("Parser context is null");
         return CsvCellHelper.GetCellName(ex.Context.Parser.Row, ex.Context.Reader.CurrentIndex + 1);
     }
 }

@@ -1,5 +1,5 @@
+using CC.HandbookService.Api.Binding;
 using CC.HandbookService.Application.UseCases;
-using CC.HandbookService.Domain.Handbooks;
 using FluentResults;
 using Wolverine;
 
@@ -8,13 +8,13 @@ namespace CC.HandbookService.Api.Endpoints;
 public static class UploadHandbookEndpoint
 {
     public static async Task<IResult> Handle(
-        string handbook,
+        HandbookTypeParameter handbookTypeParameter,
         HttpRequest request,
         IMessageBus bus)
     {
-        if (!Enum.TryParse<HandbookType>(handbook, true, out var handbookType))
-            return Results.BadRequest($"Справочник «{handbook}» не существует");
-
+        if (handbookTypeParameter.Error is not null)
+            return Results.BadRequest(handbookTypeParameter.Error);
+        
         var form = await request.ReadFormAsync();
         var handbookFile = form.Files.GetFile("handbookFile");
 
@@ -28,7 +28,7 @@ public static class UploadHandbookEndpoint
 
         var result = await bus.InvokeAsync<Result>(new UploadHandbook
         {
-            HandbookType = handbookType,
+            HandbookType = handbookTypeParameter.HandbookType,
             HandbookFileStream = stream
         });
 
