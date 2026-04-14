@@ -1,9 +1,11 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
 using CC.AppointmentService.Application.Dependencies;
+using CC.AppointmentService.Application.Dependencies.AppointmentsQuery;
 using CC.AppointmentService.Domain.Appointments.Repositories;
 using CC.AppointmentService.Domain.Feedbacks.Repositories;
 using CC.AppointmentService.Infrastructure.Persistence.Appointments;
 using CC.AppointmentService.Infrastructure.Persistence.Feedbacks;
+using CC.AppointmentService.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.AppointmentService.Infrastructure.Persistence;
@@ -14,7 +16,7 @@ public static class DependencyInjection
     {
         public IServiceCollection AddPersistence(IConfiguration configuration)
         {
-            return services.AddEfCore(configuration).AddRepositories();
+            return services.AddEfCore(configuration).AddRepositories().AddServices();
         }
 
         private IServiceCollection AddEfCore(IConfiguration configuration)
@@ -25,6 +27,11 @@ public static class DependencyInjection
                 _ => { },
                 dbCtxBuilder => dbCtxBuilder
                     .UseSnakeCaseNamingConvention());
+        }
+
+        public IServiceCollection AddServices()
+        {
+            return services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
         }
 
         private IServiceCollection AddRepositories()
