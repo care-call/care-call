@@ -4,8 +4,11 @@ using CC.HandbookService.Infrastructure;
 using CC.HandbookService.Api.Endpoints;
 using CC.HandbookService.Infrastructure.Persistence;
 using Wolverine;
+using CC.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.AddOpenApi();
 builder.Logging.ClearProviders();

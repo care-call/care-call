@@ -1,5 +1,5 @@
 using CC.HandbookService.Api.Binding;
-using CC.HandbookService.Application.Enums;
+using CC.HandbookService.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CC.HandbookService.Api.Contracts;

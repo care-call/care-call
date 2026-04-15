@@ -1,4 +1,4 @@
-namespace CC.HandbookService.Application.Enums;
+namespace CC.HandbookService.Domain.Enums;
 
 public enum SortOrder
 {
