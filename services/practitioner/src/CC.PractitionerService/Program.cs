@@ -1,13 +1,17 @@
 using CC.Common.Json;
 using CC.Common.Logging;
+using CC.PractitionerService.Infrastructure.Persistence;
 using CC.PractitionerService.Api.Endpoints.Practitioners;
 using CC.PractitionerService.Api.Endpoints.WorkSchedules;
 using CC.PractitionerService.Application;
 using CC.PractitionerService.Infrastructure;
 using CC.PractitionerService.Infrastructure.OpenApi;
+using CC.ServiceDefaults;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
