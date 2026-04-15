@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Aspire.Hosting.Docker" />
         <PackageReference Include="Aspire.Hosting.PostgreSQL" />
     </ItemGroup>
 
@@ -17,6 +18,11 @@
         <ProjectReference Include="..\..\..\handbook\src\CC.HandbookService\CC.HandbookService.csproj" />
         <ProjectReference Include="..\..\..\notification\src\CC.NotificationService\CC.NotificationService.csproj" />
         <ProjectReference Include="..\..\..\practitioner\src\CC.PractitionerService\CC.PractitionerService.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="aspire-output\" />
+      <Folder Include="infra\" />
     </ItemGroup>
 
 </Project>

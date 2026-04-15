@@ -42,6 +42,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+await app.Services.ApplyMigrationsAsync();
+
 app.MapWorkSchedulesEndpoints();
 app.MapPractitionersEndpoints();
 

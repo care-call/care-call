@@ -1,6 +1,9 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
+builder.AddDockerComposeEnvironment("env");
+
 var postgres = builder.AddPostgres("postgres")
+    .WithHostPort(5555)
     .WithPgAdmin();
 
 var practitionerDb = postgres.AddDatabase("practitioner-db", "care-call");

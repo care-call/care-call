@@ -44,6 +44,9 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", "v1");
     });
 }
+
+await app.Services.ApplyMigrationsAsync();
+
 app.MapPractitionerAppointmentEndpoints();
 app.MapAppointmentsEndpoints();
 app.MapFeedbackEndpoints();
