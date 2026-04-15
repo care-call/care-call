@@ -18,6 +18,6 @@ public class HandbookQueryService<T>(
     {
         var result = await repository.GetPageAsync(pageInfo, searchName, searchValue, sortBy, sortOrder);
         
-        return new PagedResult<HandbookItem>(result.Items, result.Page, result.TotalRows);
+        return new PagedResult<HandbookItem>(result.Items, result.Page, result.TotalRows, result.TotalPages);
     }
 }
