@@ -1,6 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddDockerComposeEnvironment("env");
+builder.AddDockerComposeEnvironment("env")
+    .WithSshDeploySupport();
 
 var postgres = builder.AddPostgres("postgres")
     .WithHostPort(5555)
@@ -13,18 +14,27 @@ var handbookDb = postgres.AddDatabase("handbook-db", "handbook");
 
 builder.AddProject<Projects.CC_PractitionerService>("practitioner")
     .WithReference(practitionerDb, "DefaultConnection")
-    .WaitFor(practitionerDb);
+    .WaitFor(practitionerDb)
+    .WithEndpoint(4555)
+    .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.CC_AppointmentService>("appointment")
     .WithReference(appointmentDb, "DefaultConnection")
-    .WaitFor(appointmentDb);
+    .WaitFor(appointmentDb)
+    .WithEndpoint(4556)
+    .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.CC_NotificationService>("notification")
     .WithReference(notificationDb, "DefaultConnection")
-    .WaitFor(notificationDb);
+    .WaitFor(notificationDb)
+    .WithEndpoint(4557)
+    .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.CC_HandbookService>("handbook")
     .WithReference(handbookDb, "DefaultConnection")
-    .WaitFor(handbookDb);
+    .WaitFor(handbookDb)
+    .WithEndpoint(4558)
+    .WithExternalHttpEndpoints();
+
 
 builder.Build().Run();
