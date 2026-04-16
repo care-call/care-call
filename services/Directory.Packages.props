@@ -17,6 +17,7 @@
     <PackageVersion Include="Vogen" Version="8.0.5" />
     <PackageVersion Include="Vogen.Serialization" Version="1.0.1" />
     <PackageVersion Include="WolverineFx" Version="5.30.0" />
+    <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
