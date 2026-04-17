@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using CC.HandbookService.Domain.Errors;
 using CC.HandbookService.Domain.Handbooks;
 using FluentResults;
@@ -6,6 +7,7 @@ namespace CC.HandbookService.Api.Binding;
 
 public sealed record HandbookTypeParameter(HandbookType HandbookType) : IParsable<HandbookTypeParameter>
 {
+    [JsonIgnore]
     public Error? Error { get; private set; }
     
     public static HandbookTypeParameter Parse(

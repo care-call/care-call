@@ -1,33 +1,17 @@
 using CC.Common.Logging;
-using CC.HandbookService.Api.Binding;
 using CC.HandbookService.Application;
 using CC.HandbookService.Infrastructure;
 using CC.HandbookService.Api.Endpoints;
+using CC.HandbookService.Infrastructure.OpenApi;
 using CC.HandbookService.Infrastructure.Persistence;
 using Wolverine;
 using CC.ServiceDefaults;
-using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddOpenApi(options =>
-{
-    options.AddSchemaTransformer((schema, context, ct) =>
-    {
-        if (context.JsonTypeInfo.Type == typeof(HandbookTypeParameter))
-            schema.Type = JsonSchemaType.String;
-
-        if (context.JsonTypeInfo.Type == typeof(int) ||
-            context.JsonTypeInfo.Type == typeof(int?))
-        {
-            schema.Type = JsonSchemaType.Integer;
-        }
-
-        return Task.CompletedTask;
-    });
-});
+builder.Services.AddOpenApi(OpenApiConfigurator.Configure);
 builder.Logging.ClearProviders();
 builder.Services.AddLogger(builder.Configuration);
 
