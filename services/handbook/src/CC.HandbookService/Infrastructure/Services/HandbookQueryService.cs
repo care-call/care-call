@@ -1,6 +1,6 @@
 using CC.Common.Models;
 using CC.HandbookService.Application.Dependencies;
-using CC.HandbookService.Application.Enums;
+using CC.HandbookService.Domain.Enums;
 using CC.HandbookService.Domain.Handbooks;
 using CC.HandbookService.Domain.Repositories;
 
@@ -18,6 +18,6 @@ public class HandbookQueryService<T>(
     {
         var result = await repository.GetPageAsync(pageInfo, searchName, searchValue, sortBy, sortOrder);
         
-        return new PagedResult<HandbookItem>(result.Items, result.Page, result.TotalRows);
+        return new PagedResult<HandbookItem>(result.Items, result.Page, result.TotalRows, result.TotalPages);
     }
 }

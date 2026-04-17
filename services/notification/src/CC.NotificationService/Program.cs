@@ -4,9 +4,13 @@ using CC.NotificationService.Api.Endpoints.WebNotifications;
 using CC.NotificationService.Application;
 using CC.NotificationService.Infrastructure;
 using CC.NotificationService.Infrastructure.OpenApi;
+using CC.NotificationService.Infrastructure.Persistence;
+using CC.ServiceDefaults;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -33,6 +37,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwaggerUI(options => { options.SwaggerEndpoint("/openapi/v1.json", "v1"); });
 }
+
+await app.Services.ApplyMigrationsAsync();
 
 app.MapWebNotificationsEndpoints();
 

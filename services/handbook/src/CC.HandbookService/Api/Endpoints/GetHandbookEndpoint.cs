@@ -1,8 +1,8 @@
 using CC.Common.Models;
 using CC.HandbookService.Api.Contracts;
 using CC.HandbookService.Application.UseCases;
-using Mediator;
-
+using CC.HandbookService.Domain.Handbooks;
+using Wolverine;
 
 namespace CC.HandbookService.Api.Endpoints;
 
@@ -10,12 +10,12 @@ public static class GetHandbookEndpoint
 {
     public static async Task<IResult> Handle(
         [AsParameters] GetHandbookRequest request, 
-        IMediator mediator)
+        IMessageBus bus)
     {
         if (request.HandbookTypeParameter.Error is not null)
             return Results.BadRequest(request.HandbookTypeParameter.Error);
             
-        var result = await mediator.Send(new GetHandbook
+        var result = await bus.InvokeAsync<PagedResult<HandbookItem>>(new GetHandbook
         {
             HandbookType = request.HandbookTypeParameter.HandbookType,
             PageInfo = new PageInfo(request.PageNumber, request.PageSize),

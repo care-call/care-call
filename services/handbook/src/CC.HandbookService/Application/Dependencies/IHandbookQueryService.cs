@@ -1,5 +1,5 @@
 using CC.Common.Models;
-using CC.HandbookService.Application.Enums;
+using CC.HandbookService.Domain.Enums;
 using CC.HandbookService.Domain.Handbooks;
 
 namespace CC.HandbookService.Application.Dependencies;

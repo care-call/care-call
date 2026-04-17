@@ -4,12 +4,16 @@ using CC.AppointmentService.Api.Endpoints.Feedback;
 using CC.AppointmentService.Application;
 using CC.AppointmentService.Infrastructure;
 using CC.AppointmentService.Infrastructure.OpenApi;
+using CC.AppointmentService.Infrastructure.Persistence;
 using CC.Common.Json;
 using CC.Common.Logging;
+using CC.ServiceDefaults;
 using Hangfire;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -40,6 +44,9 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", "v1");
     });
 }
+
+await app.Services.ApplyMigrationsAsync();
+
 app.MapPractitionerAppointmentEndpoints();
 app.MapAppointmentsEndpoints();
 app.MapFeedbackEndpoints();
