@@ -4,6 +4,7 @@ using CC.PractitionerService.Domain.Practitioners.Repositories;
 using CC.PractitionerService.Domain.WorkSchedules.Repositories;
 using CC.PractitionerService.Infrastructure.Persistence.Adjustments;
 using CC.PractitionerService.Infrastructure.Persistence.Availability;
+using CC.PractitionerService.Infrastructure.Persistence.Availability.Abstractions;
 using CC.PractitionerService.Infrastructure.Persistence.Practitioners;
 using CC.PractitionerService.Infrastructure.Persistence.Seeding;
 using CC.PractitionerService.Infrastructure.Persistence.WorkSchedules;

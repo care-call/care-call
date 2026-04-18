@@ -1,5 +1,5 @@
 ﻿using CC.PractitionerService.Application.Dependencies.UnitOfWork;
-using CC.PractitionerService.Infrastructure.Persistence.Availability;
+using CC.PractitionerService.Infrastructure.Persistence.Availability.Abstractions;
 using CC.Shared.Domain.TimeRanges;
 using СС.Contracts.Messages.Appointment;
 

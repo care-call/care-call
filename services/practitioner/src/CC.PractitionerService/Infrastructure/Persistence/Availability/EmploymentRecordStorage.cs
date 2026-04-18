@@ -1,13 +1,8 @@
-﻿using CC.PractitionerService.Infrastructure.Persistence.Availability.Models;
+﻿using CC.PractitionerService.Infrastructure.Persistence.Availability.Abstractions;
+using CC.PractitionerService.Infrastructure.Persistence.Availability.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.PractitionerService.Infrastructure.Persistence.Availability;
-
-public interface IEmploymentRecordStorage
-{
-    Task<EmploymentRecord?> GetByKeyAsync(string key);
-    Task CreateAsync(EmploymentRecord employment);
-}
 
 public sealed class EmploymentRecordStorage(DatabaseContext databaseContext) : IEmploymentRecordStorage
 {
