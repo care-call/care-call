@@ -2,26 +2,26 @@
 using CC.PractitionerService.Infrastructure.Persistence.Availability.Abstractions;
 using CC.PractitionerService.Infrastructure.Persistence.Availability.Models;
 using CC.Shared.Domain.TimeRanges;
-using СС.Contracts.Messages.Appointment;
+using СС.Contracts.Appointments.Events;
 
-namespace CC.PractitionerService.Infrastructure.MessageConsumers.Appointment;
+namespace CC.PractitionerService.Infrastructure.MessageConsumers.Appointments;
 
-public static class AppointmentCreatedMessageHandler
+public class AppointmentCreatedMessageConsumer
 {
-    public static async Task Handle(
-        AppointmentCreatedMessage message,
+    public async Task ConsumeAsync(
+        AppointmentCreatedEvent message,
         IEmploymentRecordStorage storage,
         IUnitOfWork unitOfWork,
-        ILogger logger,
+        ILogger<AppointmentCreatedMessageConsumer> logger,
         DateTime now,
         CancellationToken token)
     {
         var key = message.AppointmentId.ToString();
-        var exist = await storage.GetByKeyAsync(key);
+        var exists = await storage.GetByKeyAsync(key);
 
-        if (exist is not null)
+        if (exists is not null)
         {
-            logger.LogError("Занятость с ключем {ExternalEmploymentKey} уже существует", exist.ExternalEmploymentKey);
+            logger.LogError("Занятость с ключем {ExternalEmploymentKey} уже существует", exists.ExternalEmploymentKey);
             return;
         }
 

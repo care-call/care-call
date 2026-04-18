@@ -1,31 +1,31 @@
 ﻿using CC.PractitionerService.Application.Dependencies.UnitOfWork;
 using CC.PractitionerService.Infrastructure.Persistence.Availability.Abstractions;
 using CC.Shared.Domain.TimeRanges;
-using СС.Contracts.Messages.Appointment;
+using СС.Contracts.Appointments.Events;
 
-namespace CC.PractitionerService.Infrastructure.MessageConsumers.Appointment;
+namespace CC.PractitionerService.Infrastructure.MessageConsumers.Appointments;
 
-public static class AppointmentTransferedMessageHandler
+public class AppointmentTransferredMessageConsumer
 {
-    public static async Task Handle(
-        AppointmentTransferedMessage message,
+    public async Task ConsumeAsync(
+        AppointmentTransferredEvent message,
         IEmploymentRecordStorage storage,
         IUnitOfWork unitOfWork,
-        ILogger logger,
+        ILogger<AppointmentTransferredMessageConsumer> logger,
         DateTime now,
         CancellationToken token)
     {
         var key = message.AppointmentId.ToString();
-        var exist = await storage.GetByKeyAsync(key);
+        var exists = await storage.GetByKeyAsync(key);
 
-        if (exist is null)
+        if (exists is null)
         {
             logger.LogError("Занятость с ключем {key} не существует", key);
             return;
         }
 
-        exist.Period = new DateTimeRange(message.TimeSlot.From, message.TimeSlot.To);
-        exist.UpdatedAt = now;
+        exists.Period = new DateTimeRange(message.TimeSlot.From, message.TimeSlot.To);
+        exists.UpdatedAt = now;
 
         await unitOfWork.SaveAsync(token);
     }
