@@ -3,6 +3,7 @@ using CC.PractitionerService.Application.Dependencies.UnitOfWork;
 using CC.PractitionerService.Domain.Practitioners.Repositories;
 using CC.PractitionerService.Domain.WorkSchedules.Repositories;
 using CC.PractitionerService.Infrastructure.Persistence.Adjustments;
+using CC.PractitionerService.Infrastructure.Persistence.Availability;
 using CC.PractitionerService.Infrastructure.Persistence.Practitioners;
 using CC.PractitionerService.Infrastructure.Persistence.Seeding;
 using CC.PractitionerService.Infrastructure.Persistence.WorkSchedules;
@@ -24,7 +25,7 @@ public static class DependencyInjection
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             return services.AddNpgsql<DatabaseContext>(
-                configuration.GetConnectionString("DefaultConnection"),
+                configuration.GetConnectionString("Postgres"),
                 _ => { },
                 dbCtxBuilder => dbCtxBuilder
                     .UseSnakeCaseNamingConvention()
@@ -38,6 +39,7 @@ public static class DependencyInjection
                 .AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddScoped<IPractitionerProfileRepository, PractitionerProfileRepository>()
                 .AddScoped<IWorkScheduleRepository, WorkScheduleRepository>()
+                .AddScoped<IEmploymentRecordStorage, EmploymentRecordStorage>()
                 .AddScoped<IAvailablePractitionersQuery, AvailablePractitionersQuery>()
                 .AddScoped<IAdjustmentRepository, AdjustmentRepository>();
         }

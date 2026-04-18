@@ -8,6 +8,7 @@ using CC.PractitionerService.Infrastructure;
 using CC.PractitionerService.Infrastructure.OpenApi;
 using CC.ServiceDefaults;
 using Wolverine;
+using Wolverine.Kafka;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,9 @@ builder.Services.AddLogger(builder.Configuration);
 builder.Host.UseWolverine(opts =>
 {
     opts.Discovery.CustomizeHandlerDiscovery(t => t.Includes.WithNameSuffix("UseCase"));
+
+    opts.UseKafka(builder.Configuration.GetConnectionString("Kafka")!);
+    opts.ListenToKafkaTopics("appointments");
 });
 
 var app = builder.Build();
