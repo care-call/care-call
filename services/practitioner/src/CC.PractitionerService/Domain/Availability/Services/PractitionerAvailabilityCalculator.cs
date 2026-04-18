@@ -1,11 +1,10 @@
-﻿using CC.PractitionerService.Domain.Availability.Services.Abstractions;
-using CC.PractitionerService.Domain.WorkSchedules;
+﻿using CC.PractitionerService.Domain.WorkSchedules;
 using CC.Shared.Domain.TimeRanges;
 using CC.Shared.Domain.TimeRanges.Extensions;
 
 namespace CC.PractitionerService.Domain.Availability.Services;
 
-public sealed class PractitionerAvailabilityCalculator : IPractitionerAvailabilityCalculator
+public sealed class PractitionerAvailabilityCalculator
 {
     public IReadOnlyCollection<DateTimeRange> Calculate(
         IReadOnlyCollection<WorkSchedule> workSchedules,
