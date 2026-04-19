@@ -3,4 +3,5 @@
   <Project Path="CC.Shared.Domain/CC.Shared.Domain.csproj" />
   <Project Path="CC.Analyzer/CC.Analyzer/CC.Analyzer.csproj" />
   <Project Path="CC.Analyzer/CC.Analyzer.Tests/CC.Analyzer.Tests.csproj" />
+  <Project Path="tests/CC.Shared.Domain.Tests/CC.Shared.Domain.Tests.csproj" />
 </Solution>
