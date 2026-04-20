@@ -8,6 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
       <PackageReference Include="Yarp.ReverseProxy" />
     </ItemGroup>
 
