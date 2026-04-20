@@ -30,8 +30,7 @@ public static class OpenApiEndpoints
     {
         var gatewayBaseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
         
-        var doc = JsonNode.Parse(documentJson) 
-                  ?? throw new Exception("Invalid document json");
+        var doc = JsonNode.Parse(documentJson) ?? throw new Exception("Invalid document json");
         doc["servers"] = new JsonArray(new JsonObject { ["url"] = gatewayBaseUrl });
         
         return doc.ToJsonString();

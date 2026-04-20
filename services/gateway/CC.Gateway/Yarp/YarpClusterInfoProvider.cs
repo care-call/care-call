@@ -12,6 +12,10 @@ public class YarpClusterInfoProvider(IProxyStateLookup proxyStateLookup)
         return cluster.Destinations.First().Value.Model.Config.Address;
     }
 
+    public bool ClusterExist(string clusterId)
+        => proxyStateLookup.TryGetCluster(clusterId, out _);
+    
+
     public IEnumerable<string> GetClusterIds()
         => proxyStateLookup
             .GetClusters()

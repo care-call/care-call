@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using CC.Gateway.Yarp;
 
 namespace CC.Gateway.OpenApi;
@@ -10,15 +11,10 @@ public class OpenApiProvider(
     
     public OpenApiDocumentInfo? GetDocument(string documentName, string version = "v1")
     {
-        foreach (var clusterId in clusterInfoProvider.GetClusterIds())
-        {
-            var currDocName = GetDocumentName(clusterId);
-            
-            if (currDocName.Equals(documentName, StringComparison.OrdinalIgnoreCase))
-                return new OpenApiDocumentInfo(currDocName, version, clusterId);
-        }
+        if (!TryGetClusterId(documentName, out string? clusterId))
+            return null;
         
-        return null;
+        return new OpenApiDocumentInfo(documentName, version, clusterId);
     }
     
     public IEnumerable<OpenApiDocumentInfo> GetDocuments()
@@ -41,4 +37,14 @@ public class OpenApiProvider(
     
     private static string GetDocumentName(string clusterId)
         => clusterId[..clusterId.LastIndexOf('-')];
+
+    private bool TryGetClusterId(string documentName, [NotNullWhen(true)] out string? clusterId)
+    {
+        clusterId = $"{documentName}-cluster";
+        if (clusterInfoProvider.ClusterExist(clusterId))
+            return true;
+
+        clusterId = null;
+        return false;
+    }
 }
