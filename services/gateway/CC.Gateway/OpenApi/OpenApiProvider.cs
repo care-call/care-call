@@ -3,48 +3,44 @@ using CC.Gateway.Yarp;
 
 namespace CC.Gateway.OpenApi;
 
-public class OpenApiProvider(
-    YarpClusterInfoProvider clusterInfoProvider,
-    IHttpClientFactory httpClientFactory)
+public class OpenApiProvider
 {
-    private const string _defaultOpenApiRoute = "openapi/v1.json";
-    
-    public OpenApiDocumentInfo? GetDocument(string documentName, string version = "v1")
+    private readonly YarpClusterInfoProvider _clusterInfoProvider;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly Dictionary<string, OpenApiDocumentInfo> _documents;
+
+    public OpenApiProvider(
+        YarpClusterInfoProvider clusterInfoProvider,
+        IHttpClientFactory httpClientFactory)
     {
-        if (!TryGetClusterId(documentName, out string? clusterId))
-            return null;
-        
-        return new OpenApiDocumentInfo(documentName, version, clusterId);
+        _clusterInfoProvider = clusterInfoProvider;
+        _httpClientFactory = httpClientFactory;
+
+        _documents = CreateDocuments().ToDictionary(x => x.DocumentName);
     }
     
-    public IEnumerable<OpenApiDocumentInfo> GetDocuments()
-        => clusterInfoProvider
-            .GetClusterIds()
-            .Select(id => new OpenApiDocumentInfo(
-                DocumentName: GetDocumentName(id),
-                Version: "v1",
-                ClusterId: id));
-    
-    public async Task<string> GetDocumentAsJsonAsync(string clusterId)
-    {
-        var client = httpClientFactory.CreateClient();
+    public OpenApiDocumentInfo? GetDocument(string documentName)
+        => _documents.GetValueOrDefault(documentName);
 
-        var address = clusterInfoProvider.GetAddress(clusterId);
-        var url = new Uri(new Uri(address, UriKind.Absolute), _defaultOpenApiRoute).ToString();
+    public IEnumerable<OpenApiDocumentInfo>? GetDocuments()
+        => _documents.Values;
+    
+    public async Task<string> GetDocumentAsJsonAsync(string clusterId, string route)
+    {
+        var client = _httpClientFactory.CreateClient();
+        
+        var address = _clusterInfoProvider.GetAddress(clusterId);
+        var url = new Uri(new Uri(address, UriKind.Absolute), route).ToString();
         
         return await client.GetStringAsync(url);
     }
     
-    private static string GetDocumentName(string clusterId)
-        => clusterId[..clusterId.LastIndexOf('-')];
-
-    private bool TryGetClusterId(string documentName, [NotNullWhen(true)] out string? clusterId)
-    {
-        clusterId = $"{documentName}-cluster";
-        if (clusterInfoProvider.ClusterExist(clusterId))
-            return true;
-
-        clusterId = null;
-        return false;
-    }
+    private IEnumerable<OpenApiDocumentInfo> CreateDocuments()
+        => _clusterInfoProvider
+            .GetClusterIds()
+            .SelectMany(id => _clusterInfoProvider.GetOpenApiRoutes(id)
+                .Select(route => new OpenApiDocumentInfo(
+                    DocumentName: _clusterInfoProvider.GetOpenApiName(id),
+                    ClusterId: id,
+                    Route: route)));
 }

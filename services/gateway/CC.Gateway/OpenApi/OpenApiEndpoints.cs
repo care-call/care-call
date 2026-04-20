@@ -8,18 +8,18 @@ public static class OpenApiEndpoints
     {
         public void MapOpenApiEndpoints()
         {
-            app.MapOpenApi("/openapi/gateway-v1.json");
+            app.MapOpenApi("/openapi/Gateway-v1.json");
             
             var provider = app.Services.GetRequiredService<OpenApiProvider>();
             
-            app.MapGet("/openapi/{documentName}-{version}.json", 
-                async (string documentName, string version, HttpContext httpContext) =>
+            app.MapGet("/openapi/{documentName}.json", 
+                async (string documentName, HttpContext httpContext) =>
             {
                 var document = provider.GetDocument(documentName);
                 if (document is null)
-                    return Results.NotFound($"OpenAPI document '{documentName}-{version}' not found");
+                    return Results.NotFound($"OpenAPI document '{documentName}' not found");
 
-                var json = await provider.GetDocumentAsJsonAsync(document.ClusterId);
+                var json = await provider.GetDocumentAsJsonAsync(document.ClusterId, document.Route);
           
                 return Results.Content(ReplaceDocumentServer(json, httpContext), "application/json");
             });

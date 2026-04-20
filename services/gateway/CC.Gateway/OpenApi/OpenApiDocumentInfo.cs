@@ -1,3 +1,3 @@
 namespace CC.Gateway.OpenApi;
 
-public record OpenApiDocumentInfo(string DocumentName, string Version, string ClusterId);
+public record OpenApiDocumentInfo(string DocumentName, string ClusterId, string Route);

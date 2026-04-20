@@ -12,11 +12,11 @@ public static class SwaggerEndpoints
         
             builder.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/openapi/gateway-v1.json", "gateway-v1");
+                options.SwaggerEndpoint("/openapi/Gateway-v1.json", "Gateway-v1");
                 foreach (var doc in provider.GetDocuments())
                 {
-                    var url = $"/openapi/{doc.DocumentName}-{doc.Version}.json";
-                    options.SwaggerEndpoint(url, $"{doc.DocumentName}-{doc.Version}");
+                    var url = $"/openapi/{doc.DocumentName}.json";
+                    options.SwaggerEndpoint(url, $"{doc.DocumentName}");
                 }
             });
         }
