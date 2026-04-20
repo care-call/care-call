@@ -14,23 +14,23 @@ public class PractitionerAvailabilityCalculatorTests
     [Fact]
     public void Availability_includes_scheduled_work_hours_clipped_to_requested_period()
     {
-        var period = new DateTimeRange(TestMondayDay.AddHours(10), TestMondayDay.AddHours(12));
-        var schedule = CreateWorkSchedule(DayOfWeek.Monday, new TimeOnly(8, 0), new TimeOnly(18, 0));
+        var requestedPeriod = new DateTimeRange(TestMondayDay.AddHours(10), TestMondayDay.AddHours(12));
+        var schedule = CreateWorkSchedule(TestMondayDay.DayOfWeek, new TimeOnly(8, 0), new TimeOnly(18, 0));
 
-        var result = _sut.Calculate([schedule], [], [], period);
+        var result = _sut.Calculate([schedule], [], [], requestedPeriod);
 
         var availabilityPeriod = Assert.Single(result);
-        Assert.Equal(TestMondayDay.AddHours(10), availabilityPeriod.From);
-        Assert.Equal(TestMondayDay.AddHours(12), availabilityPeriod.To);
+        Assert.Equal(requestedPeriod.From, availabilityPeriod.From);
+        Assert.Equal(requestedPeriod.To, availabilityPeriod.To);
     }
 
     [Fact]
     public void Availability_excludes_hours_when_schedule_is_outside_validity_period()
     {
-        var period = new DateTimeRange(new DateTime(2026, 5, 1), new DateTime(2026, 5, 8));
-        var schedule = CreateWorkSchedule(DayOfWeek.Monday, new TimeOnly(9, 0), new TimeOnly(17, 0), validTo: new DateOnly(2026, 4, 30));
+        var requestedPeriod = new DateTimeRange(new DateTime(2026, 5, 1), new DateTime(2026, 5, 8));
+        var schedule = CreateWorkSchedule(TestMondayDay.DayOfWeek, new TimeOnly(9, 0), new TimeOnly(17, 0), validTo: new DateOnly(2026, 4, 30));
 
-        var result = _sut.Calculate([schedule], [], [], period);
+        var result = _sut.Calculate([schedule], [], [], requestedPeriod);
 
         Assert.Empty(result);
     }
@@ -38,11 +38,11 @@ public class PractitionerAvailabilityCalculatorTests
     [Fact]
     public void Availability_merges_overlapping_schedules_into_single_continuous_block()
     {
-        var period = new DateTimeRange(TestMondayDay, TestMondayDay.AddDays(1));
-        var morningSchedule = CreateWorkSchedule(DayOfWeek.Monday, new TimeOnly(8, 0), new TimeOnly(14, 0));
-        var eveningSchedule = CreateWorkSchedule(DayOfWeek.Monday, new TimeOnly(12, 0), new TimeOnly(18, 0));
+        var requestedPeriod = new DateTimeRange(TestMondayDay, TestMondayDay.AddDays(1));
+        var morningSchedule = CreateWorkSchedule(TestMondayDay.DayOfWeek, new TimeOnly(8, 0), new TimeOnly(14, 0));
+        var eveningSchedule = CreateWorkSchedule(TestMondayDay.DayOfWeek, new TimeOnly(12, 0), new TimeOnly(18, 0));
 
-        var result = _sut.Calculate([morningSchedule, eveningSchedule], [], [], period);
+        var result = _sut.Calculate([morningSchedule, eveningSchedule], [], [], requestedPeriod);
 
         var availabilityPeriod = Assert.Single(result);
         Assert.Equal(TestMondayDay.AddHours(8), availabilityPeriod.From);
@@ -52,8 +52,8 @@ public class PractitionerAvailabilityCalculatorTests
     [Fact]
     public void Availability_removes_unavailable_time_blocks_from_scheduled_hours()
     {
-        var period = new DateTimeRange(TestMondayDay.AddHours(9), TestMondayDay.AddHours(17));
-        var schedule = CreateWorkSchedule(DayOfWeek.Monday, new TimeOnly(9, 0), new TimeOnly(17, 0));
+        var requestedPeriod = new DateTimeRange(TestMondayDay.AddHours(9), TestMondayDay.AddHours(17));
+        var schedule = CreateWorkSchedule(TestMondayDay.DayOfWeek, new TimeOnly(9, 0), new TimeOnly(17, 0));
 
         var adjustment = new Adjustment(
             Guid.Empty,
@@ -61,7 +61,7 @@ public class PractitionerAvailabilityCalculatorTests
             AdjustmentType.Unavailable,
             new DateTimeRange(TestMondayDay.AddHours(12), TestMondayDay.AddHours(13)));
 
-        var result = _sut.Calculate([schedule], [adjustment], [], period).ToArray();
+        var result = _sut.Calculate([schedule], [adjustment], [], requestedPeriod).ToArray();
 
         Assert.Equal(2, result.Length);
 
@@ -77,8 +77,8 @@ public class PractitionerAvailabilityCalculatorTests
     [Fact]
     public void Availability_replaces_original_hours_with_override_adjustment()
     {
-        var period = new DateTimeRange(TestMondayDay.AddHours(9), TestMondayDay.AddHours(17));
-        var schedule = CreateWorkSchedule(DayOfWeek.Monday, new TimeOnly(9, 0), new TimeOnly(17, 0));
+        var requestedPeriod = new DateTimeRange(TestMondayDay.AddHours(9), TestMondayDay.AddHours(17));
+        var schedule = CreateWorkSchedule(TestMondayDay.DayOfWeek, new TimeOnly(9, 0), new TimeOnly(17, 0));
 
         var adjustment = new Adjustment(
             Guid.Empty,
@@ -86,7 +86,7 @@ public class PractitionerAvailabilityCalculatorTests
             AdjustmentType.Override,
             new DateTimeRange(TestMondayDay.AddHours(14), TestMondayDay.AddHours(15)));
 
-        var result = _sut.Calculate([schedule], [adjustment], [], period);
+        var result = _sut.Calculate([schedule], [adjustment], [], requestedPeriod);
 
         var availabilityPeriod = Assert.Single(result);
         Assert.Equal(TestMondayDay.AddHours(14), availabilityPeriod.From);
@@ -96,8 +96,8 @@ public class PractitionerAvailabilityCalculatorTests
     [Fact]
     public void Availability_excludes_time_covered_by_employment_restrictions()
     {
-        var period = new DateTimeRange(TestMondayDay.AddHours(9), TestMondayDay.AddHours(17));
-        var schedule = CreateWorkSchedule(DayOfWeek.Monday, new TimeOnly(9, 0), new TimeOnly(17, 0));
+        var requestedPeriod = new DateTimeRange(TestMondayDay.AddHours(9), TestMondayDay.AddHours(17));
+        var schedule = CreateWorkSchedule(TestMondayDay.DayOfWeek, new TimeOnly(9, 0), new TimeOnly(17, 0));
 
         var employment = new EmploymentSnapshot(
             schedule.PractitionerId,
@@ -105,7 +105,7 @@ public class PractitionerAvailabilityCalculatorTests
             new DateTimeRange(TestMondayDay.AddHours(12), TestMondayDay.AddHours(14)),
             DateTime.MinValue);
 
-        var result = _sut.Calculate([schedule], [], [employment], period).ToArray();
+        var result = _sut.Calculate([schedule], [], [employment], requestedPeriod).ToArray();
 
         Assert.Equal(2, result.Length);
 
@@ -121,9 +121,9 @@ public class PractitionerAvailabilityCalculatorTests
     [Fact]
     public void Availability_returns_empty_when_no_schedules_are_provided()
     {
-        var period = new DateTimeRange(TestMondayDay, TestMondayDay.AddDays(7));
+        var requestedPeriod = new DateTimeRange(TestMondayDay, TestMondayDay.AddDays(7));
 
-        var result = _sut.Calculate([], [], [], period);
+        var result = _sut.Calculate([], [], [], requestedPeriod);
 
         Assert.Empty(result);
     }
@@ -131,8 +131,8 @@ public class PractitionerAvailabilityCalculatorTests
     [Fact]
     public void Availability_ignores_adjustments_outside_the_requested_period()
     {
-        var period = new DateTimeRange(TestMondayDay.AddHours(9), TestMondayDay.AddHours(17));
-        var schedule = CreateWorkSchedule(DayOfWeek.Monday, new TimeOnly(9, 0), new TimeOnly(17, 0));
+        var requestedPeriod = new DateTimeRange(TestMondayDay.AddHours(9), TestMondayDay.AddHours(17));
+        var schedule = CreateWorkSchedule(TestMondayDay.DayOfWeek, new TimeOnly(9, 0), new TimeOnly(17, 0));
 
         var nextWeekAdjustment = new Adjustment(
             Guid.Empty,
@@ -140,7 +140,7 @@ public class PractitionerAvailabilityCalculatorTests
             AdjustmentType.Unavailable,
             new DateTimeRange(TestMondayDay.AddDays(7).AddHours(9), TestMondayDay.AddDays(7).AddHours(10)));
 
-        var result = _sut.Calculate([schedule], [nextWeekAdjustment], [], period);
+        var result = _sut.Calculate([schedule], [nextWeekAdjustment], [], requestedPeriod);
 
         var availabilityPeriod = Assert.Single(result);
         Assert.Equal(TestMondayDay.AddHours(9), availabilityPeriod.From);
