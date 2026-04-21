@@ -11,5 +11,6 @@ public class HandbookItemConfiguration : IEntityTypeConfiguration<HandbookItem>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Code).HasMaxLength(32);
         builder.Property(x => x.DisplayName).HasMaxLength(64);
+        builder.Property(x => x.IsActive);
     }
 }

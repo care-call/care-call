@@ -9,5 +9,6 @@ public sealed class HandbookItemMap : ClassMap<HandbookItem>
     {
         Map(m => m.Code).Validate(args => !args.Field.IsWhiteSpace() && args.Field.Length > 0);
         Map(m => m.DisplayName).Validate(args => !args.Field.IsWhiteSpace() && args.Field.Length > 0);
+        Map(m => m.IsActive).Ignore();
     }
 }
