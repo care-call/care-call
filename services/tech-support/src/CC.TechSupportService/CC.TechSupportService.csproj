@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>CC.TechSupportServive</RootNamespace>
+        <RootNamespace>CC.TechSupportService</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -37,10 +37,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="API\" />
-      <Folder Include="Application\" />
-      <Folder Include="Domain\" />
-      <Folder Include="Infrastructure\" />
+      <Folder Include="API\Controllers\" />
+      <Folder Include="Application\Interfaces\" />
+      <Folder Include="Domain\Abstractions\" />
+      <Folder Include="Domain\Services\" />
+      <Folder Include="Infrastructure\Persistence\Configurations\" />
     </ItemGroup>
 
 </Project>

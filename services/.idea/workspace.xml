@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4a2e5858-3fab-4322-ab65-4422cf0a72c9" name="Changes" comment="" />
+    <list default="true" id="4a2e5858-3fab-4322-ab65-4422cf0a72c9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/tech-support/.idea/.idea.CC.TechSupportServive/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket/Attachment.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket/Ticket.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket/TicketComment.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket/TicketHistory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/UserRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/ActionType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/AuthorType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/Category.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/Priority.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/RelatedEntityType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/ReporterType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/Status.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Exceptions/CannotChangeTicketCategoryException.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Exceptions/CannotSetAssigneeIdException.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Author.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/FileDetails.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/RelatedEntity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/TicketActors.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/CC.TechSupportService.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/CC.TechSupportService.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/appsettings.Development.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -9,6 +33,16 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/Appointment.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentCompletion.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentErrors.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentPolicy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentStatus.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/CancellationReason.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/ClientSnapshot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/PractitionerSnapshot.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
@@ -57,6 +91,14 @@
       <workItem from="1776241592110" duration="392000" />
       <workItem from="1776242050753" duration="201000" />
       <workItem from="1776242310582" duration="32000" />
+      <workItem from="1776282438147" duration="727000" />
+      <workItem from="1776331182337" duration="44000" />
+      <workItem from="1776331257588" duration="62000" />
+      <workItem from="1776331367081" duration="6000" />
+      <workItem from="1776331494197" duration="16000" />
+      <workItem from="1776335348255" duration="59000" />
+      <workItem from="1776336082402" duration="246000" />
+      <workItem from="1776368088783" duration="424000" />
     </task>
     <servers />
   </component>
