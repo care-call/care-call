@@ -11,7 +11,7 @@ namespace CC.AppointmentTests.UseCases.Appointments;
 
 public class TransferAppointmentUseCaseTest
 {
-    private readonly IAppointmentsRepository _appointments = Substitute.For<IAppointmentsRepository>();
+    private readonly IAppointmentsRepository _appointmentsRepository = Substitute.For<IAppointmentsRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     
     private readonly DateTime _now = new(2026, 04, 06, 10, 0, 0, DateTimeKind.Utc);
@@ -29,36 +29,43 @@ public class TransferAppointmentUseCaseTest
     private Appointment MakeAppointment(
         Guid? clientId = null, 
         AppointmentStatus? status = null, 
-        DateTimeRange? period = null)
+        DateTimeRange? period = null,
+        string? cancellationReason = null)
     {
         var builder = AppointmentBuilder.Create(_appointmentId, clientId ?? _clientId)
             .WithStatus(status ?? AppointmentStatus.Planned);
         
         if (period.HasValue)
-        {
             builder.WithTimeSlot(period.Value);
-        }
 
         var appointment = builder.Build();
         
         if (status == AppointmentStatus.Completed)
-        {
             appointment.Complete(_now.AddDays(-1));
+        
+        if (status == AppointmentStatus.Cancelled)
+        {
+            var reasonText = !string.IsNullOrWhiteSpace(cancellationReason) 
+                ? cancellationReason 
+                : "Default Test Reason";
+
+            var reason = CancellationReason.From(reasonText); 
+            appointment.Cancel(reason, _now.AddDays(-1)); 
         }
-       
+        
         return appointment;
     }
     
     private ValueTask<Result> Act(TransferAppointment? command = null) =>
         TransferAppointmentUseCase.Handle(
             command ?? DefaultTransferCommand, 
-            _appointments, _unitOfWork,
+            _appointmentsRepository, _unitOfWork,
             _now, CancellationToken.None);
 
     [Fact]
     public async Task Appointment_transferring_for_nonexistent_appointment_is_rejected()
     {
-        _appointments.GetByIdAsync(_appointmentId).Returns((Appointment?)null);
+        _appointmentsRepository.GetByIdAsync(_appointmentId).Returns((Appointment?)null);
 
         var result = await Act();
         
@@ -69,7 +76,7 @@ public class TransferAppointmentUseCaseTest
     [Fact]
     public async Task Appointment_transferring_for_another_clients_appointment_is_rejected()
     {
-        _appointments.GetByIdAsync(_appointmentId).Returns(MakeAppointment(clientId: Guid.NewGuid()));
+        _appointmentsRepository.GetByIdAsync(_appointmentId).Returns(MakeAppointment(clientId: Guid.NewGuid()));
         
         var result = await Act();
         
@@ -77,10 +84,14 @@ public class TransferAppointmentUseCaseTest
         await _unitOfWork.DidNotReceive().SaveAsync(Arg.Any<CancellationToken>());
     }
 
-    [Fact]
-    public async Task Appointment_transferring_for_unplanned_appointment_is_rejected()
+    [Theory]
+    [InlineData(AppointmentStatus.Completed, null)]       
+    [InlineData(AppointmentStatus.Cancelled, "Client refused")]
+    public async Task Appointment_transferring_for_unplanned_appointment_is_rejected(AppointmentStatus status, 
+        string? cancellationReason)
     {
-        _appointments.GetByIdAsync(_appointmentId).Returns(MakeAppointment(status: AppointmentStatus.Completed));
+        _appointmentsRepository.GetByIdAsync(_appointmentId).Returns(MakeAppointment(status: status,
+            cancellationReason: cancellationReason));
         
         var result = await Act();
         
@@ -89,10 +100,10 @@ public class TransferAppointmentUseCaseTest
     }
 
     [Fact]
-    public async Task Transferring_is_rejected_when_new_slot_is_too_soon()
+    public async Task Transferring_is_rejected_when_min_lead_time_is_violated()
     {
         var existingPeriod = new DateTimeRange(_now.AddDays(1), _now.AddDays(1).AddMinutes(30));
-        _appointments.GetByIdAsync(_appointmentId)
+        _appointmentsRepository.GetByIdAsync(_appointmentId)
             .Returns(MakeAppointment(period: existingPeriod));
 
         var result = await Act(new TransferAppointment
@@ -109,9 +120,9 @@ public class TransferAppointmentUseCaseTest
     [Fact]
     public async Task Transferring_is_rejected_when_max_shift_exceeded()
     {
-        var oldPeriod = new DateTimeRange(_now.AddDays(-5), _now.AddDays(-5).AddMinutes(30));
-        _appointments.GetByIdAsync(_appointmentId)
-            .Returns(MakeAppointment(period: oldPeriod));
+        var pastPeriod = new DateTimeRange(_now.AddDays(-5), _now.AddDays(-5).AddMinutes(30));
+        _appointmentsRepository.GetByIdAsync(_appointmentId)
+            .Returns(MakeAppointment(period: pastPeriod));
     
         var result = await Act(); 
     
@@ -123,7 +134,7 @@ public class TransferAppointmentUseCaseTest
     public async Task Valid_appointment_transferring_is_successful()
     {
         var existingPeriod = new DateTimeRange(_now.AddDays(1), _now.AddDays(1).AddMinutes(30));
-        _appointments.GetByIdAsync(_appointmentId)
+        _appointmentsRepository.GetByIdAsync(_appointmentId)
             .Returns(MakeAppointment(period: existingPeriod));
         
         var validSlot = new DateTimeRange(_now.AddDays(3), _now.AddDays(3).AddMinutes(30));
@@ -144,9 +155,9 @@ public class TransferAppointmentUseCaseTest
     [Fact]
     public async Task Transferring_is_successful_when_min_interval_is_exactly_met()
     {
-        var oldPeriod = new DateTimeRange(_now.AddDays(4), _now.AddDays(4).AddMinutes(30));
-        _appointments.GetByIdAsync(_appointmentId)
-            .Returns(MakeAppointment(period: oldPeriod));
+        var planedPeriod = new DateTimeRange(_now.AddDays(4), _now.AddDays(4).AddMinutes(30));
+        _appointmentsRepository.GetByIdAsync(_appointmentId)
+            .Returns(MakeAppointment(period: planedPeriod));
   
         var result = await Act(new TransferAppointment()
         {
@@ -162,8 +173,8 @@ public class TransferAppointmentUseCaseTest
     [Fact]
     public async Task Transferring_is_successful_when_max_shift_is_exactly_met()
     {
-        var oldPeriod = new DateTimeRange(_now.AddDays(2), _now.AddDays(2).AddMinutes(30));
-        _appointments.GetByIdAsync(_appointmentId).Returns(MakeAppointment(period: oldPeriod));
+        var planedPeriod = new DateTimeRange(_now.AddDays(2), _now.AddDays(2).AddMinutes(30));
+        _appointmentsRepository.GetByIdAsync(_appointmentId).Returns(MakeAppointment(period: planedPeriod));
         
         var result = await Act();
 
