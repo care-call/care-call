@@ -1,33 +1,16 @@
 ﻿using CC.TechSupportService.Domain.Enums;
+using JasperFx.Core;
 
 namespace CC.TechSupportService.Domain.ValueObjects.Ticket;
 
-public abstract record TicketCategory(string Name, Priority Priority)
-{
-    public abstract int FirstResponseDeadlineInHours { get; }
-}
+public abstract record TicketCategory(Priority Priority, TimeSpan FirstResponseDeadlineInHours);
 
-public sealed record Bug() : TicketCategory(nameof(Bug), Priority.Low)
-{
-    public override int FirstResponseDeadlineInHours => 48;
-}
+public sealed record Bug() : TicketCategory(Priority.Low, 48.Hours());
 
-public sealed record Question() : TicketCategory(nameof(Question), Priority.Normal)
-{
-    public override int FirstResponseDeadlineInHours => 24;
-}
+public sealed record Question() : TicketCategory(Priority.Normal, 24.Hours());
 
-public sealed record FeatureRequest() : TicketCategory(nameof(FeatureRequest), Priority.Low)
-{
-    public override int FirstResponseDeadlineInHours => 48;
-}
+public sealed record FeatureRequest() : TicketCategory(Priority.Low, 48.Hours());
 
-public sealed record Complaint() : TicketCategory(nameof(Complaint), Priority.High)
-{
-    public override int FirstResponseDeadlineInHours => 8;
-}
+public sealed record Complaint() : TicketCategory(Priority.High, 8.Hours());
 
-public sealed record AccountIssue() : TicketCategory(nameof(AccountIssue), Priority.Critical)
-{
-    public override int FirstResponseDeadlineInHours => 4;
-}
+public sealed record AccountIssue() : TicketCategory(Priority.Critical, 4.Hours());

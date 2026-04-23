@@ -37,11 +37,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="API\Controllers\" />
       <Folder Include="Application\Interfaces\" />
-      <Folder Include="Domain\Abstractions\" />
-      <Folder Include="Domain\Services\" />
-      <Folder Include="Infrastructure\Persistence\Configurations\" />
+      <Folder Include="Infrastructure\Persistence\Migrations\" />
     </ItemGroup>
 
 </Project>

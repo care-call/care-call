@@ -1,13 +1,17 @@
-﻿using FluentResults;
+﻿using CC.Shared.Domain;
+using CC.TechSupportService.Domain.ValueObjects;
+using FluentResults;
 
-namespace CC.TechSupportService.Domain.ValueObjects;
+namespace CC.TechSupportService.Domain.Entities;
 
-public record FileDetails
+public class FileDetails : Entity<GuidId>
 {
-    private const int MaxFileNameLength = 128;
-    private const int MaxFilePathLength = 128;
+    public const int MaxFileNameLength = 128;
+    public const int MaxFilePathLength = 128;
     
-    private FileDetails(string fileName, string filePath, ContentType contentType, long contentSize)
+    private FileDetails(GuidId id) : base(id) { }
+    
+    private FileDetails(GuidId id, string fileName, string filePath, ContentType contentType, long contentSize) : base(id)
     {
         FileName = fileName;
         FilePath = filePath;
@@ -15,7 +19,7 @@ public record FileDetails
         ContentSize = contentSize;
     }
 
-    public static Result<FileDetails> TryCreate(string fileName, string filePath, ContentType contentType, long contentSize)
+    public static Result<FileDetails> TryCreate(GuidId id, string fileName, string filePath, ContentType contentType, long contentSize)
     {
         var errors = new List<string>();
         
@@ -30,10 +34,10 @@ public record FileDetails
         else if(contentSize < 0)
             errors.Add("Content size cannot be less than 0");
 
-        if (errors.Count is 0)
+        if (errors.Count is not 0)
             return Result.Fail(errors);
         
-        return Result.Ok(new FileDetails(fileName, filePath, contentType, contentSize));
+        return Result.Ok(new FileDetails(id, fileName, filePath, contentType, contentSize));
     }
     
     public string FileName { get; private set; }

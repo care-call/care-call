@@ -13,7 +13,7 @@ public record TicketComment
     /// </summary>
     public string CsatComment { get; private set; }
     
-    public static Result<TicketComment> TryCreate(byte value, string comment)
+    public static Result<TicketComment> TryCreate(string comment)
     {
         if(comment == string.Empty)
             return Result.Fail("Comment cannot be empty");

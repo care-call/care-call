@@ -5,11 +5,11 @@ using FluentResults;
 
 namespace CC.TechSupportService.Domain.Entities;
 
-public class Comment : Entity<GuidId>
+public class TicketComment : Entity<GuidId>
 {
-    private Comment(GuidId id) : base(id) { }
+    private TicketComment(GuidId id) : base(id) { }
 
-    private Comment(GuidId id, 
+    private TicketComment(GuidId id, 
         GuidId ticketId, 
         Author author, 
         CommentBody body, 
@@ -34,7 +34,7 @@ public class Comment : Entity<GuidId>
 
     public DateTime CreatedAt { get; private set; }
 
-    public static Result<Comment> TryCreate(GuidId id,
+    public static Result<TicketComment> TryCreate(GuidId id,
         GuidId ticketId, 
         Author author, 
         CommentBody body, 
@@ -44,6 +44,6 @@ public class Comment : Entity<GuidId>
         if (id.Equals(ticketId))
             return Result.Fail("Ticket Id cannot be the same as Comment Id");
         
-        return Result.Ok(new Comment(id, ticketId, author, body, isInternal, createdAt));
+        return Result.Ok(new TicketComment(id, ticketId, author, body, isInternal, createdAt));
     }
 }

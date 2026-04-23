@@ -2,29 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4a2e5858-3fab-4322-ab65-4422cf0a72c9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tech-support/.idea/.idea.CC.TechSupportServive/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket/Attachment.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket/Ticket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket/TicketComment.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket/TicketHistory.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/UserRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/ActionType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/AuthorType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/Category.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/Priority.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/RelatedEntityType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/ReporterType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Enums/Status.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Exceptions/CannotChangeTicketCategoryException.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Exceptions/CannotSetAssigneeIdException.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Author.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/FileDetails.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/RelatedEntity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/TicketActors.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/CC.Shared.Domain/GuidId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/common/CC.Shared.Domain/GuidId.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/CC.TechSupportService.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/CC.TechSupportService.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Attachment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/TicketAttachment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Comment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/TicketComment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/TicketHistory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/TicketHistory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/UserRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/UserRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Comment/CommentBody.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Comment/CommentBody.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/ContentType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/ContentType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/FileDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/FileDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/Reporter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/Reporter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketCategory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketCategory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketComment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketComment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketDescription.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketDescription.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketStatus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketStatus.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketSubject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketSubject.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,13 +32,15 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/Appointment.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentCompletion.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentCompletion.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentErrors.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentPolicy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentStatus.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentPolicy.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentStatus.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/CancellationReason.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/ClientSnapshot.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/PractitionerSnapshot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/ClientSnapshot.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/PractitionerSnapshot.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Infrastructure/Persistence/DatabaseContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/handbook/src/CC.HandbookService/Application/IUnitOfWork.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
@@ -67,7 +65,7 @@
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/CCL-194/ImplementsRequestForm&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/CCL-194/ImplementsTechSupportDomain&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -99,6 +97,10 @@
       <workItem from="1776335348255" duration="59000" />
       <workItem from="1776336082402" duration="246000" />
       <workItem from="1776368088783" duration="424000" />
+      <workItem from="1776852833959" duration="14000" />
+      <workItem from="1776970777903" duration="21000" />
+      <workItem from="1776973586693" duration="88000" />
+      <workItem from="1776974982470" duration="5000" />
     </task>
     <servers />
   </component>

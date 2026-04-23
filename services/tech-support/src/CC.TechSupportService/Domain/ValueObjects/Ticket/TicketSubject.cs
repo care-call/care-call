@@ -4,7 +4,7 @@ namespace CC.TechSupportService.Domain.ValueObjects.Ticket;
 
 public class TicketSubject
 {
-    private const int MaxSubjectLenght = 256;
+    public const int MaxSubjectLenght = 256;
     
     private TicketSubject(string subject) => Subject = subject;
 

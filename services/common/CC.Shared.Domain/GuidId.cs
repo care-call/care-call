@@ -9,10 +9,10 @@ public record GuidId : ID<GuidId?, Guid>
         if (!TryFrom(value, out var result))
             throw new ArgumentException("Id cannot be empty");
             
-            return result;
+        return result;
     }
 
-    public static bool TryFrom(Guid value, out GuidId result)
+    public static bool TryFrom(Guid value, out GuidId? result)
     {
         if (value == Guid.Empty)
         {

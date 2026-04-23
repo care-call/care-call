@@ -4,7 +4,7 @@ namespace CC.TechSupportService.Domain.ValueObjects.Ticket;
 
 public record TicketDescription
 {
-    private const int MaxDescriptionLenght = 256;
+    public const int MaxDescriptionLenght = 256;
     
     private TicketDescription(string description) => Description = description;
 

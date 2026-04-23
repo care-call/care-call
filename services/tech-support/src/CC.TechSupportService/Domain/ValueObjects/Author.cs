@@ -3,7 +3,7 @@ using CC.TechSupportService.Domain.Enums;
 
 namespace CC.TechSupportService.Domain.ValueObjects;
 
-public class Author
+public record Author
 {
     public Author(GuidId id, AuthorType type)
     {

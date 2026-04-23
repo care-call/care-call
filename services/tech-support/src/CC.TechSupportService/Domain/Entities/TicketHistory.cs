@@ -8,11 +8,11 @@ public class TicketHistory : Entity<GuidId>
 {
     private TicketHistory(GuidId id) : base(id) { }
 
-    private TicketHistory(GuidId id, GuidId ticketId, GuidId actorId, ActionType action, string? oldValue, string? newValue, DateTime createdAt) : base(id)
+    private TicketHistory(GuidId id, GuidId ticketId, GuidId actorId, ActionType actionType, string? oldValue, string? newValue, DateTime createdAt) : base(id)
     {
         TicketId = ticketId;
         ActorId = actorId;
-        Action = action;
+        ActionType = actionType;
         OldValue = oldValue;
         NewValue = newValue;
         CreatedAt = createdAt;
@@ -25,7 +25,7 @@ public class TicketHistory : Entity<GuidId>
     /// </summary>
     public GuidId ActorId { get; private set; }
 
-    public ActionType Action  { get; private set; }
+    public ActionType ActionType  { get; private set; }
 
     public string? OldValue { get; private set; }
 

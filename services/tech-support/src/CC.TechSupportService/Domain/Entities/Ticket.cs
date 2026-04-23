@@ -8,37 +8,27 @@ namespace CC.TechSupportService.Domain.Entities;
 public class Ticket : AggregationRoot<GuidId>
 {
     private Ticket(GuidId id) : base(id) { }
-
+    
     private Ticket(GuidId id,
         int number,
         Reporter reporter,
-        GuidId? assigneeId,
         TicketSubject subject,
         TicketDescription description,
         TicketCategory ticketCategory,
-        TicketStatus status,
         RelatedEntity? relatedEntity,
-        DateTime? firstRespondedAt,
-        DateTime? lastUserRespondedAt,
-        Rating? rating,
-        TicketComment? comment,
-        DateTime createdAt,
-        DateTime updatedAt) : base(id)
+        DateTime createdAt) : base(id)
     {
         Number = number;
         Reporter = reporter;
-        AssigneeId = assigneeId;
         Subject = subject;
         Description = description;
         TicketCategory = ticketCategory;
-        Status = status;
+        Status = new New();
         RelatedEntity = relatedEntity;
-        FirstRespondedAt = firstRespondedAt;
-        LastUserRespondedAt = lastUserRespondedAt;
-        Rating = rating;
-        Comment = comment;
         CreatedAt = createdAt;
-        UpdatedAt = updatedAt;
+        UpdatedAt = CreatedAt;
+
+        SlaFirstResponseAt = createdAt.Add(TicketCategory.FirstResponseDeadlineInHours);
         
         AddDomainEvent(new TicketCreated(Id.Value));
     }
@@ -47,21 +37,21 @@ public class Ticket : AggregationRoot<GuidId>
     /// Человекочитаемый номер заявки, пр: SUP-0001
     /// </summary>
     public int Number { get; private set; }
-    
+
     public Reporter Reporter { get; private set; }
-    
+
     public GuidId? AssigneeId { get; private set; }
-    
+
     public TicketSubject Subject { get; private set; }
-    
+
     public TicketDescription Description { get; private set; }
-    
+
     public TicketCategory TicketCategory { get; private set; }
 
     public TicketStatus Status { get; private set; }
-    
+
     public RelatedEntity? RelatedEntity { get; set; }
-    
+
     /// <summary>
     /// Факт первого ответа от специалиста
     /// </summary>
@@ -71,47 +61,52 @@ public class Ticket : AggregationRoot<GuidId>
     /// Дедлайн первого ответа от специалиста
     /// </summary>
     public DateTime SlaFirstResponseAt { get; private set; }
-    
+
     /// <summary>
     /// Последнее время ответа пользователя
     /// </summary>
     public DateTime? LastUserRespondedAt { get; private set; }
-    
+
+    public DateTime? ResolvedAt { get; private set; }
+
+    public DateTime? ClosedAt { get; private set; }
+
     public Rating? Rating { get; private set; }
-    
+
     public ValueObjects.Ticket.TicketComment? Comment { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
-    
+
     public DateTime UpdatedAt { get; private set; }
-    
+
     public static Result<Ticket> TryCreate(GuidId id,
         int number, 
         Reporter reporter, 
-        GuidId? assigneeId, 
         TicketSubject subject, 
         TicketDescription description,
         TicketCategory ticketCategory,
-        TicketStatus ticketStatus,
         RelatedEntity? relatedEntity,
-        DateTime? firstRespondedAt,
-        DateTime? lastUserRespondedAt,
-        Rating? rating,
-        TicketComment? comment,
         DateTime createdAt)
     {
-        if(number < 0)
-            return Result.Fail("number cannot be less than 0!");
+        var errors = new List<string>();
         
-        return Result.Ok(new Ticket(id, number, reporter, assigneeId, subject, description, ticketCategory, ticketStatus, relatedEntity, firstRespondedAt, lastUserRespondedAt, rating, comment, createdAt, createdAt));
+        if(number < 0)
+             errors.Add("number cannot be less than 0!");
+        if(createdAt > DateTime.UtcNow)
+            errors.Add("created at time cannot be in the future");
+
+        if (errors.Count is not 0)
+            return Result.Fail(errors);
+        
+        return Result.Ok(new Ticket(id, number, reporter, subject, description, ticketCategory, relatedEntity, createdAt));
     }
     
     public Result ChangeAssignee(GuidId assignee, DateTime updatedAt)
     {
         if (AssigneeId is null)
             return Result.Fail("Cannot change assignee when it hasn't been assigned");
-        else if (AssigneeId!.Equals(assignee))
-            return Result.Fail("New assignee is the same as current");
+        if (AssigneeId!.Equals(assignee))
+            return Result.Fail("New assignee is the same as the current");
 
         AddDomainEvent(new AssigneeChanged(AssigneeId.Value, assignee.Value));
         AssigneeId = assignee;
@@ -120,7 +115,7 @@ public class Ticket : AggregationRoot<GuidId>
         return Result.Ok();
     }
     
-    public Result SetFirstRespondedTime(DateTime responseTime, DateTime updatedAt)
+    public Result SetFirstAssigneeRespondedTime(DateTime responseTime, DateTime updatedAt)
     {
         if (FirstRespondedAt is not null)
             return Result.Fail("First response time is already set!");
@@ -162,7 +157,7 @@ public class Ticket : AggregationRoot<GuidId>
         if (AssigneeId is null)
             return Result.Fail("Cannot Reclassify ticket with unassigned actor!");
 
-        SlaFirstResponseAt = updatedAt.AddHours(@new.FirstResponseDeadlineInHours);
+        SlaFirstResponseAt = updatedAt.Add(@new.FirstResponseDeadlineInHours);
         
         TicketCategory = @new;
         UpdatedAt = updatedAt;
@@ -188,7 +183,7 @@ public class Ticket : AggregationRoot<GuidId>
     {
         var opened = new Opened();
         if (!Status.CanTransitionTo(opened))
-            return Result.Fail($"Cannot open from {Status.Value}");
+            return Result.Fail($"Cannot open from {Status.GetType().Name}");
 
         AssigneeId = assigneeId;
         var oldStatus = Status;
@@ -202,7 +197,7 @@ public class Ticket : AggregationRoot<GuidId>
     {
         var inProgress = new InProgress();
         if (!Status.CanTransitionTo(inProgress))
-            return Result.Fail($"Cannot assign in progress from {Status}");
+            return Result.Fail($"Cannot assign in progress from {Status.GetType().Name}");
 
         var oldStatus = Status;
         UpdatedAt = updatedAt;
@@ -216,7 +211,7 @@ public class Ticket : AggregationRoot<GuidId>
     {
         var waitingForUser = new WaitingForUser();
         if (!Status.CanTransitionTo(waitingForUser))
-            return Result.Fail($"Cannot Shift to waiting for user from {Status}");
+            return Result.Fail($"Cannot Shift to waiting for user from {Status.GetType().Name}");
 
         var oldStatus = Status;
         UpdatedAt = updatedAt;
@@ -230,7 +225,7 @@ public class Ticket : AggregationRoot<GuidId>
     {
         var escalated = new Escalated();
         if (!Status.CanTransitionTo(escalated))
-            return Result.Fail($"Cannot Shift to escalated from {Status}");
+            return Result.Fail($"Cannot escalate from {Status.GetType().Name}");
 
         var oldStatus = Status;
         UpdatedAt = updatedAt;
@@ -242,13 +237,14 @@ public class Ticket : AggregationRoot<GuidId>
 
     public Result Resolve(DateTime updatedAt, DateTime resolvedAt)
     {
-        var resolved = new Resolved(resolvedAt);
+        var resolved = new Resolved();
         if (!Status.CanTransitionTo(resolved))
-            return Result.Fail($"Cannot Shift to resolved from {Status}");
+            return Result.Fail($"Cannot resolve from {Status.GetType().Name}");
 
         var oldStatus = Status;
         UpdatedAt = updatedAt;
         Status = resolved;
+        ResolvedAt = resolvedAt;
         AddDomainEvent(new TicketResolved(Id.Value, oldStatus));
         
         return Result.Ok();
@@ -258,7 +254,7 @@ public class Ticket : AggregationRoot<GuidId>
     {
         var reopened = new Reopened();
         if (!Status.CanTransitionTo(reopened))
-            return Result.Fail($"Cannot Shift to reopened from {Status}");
+            return Result.Fail($"Cannot reopen from {Status.GetType().Name}");
 
         var oldStatus = Status;
         UpdatedAt = updatedAt;
@@ -270,12 +266,13 @@ public class Ticket : AggregationRoot<GuidId>
 
     public Result Close(DateTime updatedAt, DateTime closedAt)
     {
-        var closed = new Closed(closedAt);
+        var closed = new Closed();
         if (!Status.CanTransitionTo(closed))
-            return Result.Fail($"Cannot Shift to closed from {Status}");
+            return Result.Fail($"Cannot close from {Status.GetType().Name}");
 
         var oldStatus = Status;
         UpdatedAt = updatedAt;
+        ClosedAt = closedAt;
         Status = closed;
         AddDomainEvent(new TicketClosed(Id.Value, oldStatus));
         

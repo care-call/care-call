@@ -4,7 +4,9 @@ namespace CC.TechSupportService.Domain.ValueObjects.Comment;
 
 public record CommentBody
 {
-    private const int MaxBodyLenght = 1024;
+    public const int MaxBodyLenght = 1024;
+    
+    private CommentBody() {  }
     
     private CommentBody(string body) => Body = body;
     
