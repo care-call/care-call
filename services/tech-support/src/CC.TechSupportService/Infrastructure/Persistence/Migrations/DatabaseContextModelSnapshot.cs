@@ -203,6 +203,12 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)")
+                        .HasColumnName("body");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -227,17 +233,6 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                                 .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("author_type");
-                        });
-
-                    b.ComplexProperty(typeof(Dictionary<string, object>), "Body", "CC.TechSupportService.Domain.Entities.TicketComment.Body#CommentBody", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Body")
-                                .IsRequired()
-                                .HasMaxLength(1024)
-                                .HasColumnType("character varying(1024)")
-                                .HasColumnName("body_body");
                         });
 
                     b.HasKey("Id")

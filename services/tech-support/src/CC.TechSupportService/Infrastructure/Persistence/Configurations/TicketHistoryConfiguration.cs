@@ -12,14 +12,14 @@ public class TicketHistoryConfiguration : IEntityTypeConfiguration<TicketHistory
         builder.HasKey(th => th.Id);
 
         builder.Property(th => th.Id)
-            .HasConversion(id => id.Value, value => GuidId.From(value));
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter());
         
         builder.Property(th => th.TicketId)
-            .HasConversion(id => id.Value, value => GuidId.From(value))
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter())
             .IsRequired();
         
         builder.Property(th => th.ActorId)
-            .HasConversion(id => id.Value, value => GuidId.From(value))
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter())
             .IsRequired();
 
         builder.Property(th => th.ActionType)

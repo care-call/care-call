@@ -5,7 +5,7 @@ namespace CC.TechSupportService.Domain.Entities;
 
 public class TicketAttachment : Entity<GuidId>
 {
-    private TicketAttachment(GuidId id) : base(id) {}
+    private TicketAttachment(GuidId id) : base(id) { }
     
     private TicketAttachment(GuidId id, GuidId ticketId, List<FileDetails> fileDetails, DateTime createdAt) : base(id)
     {

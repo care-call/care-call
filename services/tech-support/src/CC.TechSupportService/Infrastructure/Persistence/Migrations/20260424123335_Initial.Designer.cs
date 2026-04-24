@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260423210835_Initial")]
+    [Migration("20260424123335_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -32,6 +32,10 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<Guid>("AttachmentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("attachment_id");
 
                     b.Property<long>("ContentSize")
                         .HasColumnType("bigint")
@@ -55,15 +59,11 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(128)")
                         .HasColumnName("file_path");
 
-                    b.Property<Guid?>("TicketAttachmentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("ticket_attachment_id");
-
                     b.HasKey("Id")
                         .HasName("pk_files_details");
 
-                    b.HasIndex("TicketAttachmentId")
-                        .HasDatabaseName("ix_files_details_ticket_attachment_id");
+                    b.HasIndex("AttachmentId")
+                        .HasDatabaseName("ix_files_details_attachment_id");
 
                     b.ToTable("files_details", "tech_support");
                 });
@@ -82,13 +82,17 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("closed_at");
 
-                    b.Property<string>("Comment")
-                        .HasColumnType("text")
-                        .HasColumnName("comment");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("CsatComment")
+                        .HasColumnType("text")
+                        .HasColumnName("csat_comment");
+
+                    b.Property<byte?>("CsatRating")
+                        .HasColumnType("smallint")
+                        .HasColumnName("csat_rating");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -107,10 +111,6 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("integer")
                         .HasColumnName("number");
-
-                    b.Property<byte?>("Rating")
-                        .HasColumnType("smallint")
-                        .HasColumnName("rating");
 
                     b.Property<DateTime?>("ResolvedAt")
                         .HasColumnType("timestamp with time zone")
@@ -194,6 +194,9 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_ticket_attachments");
 
+                    b.HasIndex("TicketId")
+                        .HasDatabaseName("ix_ticket_attachments_ticket_id");
+
                     b.ToTable("ticket_attachments", "tech_support");
                 });
 
@@ -202,6 +205,12 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)")
+                        .HasColumnName("body");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -229,19 +238,11 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                                 .HasColumnName("author_type");
                         });
 
-                    b.ComplexProperty(typeof(Dictionary<string, object>), "Body", "CC.TechSupportService.Domain.Entities.TicketComment.Body#CommentBody", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Body")
-                                .IsRequired()
-                                .HasMaxLength(1024)
-                                .HasColumnType("character varying(1024)")
-                                .HasColumnName("body_body");
-                        });
-
                     b.HasKey("Id")
                         .HasName("pk_ticket_comments");
+
+                    b.HasIndex("TicketId")
+                        .HasDatabaseName("ix_ticket_comments_ticket_id");
 
                     b.ToTable("ticket_comments", "tech_support");
                 });
@@ -315,8 +316,37 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("CC.TechSupportService.Domain.Entities.TicketAttachment", null)
                         .WithMany("FileDetails")
-                        .HasForeignKey("TicketAttachmentId")
-                        .HasConstraintName("fk_files_details_ticket_attachments_ticket_attachment_id");
+                        .HasForeignKey("AttachmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_files_details_ticket_attachments_attachment_id");
+                });
+
+            modelBuilder.Entity("CC.TechSupportService.Domain.Entities.TicketAttachment", b =>
+                {
+                    b.HasOne("CC.TechSupportService.Domain.Entities.Ticket", null)
+                        .WithMany("Attachments")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_ticket_attachments_tickets_ticket_id");
+                });
+
+            modelBuilder.Entity("CC.TechSupportService.Domain.Entities.TicketComment", b =>
+                {
+                    b.HasOne("CC.TechSupportService.Domain.Entities.Ticket", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_ticket_comments_tickets_ticket_id");
+                });
+
+            modelBuilder.Entity("CC.TechSupportService.Domain.Entities.Ticket", b =>
+                {
+                    b.Navigation("Attachments");
+
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("CC.TechSupportService.Domain.Entities.TicketAttachment", b =>

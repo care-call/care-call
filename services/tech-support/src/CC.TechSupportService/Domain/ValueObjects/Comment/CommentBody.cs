@@ -1,24 +1,19 @@
-﻿using FluentResults;
+﻿using Vogen;
 
 namespace CC.TechSupportService.Domain.ValueObjects.Comment;
 
-public record CommentBody
+[ValueObject(typeof(string))]
+public partial record CommentBody
 {
     public const int MaxBodyLenght = 1024;
     
-    private CommentBody() {  }
-    
-    private CommentBody(string body) => Body = body;
-    
-    public string Body { get; private set; }
-
-    public static Result<CommentBody> TryCreate(string body)
+    private static Validation Validate(string body)
     {
         if (string.IsNullOrEmpty(body))
-            return Result.Fail("Body cannot be empty!");
+            return Validation.Invalid("Body cannot be empty!");
         else if (body.Length > MaxBodyLenght)
-            return Result.Fail($"Body length cannot be greater than {MaxBodyLenght}");
+            return Validation.Invalid($"Body length cannot be greater than {MaxBodyLenght}");
         
-        return Result.Ok();
+        return Validation.Ok;
     }
 }

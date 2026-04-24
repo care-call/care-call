@@ -1,21 +1,18 @@
-﻿using FluentResults;
+﻿using Vogen;
 
 namespace CC.TechSupportService.Domain.ValueObjects.Ticket;
 
-public record CsatRating
+/// <summary>
+/// Оценка пользователя, от 1 до 5
+/// </summary>
+[ValueObject(typeof(byte))]
+public partial record CsatRating
 {
-    private CsatRating(byte value) => Rating = value;
-    
-    /// <summary>
-    /// Оценка пользователя, от 1 до 5
-    /// </summary>
-    public byte Rating { get; private set; }
-    
-    public static Result<CsatRating> TryCreate(byte value)
+    private static Validation Validate(byte value)
     {
         if (value > 5)
-            return Result.Fail("Value cannot be greater than 5");
+            return Validation.Invalid("Value cannot be greater than 5");
         
-        return Result.Ok(new CsatRating(value));
+        return Validation.Ok;
     }
 }

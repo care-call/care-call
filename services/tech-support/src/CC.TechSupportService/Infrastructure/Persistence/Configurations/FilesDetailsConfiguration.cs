@@ -13,7 +13,7 @@ public class FilesDetailsConfiguration : IEntityTypeConfiguration<FileDetails>
         builder.HasKey(fd => fd.Id);
 
         builder.Property(fd => fd.Id)
-            .HasConversion(id => id.Value, value => GuidId.From(value));
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter());
 
         builder.Property(fd => fd.FileName)
             .HasMaxLength(FileDetails.MaxFileNameLength)
@@ -24,7 +24,7 @@ public class FilesDetailsConfiguration : IEntityTypeConfiguration<FileDetails>
             .IsRequired();
 
         builder.Property(fd => fd.ContentType)
-            .HasConversion(ct => ct.Type, value => ContentType.TryCreate(value).Value)
+            .HasConversion(new VogenEfCoreConverters.ContentTypeEfCoreValueConverter())
             .HasMaxLength(ContentType.MaxContentTypeLength)
             .IsRequired();
 

@@ -3,11 +3,11 @@ using FluentResults;
 
 namespace CC.TechSupportService.Domain.Entities;
 
-public class UserRequest : Entity<LongId>
+public class UserRequest : Entity<long>
 {
-    private UserRequest(LongId id) : base(id) { }
+    private UserRequest() : base(0) { }
 
-    private UserRequest(LongId id, GuidId userId, DateTime lastRequestTime) : base(id)
+    private UserRequest(GuidId userId, DateTime lastRequestTime) : base(0)
     {
         UserId = userId;
         AmountOfRequestForLastHour = 0;
@@ -20,13 +20,12 @@ public class UserRequest : Entity<LongId>
     
     public DateTime LastRequestTime { get; private set; }
 
-    public static Result<UserRequest> TryCreate(LongId id,
-        GuidId userId,
+    public static Result<UserRequest> TryCreate(GuidId userId,
         DateTime lastRequestTime)
     {
         if (lastRequestTime > DateTime.UtcNow)
             return Result.Fail("last request time cannot be in the future!");
         
-        return Result.Ok(new UserRequest(id, userId, lastRequestTime));
+        return Result.Ok(new UserRequest(userId, lastRequestTime));
     }
 }

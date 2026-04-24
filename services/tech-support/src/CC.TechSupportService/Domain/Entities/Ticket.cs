@@ -254,7 +254,7 @@ public class Ticket : AggregationRoot<GuidId>
         var oldStatus = Status;
         UpdatedAt = updatedAt;
         Status = opened;
-        AddDomainEvent(new TicketOpened(Id.Value, oldStatus));
+        AddDomainEvent(new TicketEvents(Id.Value, oldStatus));
         return Result.Ok();
     }
 

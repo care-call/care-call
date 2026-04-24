@@ -5,8 +5,6 @@ namespace CC.TechSupportService.Domain.ValueObjects.Ticket;
 
 public record Reporter
 {
-    private Reporter() {  }
-    
     private Reporter(Guid reporterId, ReporterType reporterType)
     {
         ReporterId = reporterId;

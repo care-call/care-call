@@ -5,7 +5,7 @@ namespace CC.TechSupportService.Domain.Events;
 
 public record TicketCreated(Guid TicketId) : IDomainEvent;
 
-public record TicketOpened(Guid TicketId, TicketStatus OldStatus) : IDomainEvent;
+public record TicketEvents(Guid TicketId, TicketStatus OldStatus) : IDomainEvent;
 
 public record TicketProgressed(Guid TicketId, TicketStatus OldStatus) : IDomainEvent;
 

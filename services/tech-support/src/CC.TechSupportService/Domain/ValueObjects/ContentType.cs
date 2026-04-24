@@ -1,16 +1,14 @@
 ﻿using System.Text.RegularExpressions;
 using FluentResults;
+using Vogen;
 
 namespace CC.TechSupportService.Domain.ValueObjects;
 
-public record ContentType
+[ValueObject(typeof(string))]
+public partial record ContentType
 {
     public const int MaxContentTypeLength = 256;
     
-    private ContentType(string type) => Type = type;
-    
-    public string Type { get; private set; }
-
     public static Result<ContentType> TryCreate(string contentType)
     {
         var errors = new List<string>();
@@ -25,6 +23,6 @@ public record ContentType
         if (errors.Count is not 0)
             return Result.Fail(errors);
         
-        return Result.Ok(new ContentType(contentType));
+        return Result.Ok(From(contentType));
     }
 }

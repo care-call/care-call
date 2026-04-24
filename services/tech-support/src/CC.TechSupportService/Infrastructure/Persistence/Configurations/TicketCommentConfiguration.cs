@@ -13,16 +13,16 @@ public class TicketCommentConfiguration : IEntityTypeConfiguration<TicketComment
         builder.HasKey(tc => tc.Id);
 
         builder.Property(tc => tc.Id)
-            .HasConversion(id => id.Value, value => GuidId.From(value));
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter());
         
         builder.Property(tc => tc.TicketId)
-            .HasConversion(ti => ti.Value, value => GuidId.From(value))
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter())
             .IsRequired();
 
         builder.ComplexProperty(tc => tc.Author, au =>
         {
             au.Property(id => id.Id)
-                .HasConversion(id => id.Value, value => GuidId.From(value))
+                .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter())
                 .IsRequired();
 
             au.Property(at => at.Type)
@@ -30,13 +30,11 @@ public class TicketCommentConfiguration : IEntityTypeConfiguration<TicketComment
                 .IsRequired();
         });
 
-        builder.ComplexProperty(tc => tc.Body, tc =>
-        {
-            tc.Property(b => b.Body)
-                .HasMaxLength(CommentBody.MaxBodyLenght)
-                .IsRequired();
-        });
-
+        builder.Property(tc => tc.Body)
+            .HasConversion(new VogenEfCoreConverters.CommentBodyEfCoreValueConverter())
+            .HasMaxLength(CommentBody.MaxBodyLenght)
+            .IsRequired();
+        
         builder.Property(tc => tc.IsInternal)
             .IsRequired();
 

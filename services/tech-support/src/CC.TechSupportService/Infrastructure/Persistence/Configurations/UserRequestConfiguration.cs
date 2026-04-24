@@ -12,11 +12,10 @@ public class UserRequestConfiguration : IEntityTypeConfiguration<UserRequest>
         builder.HasKey(usr => usr.Id);
 
         builder.Property(usr => usr.Id)
-            .HasConversion(id => id.Value, value => LongId.From(value))
             .ValueGeneratedOnAdd();
 
         builder.Property(usr => usr.UserId)
-            .HasConversion(userId => userId.Value, value => GuidId.From(value))
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter())
             .IsRequired();
 
         builder.Property(usr => usr.AmountOfRequestForLastHour)

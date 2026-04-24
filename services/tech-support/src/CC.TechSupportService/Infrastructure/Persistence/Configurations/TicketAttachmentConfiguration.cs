@@ -12,10 +12,10 @@ public class TicketAttachmentConfiguration : IEntityTypeConfiguration<TicketAtta
         builder.HasKey(ta => ta.Id);
 
         builder.Property(ta => ta.Id)
-            .HasConversion(id => id.Value, value => GuidId.From(value));
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter());
 
         builder.Property(ta => ta.TicketId)
-            .HasConversion(id => id.Value, value => GuidId.From(value))
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter())
             .IsRequired();
 
         builder.HasMany(x => x.FileDetails)

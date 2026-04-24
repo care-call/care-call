@@ -1,22 +1,19 @@
-﻿using FluentResults;
+﻿using Vogen;
 
 namespace CC.TechSupportService.Domain.ValueObjects.Ticket;
 
-public class TicketSubject
+[ValueObject(typeof(string))]
+public partial class TicketSubject
 {
     public const int MaxSubjectLenght = 256;
     
-    private TicketSubject(string subject) => Subject = subject;
-
-    public static Result<TicketSubject> TryCreate(string description)
+    private static Validation Validate(string description)
     {
         if (string.IsNullOrEmpty(description))
-            return Result.Fail("Subject cannot be null or empty");
+            return Validation.Invalid("Subject cannot be null or empty");
         else if (description.Length > MaxSubjectLenght)
-            return Result.Fail($"Subject cannot be greater than {MaxSubjectLenght}");
-        
-        return Result.Ok(new TicketSubject(description));
+            return Validation.Invalid($"Subject cannot be greater than {MaxSubjectLenght}");
+
+        return Validation.Ok;
     }
-    
-    public string Subject { get; private set; }
 }

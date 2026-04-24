@@ -13,7 +13,7 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         builder.HasKey(tc => tc.Id);
 
         builder.Property(tc => tc.Id)
-            .HasConversion(id => id.Value, value => GuidId.From(value));
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter());
 
         builder.HasMany(x => x.Attachments)
             .WithOne()
@@ -42,16 +42,16 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         });
 
         builder.Property(tc => tc.AssigneeId)
-            .HasConversion(id => id!.Value, value => GuidId.From(value))
+            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter())
             .IsRequired(false);
 
         builder.Property(tc => tc.Subject)
-            .HasConversion(sb => sb.Subject, value => TicketSubject.TryCreate(value).Value)
+            .HasConversion(new VogenEfCoreConverters.TicketSubjectEfCoreValueConverter())
             .HasMaxLength(TicketSubject.MaxSubjectLenght)
             .IsRequired();
 
         builder.Property(tc => tc.Description)
-            .HasConversion(sb => sb.Description, value => TicketDescription.TryCreate(value).Value)
+            .HasConversion(new VogenEfCoreConverters.TicketDescriptionEfCoreValueConverter())
             .HasMaxLength(TicketDescription.MaxDescriptionLenght)
             .IsRequired();
 
@@ -91,12 +91,11 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .IsRequired(false);
         
         builder.Property(rt => rt.CsatRating)
-            .HasConversion(rt => rt.Rating, x => CsatRating.TryCreate(x).Value)
+            .HasConversion(new VogenEfCoreConverters.CsatRatingEfCoreValueConverter())
             .IsRequired(false);
         
         builder.Property(rt => rt.CsatComment)
-            .HasConversion(rt => rt.Comment, 
-                x => Domain.ValueObjects.Ticket.CsatComment.TryCreate(x).Value)
+            .HasConversion(new VogenEfCoreConverters.CsatCommentEfCoreValueConverter())
             .IsRequired(false);
 
         builder.Property(cr => cr.CreatedAt)

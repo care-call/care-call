@@ -1,28 +1,15 @@
-﻿namespace CC.Shared.Domain;
+﻿using Vogen;
 
-public record GuidId : ID<GuidId?, Guid>
+namespace CC.Shared.Domain;
+
+[ValueObject<Guid>]
+public partial record GuidId
 {
-    private GuidId(Guid value) => Value = value;
-
-    public static GuidId From(Guid value)
-    {
-        if (!TryFrom(value, out var result))
-            throw new ArgumentException("Id cannot be empty");
-            
-        return result;
-    }
-
-    public static bool TryFrom(Guid value, out GuidId? result)
+    private static Validation Validate(Guid value)
     {
         if (value == Guid.Empty)
-        {
-            result = null;
-            return false;
-        }
-        
-        result = new GuidId(value);
-        return true;
-    }
+            return Validation.Invalid();
 
-    public Guid Value { get; }
+        return Validation.Ok;
+    }
 }
