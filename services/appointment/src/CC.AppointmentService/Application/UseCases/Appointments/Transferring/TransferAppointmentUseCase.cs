@@ -24,6 +24,10 @@ public static class TransferAppointmentUseCase
         var appointment = await appointmentsRepository.GetByIdAsync(command.AppointmentId);
         if (appointment is null || appointment.ClientId != command.ClientId)
             return Result.Fail(AppointmentErrors.NotFound());
+        
+        var lastAppointment = await appointmentsRepository.GetLastAppointmentAsync(command.ClientId);
+        if (lastAppointment is not null && appointment.HasInsufficientBreakAfter(lastAppointment))
+            return Result.Fail(AppointmentErrors.MinBreakBetweenAppointments);
 
         var result = appointment.Transfer(command.TimeSlot, now);
         if (result.IsFailed)
