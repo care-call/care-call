@@ -11,7 +11,7 @@ public class FileDetails : Entity<GuidId>
     
     private FileDetails(GuidId id) : base(id) { }
     
-    private FileDetails(GuidId id, string fileName, string filePath, ContentType contentType, long contentSize) : base(id)
+    private FileDetails(GuidId id, GuidId attachmentId, string fileName, string filePath, ContentType contentType, long contentSize) : base(id)
     {
         FileName = fileName;
         FilePath = filePath;
@@ -19,7 +19,17 @@ public class FileDetails : Entity<GuidId>
         ContentSize = contentSize;
     }
 
-    public static Result<FileDetails> TryCreate(GuidId id, string fileName, string filePath, ContentType contentType, long contentSize)
+    public GuidId AttachmentId { get; private set; }
+    
+    public string FileName { get; private set; }
+    
+    public string FilePath { get; private set; }
+    
+    public ContentType ContentType { get; private set; }
+    
+    public long ContentSize { get; private set; }
+    
+    public static Result<FileDetails> TryCreate(GuidId id, GuidId attachmentId, string fileName, string filePath, ContentType contentType, long contentSize)
     {
         var errors = new List<string>();
         
@@ -37,14 +47,6 @@ public class FileDetails : Entity<GuidId>
         if (errors.Count is not 0)
             return Result.Fail(errors);
         
-        return Result.Ok(new FileDetails(id, fileName, filePath, contentType, contentSize));
+        return Result.Ok(new FileDetails(id, attachmentId, fileName, filePath, contentType, contentSize));
     }
-    
-    public string FileName { get; private set; }
-    
-    public string FilePath { get; private set; }
-    
-    public ContentType ContentType { get; private set; }
-    
-    public long ContentSize { get; private set; }
 }

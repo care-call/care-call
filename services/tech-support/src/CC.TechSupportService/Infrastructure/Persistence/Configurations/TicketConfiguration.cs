@@ -15,6 +15,16 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         builder.Property(tc => tc.Id)
             .HasConversion(id => id.Value, value => GuidId.From(value));
 
+        builder.HasMany(x => x.Attachments)
+            .WithOne()
+            .HasForeignKey(x => x.TicketId)
+            .IsRequired();
+        
+        builder.HasMany(x => x.Comments)
+            .WithOne()
+            .HasForeignKey(x => x.TicketId)
+            .IsRequired();
+        
         builder.HasAlternateKey(tc => tc.Number);
         
         builder.Property(tc => tc.Number)
@@ -49,7 +59,7 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .HasConversion(x => TicketCategoryToString(x),
                 x => StringToTicketCategory(x))
             .HasMaxLength(32)
-            .IsRequired(); // maybe will work))))
+            .IsRequired();
 
         builder.Property(tc => tc.Status)
             .HasConversion(x => TicketStatusToString(x), x => StringToTicketStatus(x))
@@ -80,13 +90,13 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         builder.Property(ra => ra.ClosedAt)
             .IsRequired(false);
         
-        builder.Property(rt => rt.Rating)
-            .HasConversion(rt => rt.CsatRating, x => Rating.TryCreate(x).Value)
+        builder.Property(rt => rt.CsatRating)
+            .HasConversion(rt => rt.Rating, x => CsatRating.TryCreate(x).Value)
             .IsRequired(false);
         
-        builder.Property(rt => rt.Comment)
-            .HasConversion(rt => rt.CsatComment, 
-                x => Domain.ValueObjects.Ticket.TicketComment.TryCreate(x).Value)
+        builder.Property(rt => rt.CsatComment)
+            .HasConversion(rt => rt.Comment, 
+                x => Domain.ValueObjects.Ticket.CsatComment.TryCreate(x).Value)
             .IsRequired(false);
 
         builder.Property(cr => cr.CreatedAt)

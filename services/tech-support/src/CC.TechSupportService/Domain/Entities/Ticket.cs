@@ -7,9 +7,15 @@ namespace CC.TechSupportService.Domain.Entities;
 
 public class Ticket : AggregationRoot<GuidId>
 {
+    private List<TicketAttachment> _attachments;
+
+    private List<TicketComment> _comments;
+    
     private Ticket(GuidId id) : base(id) { }
     
     private Ticket(GuidId id,
+        List<TicketAttachment> attachments,
+        List<TicketComment> comments,
         int number,
         Reporter reporter,
         TicketSubject subject,
@@ -18,6 +24,8 @@ public class Ticket : AggregationRoot<GuidId>
         RelatedEntity? relatedEntity,
         DateTime createdAt) : base(id)
     {
+        _attachments = attachments;
+        _comments = comments;
         Number = number;
         Reporter = reporter;
         Subject = subject;
@@ -38,8 +46,12 @@ public class Ticket : AggregationRoot<GuidId>
     /// </summary>
     public int Number { get; private set; }
 
-    public Reporter Reporter { get; private set; }
+    public IReadOnlyList<TicketAttachment> Attachments => _attachments;
 
+    public IReadOnlyList<TicketComment> Comments => _comments;
+    
+    public Reporter Reporter { get; private set; }
+    
     public GuidId? AssigneeId { get; private set; }
 
     public TicketSubject Subject { get; private set; }
@@ -71,15 +83,17 @@ public class Ticket : AggregationRoot<GuidId>
 
     public DateTime? ClosedAt { get; private set; }
 
-    public Rating? Rating { get; private set; }
+    public CsatRating? CsatRating { get; private set; }
 
-    public ValueObjects.Ticket.TicketComment? Comment { get; private set; }
+    public CsatComment? CsatComment { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
 
     public DateTime UpdatedAt { get; private set; }
 
     public static Result<Ticket> TryCreate(GuidId id,
+        List<TicketAttachment> attachments,
+        List<TicketComment> ticketComments,
         int number, 
         Reporter reporter, 
         TicketSubject subject, 
@@ -98,7 +112,57 @@ public class Ticket : AggregationRoot<GuidId>
         if (errors.Count is not 0)
             return Result.Fail(errors);
         
-        return Result.Ok(new Ticket(id, number, reporter, subject, description, ticketCategory, relatedEntity, createdAt));
+        return Result.Ok(new Ticket(id, attachments, ticketComments, number, reporter, subject, description, ticketCategory, relatedEntity, createdAt));
+    }
+
+    public Result AddAttachments(List<TicketAttachment> itemsToAdd, DateTime updatedAt)
+    {
+        if (_attachments.Any(itemsToAdd.Contains))
+            return Result.Fail("cannot add elements that are currently added");
+            
+        _attachments.AddRange(itemsToAdd);
+        UpdatedAt = updatedAt;
+        
+        return Result.Ok();
+    }
+    
+    public Result RemoveAttachments(List<TicketAttachment> itemsToRemove, DateTime updatedAt)
+    {
+        if (!itemsToRemove.All(_attachments.Contains))
+            return Result.Fail("At least one element is absent in the items to remove");
+
+        foreach (var item in itemsToRemove)
+        {
+            _attachments.Remove(item);
+        }
+        UpdatedAt = updatedAt;
+        
+        return Result.Ok();
+    }
+    
+    public Result AddComments(List<TicketComment> itemsToAdd, DateTime updatedAt)
+    {
+        if (_comments.Any(itemsToAdd.Contains))
+            return Result.Fail("Cannot add elements that are currently added");
+            
+        _comments.AddRange(itemsToAdd);
+        UpdatedAt = updatedAt;
+        
+        return Result.Ok();
+    }
+    
+    public Result RemoveComments(List<TicketComment> itemsToRemove, DateTime updatedAt)
+    {
+        if (!itemsToRemove.All(_comments.Contains))
+            return Result.Fail("At least one element is absent in the items to remove");
+
+        foreach (var item in itemsToRemove)
+        {
+            _comments.Remove(item);
+        }
+        UpdatedAt = updatedAt;
+        
+        return Result.Ok();
     }
     
     public Result ChangeAssignee(GuidId assignee, DateTime updatedAt)
@@ -128,9 +192,10 @@ public class Ticket : AggregationRoot<GuidId>
     public Result SetLastUserRespondTime(DateTime lastTime, DateTime updatedAt)
     {
         if (LastUserRespondedAt > lastTime)
-            return Result.Fail("New responded time cannot be lower than current is!");
+            return Result.Fail("New responded time cannot be before than the current is!");
 
         UpdatedAt = updatedAt;
+        LastUserRespondedAt = lastTime;
         
         return Result.Ok();
     }
@@ -166,15 +231,15 @@ public class Ticket : AggregationRoot<GuidId>
         return Result.Ok();
     }
     
-    public Result LeaveRatingAndComment(Rating rating, ValueObjects.Ticket.TicketComment? comment, DateTime updatedAt)
+    public Result LeaveRatingAndComment(CsatRating csatRating, ValueObjects.Ticket.CsatComment? comment, DateTime updatedAt)
     {
-        if (Rating is not null)
+        if (CsatRating is not null)
             return Result.Fail("Cannot change Rating and comment after posting");
         
-        Rating = rating;
-        Comment = comment;
+        CsatRating = csatRating;
+        CsatComment = comment;
         UpdatedAt = updatedAt;
-        Rating = rating;
+        CsatRating = csatRating;
         
         return Result.Ok();
     }

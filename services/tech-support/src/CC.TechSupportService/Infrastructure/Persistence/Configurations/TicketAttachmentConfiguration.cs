@@ -19,7 +19,9 @@ public class TicketAttachmentConfiguration : IEntityTypeConfiguration<TicketAtta
             .IsRequired();
 
         builder.HasMany(x => x.FileDetails)
-            .WithOne();
+            .WithOne()
+            .HasForeignKey(x => x.AttachmentId)
+            .IsRequired();
 
         builder.Property(ta => ta.CreatedAt)
             .IsRequired();
