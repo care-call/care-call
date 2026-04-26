@@ -9,4 +9,10 @@ public abstract class HandbookItem
     public required string Code { get; init; }
     public required string DisplayName { get; set; }
     public bool IsActive { get; set; }
+    public virtual void UpdateFrom(HandbookItem item)
+    {
+        DisplayName = item.DisplayName;
+        IsActive = item.IsActive;
+    }
+
 }

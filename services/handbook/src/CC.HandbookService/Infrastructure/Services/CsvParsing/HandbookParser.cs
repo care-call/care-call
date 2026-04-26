@@ -5,19 +5,21 @@ using CC.HandbookService.Domain.Handbooks;
 using CC.HandbookService.Infrastructure.Services.CsvParsing.Errors;
 using CC.HandbookService.Infrastructure.Services.CsvParsing.HandbookMaps;
 using CsvHelper;
+using CsvHelper.Configuration;
 using FluentResults;
 using MissingFieldException = CsvHelper.MissingFieldException;
 
 namespace CC.HandbookService.Infrastructure.Services.CsvParsing;
 
-public class HandbookParser : IHandbookParser
+public class HandbookParser(IServiceProvider keyedProvider) : IHandbookParser
 {
     public async Task<Result<IEnumerable<T>>> ParseAsync<T>(Stream stream) 
         where T : HandbookItem
     {
         var streamReader = new StreamReader(stream);
         using var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture);
-        csvReader.Context.RegisterClassMap<HandbookItemMap>();
+        var map = keyedProvider.GetRequiredKeyedService<ClassMap>(typeof(T));
+        csvReader.Context.RegisterClassMap(map);
 
         var records = new List<T>();
         try

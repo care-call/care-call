@@ -36,10 +36,11 @@ public class HandbookRepository<T>(DatabaseContext context) : IHandbookRepositor
         return Task.CompletedTask;
     }
 
-    public Task SetAllInActiveStatus() =>
+    public Task SetInactiveStatusByMissingCodesAsync(IEnumerable<string> codes) =>
               context.Set<T>()
+                     .Where(x => x.IsActive && !codes.Contains(x.Code))
                      .ExecuteUpdateAsync(x => x
-                     .SetProperty(p => p.IsActive, false));
+                        .SetProperty(p => p.IsActive, false));
 
     public Task<Dictionary<string, T>> GetByCodes(IEnumerable<string> codes) =>
               context.Set<T>()

@@ -3,7 +3,8 @@ using CsvHelper.Configuration;
 
 namespace CC.HandbookService.Infrastructure.Services.CsvParsing.HandbookMaps;
 
-public sealed class HandbookItemMap : ClassMap<HandbookItem>
+public abstract class HandbookItemMap<T> : ClassMap<T>
+    where T : HandbookItem
 {
     public HandbookItemMap()
     {

@@ -8,6 +8,5 @@ public class ProblemAreaConfiguration : IEntityTypeConfiguration<ProblemArea>
 {
     public void Configure(EntityTypeBuilder<ProblemArea> builder)
     {
-        builder.HasIndex(x => x.Code).IsUnique();
     }
 }

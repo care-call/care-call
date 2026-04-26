@@ -5,5 +5,11 @@ namespace CC.HandbookService.Domain.Handbooks;
 /// </summary>
 public class ProblemArea : HandbookItem
 {
-
+    public override void UpdateFrom(HandbookItem item)
+    {
+        base.UpdateFrom(item);
+        if (item is ProblemArea problemArea)
+        {
+        }
+    }
 }

@@ -8,6 +8,5 @@ public class LanguageConfiguration : IEntityTypeConfiguration<Language>
 {
     public void Configure(EntityTypeBuilder<Language> builder)
     {
-        builder.HasIndex(x => x.Code).IsUnique();
     }
 }
