@@ -1,14 +1,19 @@
 using CC.Common.Json;
 using CC.Common.Logging;
+using CC.NotificationService.Api.Endpoints.Templates;
 using CC.NotificationService.Api.Endpoints.WebNotifications;
 using CC.NotificationService.Application;
 using CC.NotificationService.Infrastructure;
 using CC.NotificationService.Infrastructure.OpenApi;
 using CC.NotificationService.Infrastructure.Persistence;
 using CC.ServiceDefaults;
+using Microsoft.EntityFrameworkCore;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<DatabaseContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.AddServiceDefaults();
 
@@ -41,5 +46,5 @@ if (app.Environment.IsDevelopment())
 await app.Services.ApplyMigrationsAsync();
 
 app.MapWebNotificationsEndpoints();
-
+app.MapTemplateEndpoints();
 app.Run();

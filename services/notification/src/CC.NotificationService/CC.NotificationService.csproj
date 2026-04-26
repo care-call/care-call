@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -7,16 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore"/>
-        <PackageReference Include="EFCore.NamingConventions"/>
-        <PackageReference Include="FluentResults"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+        <PackageReference Include="Grpc.AspNetCore" />
+        <PackageReference Include="EFCore.NamingConventions" />
+        <PackageReference Include="FluentResults" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
         <PackageReference Include="WolverineFx" />
     </ItemGroup>
 
@@ -26,9 +26,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Api\Endpoints\TemplateVersions\" />
+      <Folder Include="Api\Новая папка1\" />
       <Folder Include="Application\UseCases\" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\common\CC.ServiceDefaults\CC.ServiceDefaults.csproj" />
     </ItemGroup>
+    <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://www.schemastore.org/appsscript.json" /></VisualStudio></ProjectExtensions>
 </Project>

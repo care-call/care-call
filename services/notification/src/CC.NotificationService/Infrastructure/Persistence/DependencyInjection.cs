@@ -1,6 +1,8 @@
 using CC.NotificationService.Application.Dependencies.UnitOfWork;
 using CC.NotificationService.Domain;
+using CC.NotificationService.Domain.interfaces;
 using CC.NotificationService.Infrastructure.Persistence.Notifications;
+using CC.NotificationService.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.NotificationService.Infrastructure.Persistence;
@@ -28,7 +30,9 @@ public static class DependencyInjection
         {
             return services
                 .AddScoped<IUnitOfWork, UnitOfWork>()
-                .AddScoped<INotificationsRepository, NotificationsRepository>();
+                .AddScoped<INotificationsRepository, NotificationsRepository>()
+                .AddScoped<ITemplateRepository, TemplateRepository>()
+                .AddScoped<ITemplateVersionRepository, TemplateVersionRepository>();
         }
     }
 }
