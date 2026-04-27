@@ -77,5 +77,5 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
     }
 
     public bool HasInsufficientBreakAfter(Appointment previous) =>
-        TimeSlot.From - previous.TimeSlot.From < Policy.MinBreakBetweenAppointments;
+        TimeSlot.From - previous.TimeSlot.To < Policy.MinBreakBetweenAppointments;
 }

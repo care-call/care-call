@@ -6,7 +6,8 @@ namespace CC.PractitionerService.Application.UseCases.Practitioners;
 
 public sealed record AvailablePractitionerFilter
 {
-    public DateOnly? TargetDate { get; init; }
+    public DateOnly PeriodFrom { get; init; }
+    public DateOnly PeriodTo { get; init; }
     public IReadOnlyCollection<int>? AgeGroupIds { get; init; }
     public IReadOnlyCollection<int>? ProblemAreas { get; init; }
     public IReadOnlyCollection<int>? PractitionerLanguages { get; init; }
@@ -15,17 +16,8 @@ public sealed record AvailablePractitionerFilter
     public int PageNumber { get; init; }
 }
 
-public sealed class MatchPractitionersUseCase(IAvailablePractitionersQuery availablePractitionersQuery)
+public sealed class GetAvailablePractitionersUseCase(IAvailablePractitionersQuery availablePractitionersQuery)
 {
     public async ValueTask<Result<PractitionerDto[]>> Handle(AvailablePractitionerFilter filter, CancellationToken ct)
-    {
-        var practitioners = await availablePractitionersQuery.FindAvailableAsync(filter, ct);
-
-        if (filter.TargetDate is not null)
-        {
-            //TODO: Реализовать фильтрацию по занятности
-        }
-
-        return Result.Ok(practitioners);
-    }
+        => Result.Ok(await availablePractitionersQuery.FindAvailableAsync(filter, ct));
 }

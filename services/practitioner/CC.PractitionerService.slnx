@@ -1,14 +1,18 @@
 <Solution>
   <Folder Name="/common/">
+    <Project Path="../common/CC.Analyzer/CC.Analyzer/CC.Analyzer.csproj" />
     <Project Path="../common/CC.Common/CC.Common.csproj" />
     <Project Path="../common/CC.ServiceDefaults/CC.ServiceDefaults.csproj" />
     <Project Path="../common/CC.Shared.Domain/CC.Shared.Domain.csproj" />
-    <Project Path="../common/CC.Analyzer/CC.Analyzer/CC.Analyzer.csproj" />
+    <Project Path="../common/СС.Contracts/СС.Contracts.csproj" />
   </Folder>
   <Folder Name="/docs/">
     <File Path="docs/README.md" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/CC.PractitionerService/CC.PractitionerService.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CC.PractitionerTests/CC.PractitionerTests.csproj" />
   </Folder>
 </Solution>

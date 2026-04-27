@@ -18,7 +18,7 @@ namespace CC.PractitionerService.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.1")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -169,7 +169,9 @@ namespace CC.PractitionerService.Infrastructure.Persistence.Migrations
                                     b2.Property<TimeOnly>("To");
                                 });
 
-                            b1.ToJson("recurrences");
+                            b1
+                                .ToJson("recurrences")
+                                .HasColumnType("jsonb");
                         });
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "SessionDuration", "CC.PractitionerService.Domain.WorkSchedules.WorkSchedule.SessionDuration#SessionDuration", b1 =>
@@ -198,6 +200,57 @@ namespace CC.PractitionerService.Infrastructure.Persistence.Migrations
                         .HasName("pk_work_schedules");
 
                     b.ToTable("work_schedules", (string)null);
+                });
+
+            modelBuilder.Entity("CC.PractitionerService.Infrastructure.Persistence.Availability.Models.EmploymentRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("ExternalEmploymentKey")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)")
+                        .HasColumnName("external_employment_key");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<Guid>("PractitionerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("practitioner_id");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("updated_at");
+
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "Period", "CC.PractitionerService.Infrastructure.Persistence.Availability.Models.EmploymentRecord.Period#DateTimeRange", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<DateTime>("From")
+                                .HasColumnType("timestamp without time zone")
+                                .HasColumnName("period_from");
+
+                            b1.Property<DateTime>("To")
+                                .HasColumnType("timestamp without time zone")
+                                .HasColumnName("period_to");
+                        });
+
+                    b.HasKey("Id")
+                        .HasName("pk_employments");
+
+                    b.HasIndex("ExternalEmploymentKey")
+                        .HasDatabaseName("ix_employments_external_employment_key");
+
+                    b.ToTable("employments", (string)null);
                 });
 #pragma warning restore 612, 618
         }
