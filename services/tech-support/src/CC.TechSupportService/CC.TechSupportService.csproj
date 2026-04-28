@@ -39,6 +39,7 @@
 
     <ItemGroup>
       <Folder Include="API\Contract\" />
+      <Folder Include="Application\Common\" />
       <Folder Include="Application\Interfaces\" />
       <Folder Include="Domain\Services\" />
       <Folder Include="Infrastructure\Persistence\Migrations\" />

@@ -1,10 +1,16 @@
 using CC.TechSupportService.API.Endpoints.Tickets;
 using CC.TechSupportService.Infrastructure;
+using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Host.UseWolverine(opts =>
+{
+    opts.Discovery.CustomizeHandlerDiscovery(t => t.Includes.WithNameSuffix("UseCase"));
+});
 
 var app = builder.Build();
 

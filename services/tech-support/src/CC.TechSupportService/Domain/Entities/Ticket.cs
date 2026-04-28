@@ -104,9 +104,9 @@ public class Ticket : AggregationRoot<GuidId>
     {
         var errors = new List<string>();
         
-        if(number < 0)
+        if (number < 0)
              errors.Add("number cannot be less than 0!");
-        if(createdAt > DateTime.UtcNow)
+        if (createdAt > DateTime.UtcNow)
             errors.Add("created at time cannot be in the future");
 
         if (errors.Count is not 0)
