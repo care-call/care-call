@@ -98,6 +98,26 @@ public class TransferAppointmentUseCaseTest
         result.ShouldHaveErrorCode("A203");
         await _unitOfWork.DidNotReceive().SaveAsync(Arg.Any<CancellationToken>());
     }
+    
+    [Fact]
+    public async Task Appointment_transferring_with_insufficient_break_is_rejected()
+    {
+        var currAppointmentTimeSlot = new DateTimeRange(_now.AddDays(1), _now.AddDays(1).AddHours(1));
+        _appointmentsRepository.GetByIdAsync(_appointmentId).Returns(MakeAppointment(period: currAppointmentTimeSlot));
+        
+        var newTimeSlot = new DateTimeRange(_now.AddDays(2), _now.AddDays(2).AddHours(1));
+        var lastAppointmentTimeSlot = new DateTimeRange(
+            newTimeSlot.From.Add(-AppointmentPolicy.Default.MinBreakBetweenAppointments).AddSeconds(1)
+            - (newTimeSlot.To - newTimeSlot.From),
+            newTimeSlot.From.Add(-AppointmentPolicy.Default.MinBreakBetweenAppointments).AddSeconds(1));
+        
+        _appointmentsRepository.GetLastAppointmentAsync(_clientId).Returns(MakeAppointment(period: lastAppointmentTimeSlot));
+        
+        var result = await Act();
+        
+        result.ShouldHaveErrorCode("A103");
+        await _unitOfWork.DidNotReceive().SaveAsync(Arg.Any<CancellationToken>());
+    }
 
     [Fact]
     public async Task Transferring_is_rejected_when_min_lead_time_is_violated()
