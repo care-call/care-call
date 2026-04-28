@@ -1,13 +1,19 @@
 using CC.Common.Json;
 using CC.Common.Logging;
+using CC.PractitionerService.Infrastructure.Persistence;
 using CC.PractitionerService.Api.Endpoints.Practitioners;
 using CC.PractitionerService.Api.Endpoints.WorkSchedules;
 using CC.PractitionerService.Application;
 using CC.PractitionerService.Infrastructure;
 using CC.PractitionerService.Infrastructure.OpenApi;
+using CC.ServiceDefaults;
 using Wolverine;
+using Wolverine.Kafka;
+using CC.PractitionerService.Infrastructure.MessageConsumers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -25,6 +31,7 @@ builder.Services.AddLogger(builder.Configuration);
 builder.Host.UseWolverine(opts =>
 {
     opts.Discovery.CustomizeHandlerDiscovery(t => t.Includes.WithNameSuffix("UseCase"));
+    opts.Services.AddWolverineExtension<KafkaWolverineExtension>();
 });
 
 var app = builder.Build();
@@ -37,6 +44,8 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", "v1");
     });
 }
+
+await app.Services.ApplyMigrationsAsync();
 
 app.MapWorkSchedulesEndpoints();
 app.MapPractitionersEndpoints();

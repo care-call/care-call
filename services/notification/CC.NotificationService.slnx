@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/common/">
     <Project Path="../common/CC.Common/CC.Common.csproj" />
+    <Project Path="../common/CC.ServiceDefaults/CC.ServiceDefaults.csproj" />
     <Project Path="../common/CC.Shared.Domain/CC.Shared.Domain.csproj" />
     <Project Path="../common/CC.Analyzer/CC.Analyzer/CC.Analyzer.csproj" />
   </Folder>

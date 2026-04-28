@@ -1,0 +1,29 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.2.2">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <UserSecretsId>0f8b774f-99b2-4825-8778-15a64f82bbf9</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Hosting.Docker" />
+        <PackageReference Include="Aspire.Hosting.Docker.SshDeploy" />
+        <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\appointment\src\CC.AppointmentService\CC.AppointmentService.csproj" />
+        <ProjectReference Include="..\..\..\handbook\src\CC.HandbookService\CC.HandbookService.csproj" />
+        <ProjectReference Include="..\..\..\notification\src\CC.NotificationService\CC.NotificationService.csproj" />
+        <ProjectReference Include="..\..\..\practitioner\src\CC.PractitionerService\CC.PractitionerService.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="aspire-output\" />
+      <Folder Include="infra\" />
+    </ItemGroup>
+
+</Project>

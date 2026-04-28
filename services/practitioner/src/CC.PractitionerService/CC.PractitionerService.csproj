@@ -20,6 +20,7 @@
         <PackageReference Include="Riok.Mapperly" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
         <PackageReference Include="WolverineFx" />
+        <PackageReference Include="WolverineFx.Kafka" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,8 +32,10 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\CC.Common\CC.Common.csproj" />
       <ProjectReference Include="..\..\..\common\CC.Shared.Domain\CC.Shared.Domain.csproj" />
-      <ProjectReference Include="..\..\..\common\CC.Analyzer\CC.Analyzer\CC.Analyzer.csproj"
-                        OutputItemType="Analyzer"
-                        ReferenceOutputAssembly="false" />
+      <ProjectReference Include="..\..\..\common\CC.Analyzer\CC.Analyzer\CC.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+      <ProjectReference Include="..\..\..\common\СС.Contracts\СС.Contracts.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\common\CC.ServiceDefaults\CC.ServiceDefaults.csproj" />
     </ItemGroup>
 </Project>

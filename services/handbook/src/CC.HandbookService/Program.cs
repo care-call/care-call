@@ -2,12 +2,16 @@ using CC.Common.Logging;
 using CC.HandbookService.Application;
 using CC.HandbookService.Infrastructure;
 using CC.HandbookService.Api.Endpoints;
+using CC.HandbookService.Infrastructure.OpenApi;
 using CC.HandbookService.Infrastructure.Persistence;
 using Wolverine;
+using CC.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
+builder.AddServiceDefaults();
+
+builder.Services.AddOpenApi(OpenApiConfigurator.Configure);
 builder.Logging.ClearProviders();
 builder.Services.AddLogger(builder.Configuration);
 
@@ -23,6 +27,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "v1");
+    });
 }
 
 await app.Services.ApplyMigrationsAsync();

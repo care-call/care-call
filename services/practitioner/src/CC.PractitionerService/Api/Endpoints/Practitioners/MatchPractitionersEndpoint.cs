@@ -14,12 +14,13 @@ public static class MatchPractitionersEndpoint
     {
         var result = await bus.InvokeAsync<Result<PractitionerDto[]>>(new AvailablePractitionerFilter()
         {
-            TargetDate = request.TargetDate,
+            PeriodFrom = request.PeriodFrom,
+            PeriodTo = request.PeriodTo,
             AgeGroupIds = request.AgeGroupIds,
             ProblemAreas = request.ProblemAreas,
             PractitionerFullName = request.PractitionerFullName,
             PractitionerLanguages = request.PractitionerLanguages,
         });
-        return Results.Ok(result.Value);
+        return Results.Ok(result);
     }
 }

@@ -12,7 +12,8 @@ public static class DependencyInjection
         {
             return services
                 .AddSingleton<IHandbookParser, HandbookParser>()
-                .AddHandbookLoaders();
+                .AddHandbookLoaders()
+                .AddHandbookQueryServices();
         }
 
         private IServiceCollection AddHandbookLoaders()
@@ -21,6 +22,14 @@ public static class DependencyInjection
                 .AddKeyedScoped<IHandbookLoader, HandbookLoader<Language>>(HandbookType.Languages)
                 .AddKeyedScoped<IHandbookLoader, HandbookLoader<AgeGroup>>(HandbookType.AgeGroups)
                 .AddKeyedScoped<IHandbookLoader, HandbookLoader<ProblemArea>>(HandbookType.ProblemAreas);
+        }
+        
+        private IServiceCollection AddHandbookQueryServices()
+        {
+            return services
+                .AddKeyedScoped<IHandbookQueryService, HandbookQueryService<Language>>(HandbookType.Languages)
+                .AddKeyedScoped<IHandbookQueryService, HandbookQueryService<AgeGroup>>(HandbookType.AgeGroups)
+                .AddKeyedScoped<IHandbookQueryService, HandbookQueryService<ProblemArea>>(HandbookType.ProblemAreas);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 using CC.PractitionerService.Domain.Practitioners;
+using CC.Shared.Domain.TimeRanges;
 using Riok.Mapperly.Abstractions;
 
 namespace CC.PractitionerService.Application.UseCases.Practitioners;
@@ -10,5 +11,5 @@ public partial class PractitionerMapper
     [MapProperty(nameof(PractitionerProfile.Specializations.AgeGroups), nameof(PractitionerDto.AgeGroups))]
     [MapProperty(nameof(PractitionerProfile.Specializations.Languages), nameof(PractitionerDto.Languages))]
     [MapProperty(nameof(PractitionerProfile.Specializations.ProblemAreas), nameof(PractitionerDto.ProblemAreas))]
-    public partial PractitionerDto ToDto(PractitionerProfile practitionerProfile);
+    public partial PractitionerDto ToDto(PractitionerProfile practitionerProfile, IReadOnlyCollection<DateTimeRange> availabilities);
 }
