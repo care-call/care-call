@@ -1,0 +1,11 @@
+<Solution>
+    <Folder Name="/common/">
+        <Project Path="../common/CC.Common/CC.Common.csproj" />
+        <Project Path="../common/CC.Shared.Domain/CC.Shared.Domain.csproj" />
+        <Project Path="../common/CC.Analyzer/CC.Analyzer/CC.Analyzer.csproj" />
+    </Folder>
+    
+  <Folder Name="/src/">
+      <Project Path="src/CC.TechSupportService/CC.TechSupportService.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="4a2e5858-3fab-4322-ab65-4422cf0a72c9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/CC.Shared.Domain/GuidId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/common/CC.Shared.Domain/GuidId.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/CC.TechSupportService.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/CC.TechSupportService.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Attachment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/TicketAttachment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Comment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/TicketComment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/Ticket.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/TicketHistory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/TicketHistory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/UserRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/UserRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Comment/CommentBody.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Comment/CommentBody.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/ContentType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/ContentType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/FileDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/Entities/FileDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/Reporter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/Reporter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketCategory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketCategory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketComment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketComment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketDescription.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketDescription.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketStatus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketStatus.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketSubject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Domain/ValueObjects/Ticket/TicketSubject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/tech-support/src/CC.TechSupportService/appsettings.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/Appointment.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentCompletion.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentErrors.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentPolicy.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/AppointmentStatus.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/CancellationReason.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/ClientSnapshot.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Domain/Appointments/PractitionerSnapshot.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/appointment/src/CC.AppointmentService/Infrastructure/Persistence/DatabaseContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/handbook/src/CC.HandbookService/Application/IUnitOfWork.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3CNx4Z0lbZ5Hhjk56etNrqoWzAQ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/CCL-194/ImplementsTechSupportDomain&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4a2e5858-3fab-4322-ab65-4422cf0a72c9" name="Changes" comment="" />
+      <created>1776239638097</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776239638097</updated>
+      <workItem from="1776239639101" duration="12000" />
+      <workItem from="1776239714636" duration="157000" />
+      <workItem from="1776239969678" duration="190000" />
+      <workItem from="1776240228674" duration="169000" />
+      <workItem from="1776240533965" duration="26000" />
+      <workItem from="1776240704054" duration="153000" />
+      <workItem from="1776240999890" duration="98000" />
+      <workItem from="1776241234540" duration="56000" />
+      <workItem from="1776241417340" duration="123000" />
+      <workItem from="1776241592110" duration="392000" />
+      <workItem from="1776242050753" duration="201000" />
+      <workItem from="1776242310582" duration="32000" />
+      <workItem from="1776282438147" duration="727000" />
+      <workItem from="1776331182337" duration="44000" />
+      <workItem from="1776331257588" duration="62000" />
+      <workItem from="1776331367081" duration="6000" />
+      <workItem from="1776331494197" duration="16000" />
+      <workItem from="1776335348255" duration="59000" />
+      <workItem from="1776336082402" duration="246000" />
+      <workItem from="1776368088783" duration="424000" />
+      <workItem from="1776852833959" duration="14000" />
+      <workItem from="1776970777903" duration="21000" />
+      <workItem from="1776973586693" duration="88000" />
+      <workItem from="1776974982470" duration="5000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="3" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
