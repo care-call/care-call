@@ -13,4 +13,6 @@ public interface IHandbookRepository<T>
         SortOrder? sortOrder);
     public Task DeleteAllAsync();
     public Task AddRangeAsync(IEnumerable<T> items);
+    public Task SetInactiveStatusByMissingCodesAsync(IEnumerable<string> codes);
+    public Task<Dictionary<string,T>> GetByCodes(IEnumerable<string> codes);
 }

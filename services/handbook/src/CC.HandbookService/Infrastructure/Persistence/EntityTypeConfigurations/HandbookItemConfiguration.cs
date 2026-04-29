@@ -9,7 +9,9 @@ public class HandbookItemConfiguration : IEntityTypeConfiguration<HandbookItem>
     public void Configure(EntityTypeBuilder<HandbookItem> builder)
     {
         builder.HasKey(x => x.Id);
+        builder.HasIndex(x => x.Code).IsUnique();
         builder.Property(x => x.Code).HasMaxLength(32);
         builder.Property(x => x.DisplayName).HasMaxLength(64);
+        builder.Property(x => x.IsActive);
     }
 }

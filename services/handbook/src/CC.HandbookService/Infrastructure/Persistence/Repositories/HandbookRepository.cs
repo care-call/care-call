@@ -7,20 +7,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CC.HandbookService.Infrastructure.Persistence.Repositories;
 
-public class HandbookRepository<T>(DatabaseContext context): IHandbookRepository<T> where T : HandbookItem
+public class HandbookRepository<T>(DatabaseContext context) : IHandbookRepository<T> where T : HandbookItem
 {
     public Task<PagedResult<T>> GetPageAsync(
-        PageInfo pageInfo, 
-        string? searchName, 
-        string? searchValue, 
-        string? sortBy, 
+        PageInfo pageInfo,
+        string? searchName,
+        string? searchValue,
+        string? sortBy,
         SortOrder? sortOrder)
     {
         IQueryable<T> query = context.Set<T>();
-        
+
         if (searchName != null && searchValue != null)
             query = query.ApplySearch(searchName, searchValue);
-    
+
         if (sortBy != null && sortOrder != null)
             query = query.ApplySort(sortBy, sortOrder.Value);
 
@@ -35,4 +35,15 @@ public class HandbookRepository<T>(DatabaseContext context): IHandbookRepository
         context.Set<T>().AddRange(items);
         return Task.CompletedTask;
     }
+
+    public Task SetInactiveStatusByMissingCodesAsync(IEnumerable<string> codes) =>
+              context.Set<T>()
+                     .Where(x => x.IsActive && !codes.Contains(x.Code))
+                     .ExecuteUpdateAsync(x => x
+                        .SetProperty(p => p.IsActive, false));
+
+    public Task<Dictionary<string, T>> GetByCodes(IEnumerable<string> codes) =>
+              context.Set<T>()
+                     .Where(x => codes.Contains(x.Code))
+                     .ToDictionaryAsync(x => x.Code);
 }
