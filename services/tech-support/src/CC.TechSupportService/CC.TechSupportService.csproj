@@ -21,6 +21,9 @@
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
         <PackageReference Include="WolverineFx" />
         <PackageReference Include="Vogen" />
+        <PackageReference Include="WolverineFx.EntityFrameworkCore" />
+        <PackageReference Include="WolverineFx.Http" />
+        <PackageReference Include="WolverineFx.Postgresql" />
     </ItemGroup>
 
     <ItemGroup>
@@ -38,8 +41,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Api\Contract\" />
-      <Folder Include="Domain\Services\" />
       <Folder Include="Infrastructure\Persistence\Migrations\" />
     </ItemGroup>
 

@@ -33,7 +33,7 @@ public sealed class TicketCommentConfiguration : IEntityTypeConfiguration<Ticket
             .IsRequired();
 
         builder.Property(tc => tc.CreatedAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired();
     }
 }
