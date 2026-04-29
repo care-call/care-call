@@ -91,7 +91,6 @@ public sealed class Ticket : AggregationRoot<Guid>
 
         AddDomainEvent(new AssigneeChanged(AssigneeId.Value, assigneeId));
         AssigneeId = assigneeId;
-        UpdatedAt = updatedAt;
         
         return Result.Ok();
     }
@@ -100,8 +99,7 @@ public sealed class Ticket : AggregationRoot<Guid>
     {
         if (FirstRespondedAt is not null)
             return Result.Fail(TechServiceErrors.SettingFirstAgentRespondedTimeForTheSecondTime);
-
-        UpdatedAt = updatedAt;
+        
         FirstRespondedAt = responseTime;
         return Result.Ok();
     }
@@ -110,8 +108,7 @@ public sealed class Ticket : AggregationRoot<Guid>
     {
         if (LastUserRespondedAt > lastTime)
             return Result.Fail(TechServiceErrors.LastUserRespondedTimeIsBeforeCurrent);
-
-        UpdatedAt = updatedAt;
+        
         LastUserRespondedAt = lastTime;
         
         return Result.Ok();
@@ -127,7 +124,6 @@ public sealed class Ticket : AggregationRoot<Guid>
             return Result.Fail(TechServiceErrors.TimeToEditTicketDescriptionHasPassed);
         
         Description = newDescription;
-        UpdatedAt = updatedAt;
 
         return Result.Ok();
     }
@@ -138,9 +134,7 @@ public sealed class Ticket : AggregationRoot<Guid>
             return Result.Fail(TechServiceErrors.ReclassifyingTicketWithUnassignedAgent);
 
         SlaFirstResponseAt = updatedAt.Add(@new.FirstResponseDeadlineInHours);
-        
         TicketCategory = @new;
-        UpdatedAt = updatedAt;
         
         AddDomainEvent(new TicketCategoryReclassified(Id, TicketCategory, @new, AssigneeId.Value, updatedAt));
         return Result.Ok();
@@ -153,7 +147,6 @@ public sealed class Ticket : AggregationRoot<Guid>
         
         CsatRating = csatRating;
         CsatComment = comment;
-        UpdatedAt = updatedAt;
         CsatRating = csatRating;
         
         return Result.Ok();
@@ -167,7 +160,6 @@ public sealed class Ticket : AggregationRoot<Guid>
 
         AssigneeId = assigneeId;
         var oldStatus = Status;
-        UpdatedAt = updatedAt;
         Status = opened;
         AddDomainEvent(new TicketEvents(Id, oldStatus));
         return Result.Ok();
@@ -180,7 +172,6 @@ public sealed class Ticket : AggregationRoot<Guid>
             return Result.Fail(TechServiceErrors.AssigningInProgressFromStatus(Status.GetType().Name));
 
         var oldStatus = Status;
-        UpdatedAt = updatedAt;
         Status = inProgress;
         AddDomainEvent(new TicketProgressed(Id, oldStatus));
 
@@ -194,7 +185,6 @@ public sealed class Ticket : AggregationRoot<Guid>
             return Result.Fail(TechServiceErrors.ShiftingToWaitingForUserFromStatus(Status.GetType().Name));
 
         var oldStatus = Status;
-        UpdatedAt = updatedAt;
         Status = waitingForUser;
         AddDomainEvent(new TicketShiftedToWaitingForUser(Id, oldStatus));
         
@@ -208,7 +198,6 @@ public sealed class Ticket : AggregationRoot<Guid>
             return Result.Fail(TechServiceErrors.EscalatingFromStatus(Status.GetType().Name));
 
         var oldStatus = Status;
-        UpdatedAt = updatedAt;
         Status = escalated;
         AddDomainEvent(new TicketEscalated(Id, oldStatus));
         
@@ -222,7 +211,6 @@ public sealed class Ticket : AggregationRoot<Guid>
             return Result.Fail(TechServiceErrors.ResolvingFromStatus(Status.GetType().Name));
 
         var oldStatus = Status;
-        UpdatedAt = updatedAt;
         Status = resolved;
         ResolvedAt = resolvedAt;
         AddDomainEvent(new TicketResolved(Id, oldStatus));
@@ -237,7 +225,6 @@ public sealed class Ticket : AggregationRoot<Guid>
             return Result.Fail(TechServiceErrors.ReopeningFromStatus(Status.GetType().Name));
 
         var oldStatus = Status;
-        UpdatedAt = updatedAt;
         Status = reopened;
         AddDomainEvent(new TicketReopened(Id, oldStatus));
         
@@ -251,7 +238,6 @@ public sealed class Ticket : AggregationRoot<Guid>
             return Result.Fail(TechServiceErrors.ClosingFromStatus(Status.GetType().Name));
 
         var oldStatus = Status;
-        UpdatedAt = updatedAt;
         ClosedAt = closedAt;
         Status = closed;
         AddDomainEvent(new TicketClosed(Id, oldStatus));
