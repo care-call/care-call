@@ -1,4 +1,4 @@
-﻿namespace CC.TechSupportService.API.Contracts.Enums;
+﻿namespace CC.TechSupportService.Features.Tickets;
 
 public enum TicketCategoryType
 {

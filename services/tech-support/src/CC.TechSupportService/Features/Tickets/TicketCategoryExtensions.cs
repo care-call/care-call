@@ -1,7 +1,6 @@
-﻿using CC.TechSupportService.API.Contracts.Enums;
-using CC.TechSupportService.Domain.ValueObjects.Ticket;
+﻿using CC.TechSupportService.Domain.ValueObjects.Ticket;
 
-namespace CC.TechSupportService.Application.Common.Extensions;
+namespace CC.TechSupportService.Features.Tickets;
 
 public static class TicketCategoryExtensions
 {

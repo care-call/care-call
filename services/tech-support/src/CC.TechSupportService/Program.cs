@@ -1,15 +1,20 @@
-using CC.TechSupportService.API.Endpoints.Tickets;
 using CC.TechSupportService.Infrastructure;
 using Wolverine;
+using Wolverine.EntityFrameworkCore;
+using Wolverine.Http;
+using Wolverine.Postgresql;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddWolverineHttp();
+
 builder.Host.UseWolverine(opts =>
 {
-    opts.Discovery.CustomizeHandlerDiscovery(t => t.Includes.WithNameSuffix("UseCase"));
+    opts.PersistMessagesWithPostgresql(builder.Configuration.GetConnectionString("DefaultConnection")!);
+    opts.UseEntityFrameworkCoreTransactions();
 });
 
 var app = builder.Build();
@@ -24,6 +29,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapTicketEndpoints();
 
+app.MapWolverineEndpoints();
 app.Run();

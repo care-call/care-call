@@ -19,7 +19,7 @@ public sealed class TicketAttachmentConfiguration : IEntityTypeConfiguration<Tic
             .IsRequired();
 
         builder.Property(ta => ta.CreatedAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired();
     }
 }

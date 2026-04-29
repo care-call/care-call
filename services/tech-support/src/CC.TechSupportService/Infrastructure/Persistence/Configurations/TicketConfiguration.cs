@@ -61,23 +61,23 @@ public sealed class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         });
 
         builder.Property(fr => fr.FirstRespondedAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired(false);
 
         builder.Property(sfr => sfr.SlaFirstResponseAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired();
         
         builder.Property(lu => lu.LastUserRespondedAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired(false);
 
         builder.Property(ra => ra.ResolvedAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired(false);
         
         builder.Property(ra => ra.ClosedAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired(false);
         
         builder.Property(rt => rt.CsatRating)
@@ -89,11 +89,11 @@ public sealed class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .IsRequired(false);
 
         builder.Property(cr => cr.CreatedAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired();
 
         builder.Property(ut => ut.UpdatedAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired();
     }
 

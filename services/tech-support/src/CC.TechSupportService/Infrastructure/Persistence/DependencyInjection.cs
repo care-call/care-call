@@ -1,7 +1,4 @@
-﻿using CC.TechSupportService.Application.Interfaces;
-using CC.TechSupportService.Domain.Abstractions;
-using CC.TechSupportService.Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace CC.TechSupportService.Infrastructure.Persistence;
 
@@ -18,8 +15,6 @@ public static class DependencyInjection
                 {
                     dbCtxBuilder.UseSnakeCaseNamingConvention();
                 });
-            services.AddScoped<ITicketRepository, TicketRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
