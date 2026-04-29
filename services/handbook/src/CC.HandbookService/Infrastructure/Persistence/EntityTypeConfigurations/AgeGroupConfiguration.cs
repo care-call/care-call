@@ -10,6 +10,5 @@ public class AgeGroupConfiguration : IEntityTypeConfiguration<AgeGroup>
     {
         builder.Property(x => x.FromAge);
         builder.Property(x => x.ToAge);
-
     }
 }

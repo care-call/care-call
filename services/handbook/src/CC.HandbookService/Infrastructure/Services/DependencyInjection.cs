@@ -2,6 +2,7 @@ using CC.HandbookService.Application.Dependencies;
 using CC.HandbookService.Domain.Handbooks;
 using CC.HandbookService.Infrastructure.Services.CsvParsing;
 using CC.HandbookService.Infrastructure.Services.CsvParsing.HandbookMaps;
+using CC.HandbookService.Infrastructure.Services.CsvParsing.HandbookUpdater;
 using CsvHelper.Configuration;
 
 namespace CC.HandbookService.Infrastructure.Services;
@@ -15,6 +16,7 @@ public static class DependencyInjection
             return services
                 .AddSingleton<IHandbookParser, HandbookParser>()
                 .AddHandbookLoaders()
+                .AddHandbookUpdaters()
                 .AddHandbookMaps()
                 .AddHandbookQueryServices();
         }
@@ -27,6 +29,14 @@ public static class DependencyInjection
                 .AddKeyedScoped<IHandbookLoader, HandbookLoader<ProblemArea>>(HandbookType.ProblemAreas);
         }
         
+        private IServiceCollection AddHandbookUpdaters()
+        {
+            return services
+                .AddScoped<IHandbookUpdater<Language>, LanguageUpdater>()
+                .AddScoped<IHandbookUpdater<AgeGroup>, AgeGroupUpdater>()
+                .AddScoped<IHandbookUpdater<ProblemArea>, ProblemAreaUpdater>();
+        }
+
         private IServiceCollection AddHandbookMaps()
         {
             return services
@@ -34,8 +44,6 @@ public static class DependencyInjection
                 .AddKeyedTransient<ClassMap, AgeGroupMap>(typeof(AgeGroup))
                 .AddKeyedTransient<ClassMap, ProblemAreaMap>(typeof(ProblemArea));
         }
-
-
 
         private IServiceCollection AddHandbookQueryServices()
         {

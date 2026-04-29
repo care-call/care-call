@@ -5,9 +5,10 @@ using FluentResults;
 
 namespace CC.HandbookService.Infrastructure.Services;
 
-public class HandbookLoader<T> (
+public class HandbookLoader<T>(
     IHandbookParser parser,
-    IHandbookRepository<T> repository) : IHandbookLoader 
+    IHandbookRepository<T> repository,
+    IHandbookUpdater<T> updater) : IHandbookLoader 
     where T : HandbookItem 
 {
     public async Task<Result> LoadAsync(Stream stream)
@@ -16,11 +17,9 @@ public class HandbookLoader<T> (
         if (!result.IsSuccess)
             return Result.Fail(result.Errors);
 
-        var items = result.Value
-            .GroupBy(x => x.Code)
-            .Select(y => y.Last());
+        var items = result.Value.ToList();
 
-        var itemsCodes = items.Select(x => x.Code);
+        var itemsCodes = items.Select(x => x.Code).ToArray();
         
         var entities = await repository.GetByCodes(itemsCodes);
 
@@ -31,7 +30,7 @@ public class HandbookLoader<T> (
             item.IsActive = true;
 
             if (entities.TryGetValue(item.Code, out var entity))
-                entity.UpdateFrom(item);
+                updater.Update(item, entity);
             else
                 newItems.Add(item);
         }

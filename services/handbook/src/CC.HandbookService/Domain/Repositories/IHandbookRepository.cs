@@ -14,6 +14,5 @@ public interface IHandbookRepository<T>
     public Task DeleteAllAsync();
     public Task AddRangeAsync(IEnumerable<T> items);
     public Task SetInactiveStatusByMissingCodesAsync(IEnumerable<string> codes);
-    public Task<Dictionary<string, T>> GetByCodes(IEnumerable<string> codes);
-
+    public Task<Dictionary<string,T>> GetByCodes(IEnumerable<string> codes);
 }
