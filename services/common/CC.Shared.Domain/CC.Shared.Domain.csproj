@@ -6,4 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Vogen" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="GuidId.cs" />
+    </ItemGroup>
+
 </Project>
