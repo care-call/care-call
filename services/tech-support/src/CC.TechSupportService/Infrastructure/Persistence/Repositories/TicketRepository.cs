@@ -1,28 +1,16 @@
-﻿using CC.Shared.Domain;
-using CC.TechSupportService.Domain.Abstractions;
+﻿using CC.TechSupportService.Domain.Abstractions;
 using CC.TechSupportService.Domain.Entities;
 
 namespace CC.TechSupportService.Infrastructure.Persistence.Repositories;
 
-public class TicketRepository : ITicketRepository
+public class TicketRepository(DatabaseContext dbContext) : ITicketRepository
 {
-    private readonly DatabaseContext _dbContext;
-    
-    public TicketRepository(DatabaseContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-    
-    public Task AddAsync(Ticket ticket, CancellationToken token)
-        => _dbContext.Tickets.AddAsync(ticket, token).AsTask();
+    public async ValueTask AddAsync(Ticket ticket, CancellationToken token)
+        => await dbContext.Tickets.AddAsync(ticket, token);
 
-    public Task<Ticket?> GetAsync(GuidId id, CancellationToken token)
-        => _dbContext.Tickets.FindAsync(new object?[] { id }, token).AsTask();
+    public async ValueTask<Ticket?> GetAsync(Guid id, CancellationToken token)
+        => await dbContext.Tickets.FindAsync([id], token);
 
-    public Task RemoveAsync(Ticket ticket, CancellationToken token)
-    {
-        _dbContext.Tickets.Remove(ticket);
-        
-        return Task.CompletedTask;
-    }
+    public void Remove(Ticket ticket)
+        => dbContext.Tickets.Remove(ticket);
 }

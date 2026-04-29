@@ -1,4 +1,5 @@
-﻿using Vogen;
+﻿using CC.TechSupportService.Domain.Enums;
+using Vogen;
 
 namespace CC.TechSupportService.Domain.ValueObjects.Ticket;
 
@@ -8,11 +9,6 @@ namespace CC.TechSupportService.Domain.ValueObjects.Ticket;
 [ValueObject(typeof(byte))]
 public partial record CsatRating
 {
-    private static Validation Validate(byte value)
-    {
-        if (value > 5)
-            return Validation.Invalid("Value cannot be greater than 5");
-        
-        return Validation.Ok;
-    }
+    private static Validation Validate(byte value) 
+        => value > 5 ? Validation.Invalid(TechServiceErrors.CsatRatingExceedsMaxValue.ToString()) : Validation.Ok;
 }

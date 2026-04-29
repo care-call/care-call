@@ -12,14 +12,8 @@ public record RelatedEntity
     }
     
     public Guid RelatedEntityId { get; private set; }
-    
     public RelatedEntityType RelatedType { get; private set; }
     
     public static Result<RelatedEntity> TryCreate(Guid relatedEntityId, RelatedEntityType relatedType)
-    {
-        if (relatedEntityId == Guid.Empty)
-            return Result.Fail("RelatedEntityId cannot be empty");
-        
-        return Result.Ok(new RelatedEntity(relatedEntityId, relatedType));
-    }
+        => Result.Ok(new RelatedEntity(relatedEntityId, relatedType));
 }

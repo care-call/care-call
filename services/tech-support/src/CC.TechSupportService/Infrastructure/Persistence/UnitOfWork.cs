@@ -1,16 +1,9 @@
-﻿using CC.TechSupportService.Domain.Abstractions;
+﻿using CC.TechSupportService.Application.Interfaces;
 
 namespace CC.TechSupportService.Infrastructure.Persistence;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(DatabaseContext databaseContext) : IUnitOfWork
 {
-    private readonly DatabaseContext _databaseContext;
-
-    public UnitOfWork(DatabaseContext databaseContext)
-    {
-        _databaseContext = databaseContext;
-    }
-
     public Task SaveChangesAsync(CancellationToken token)
-        => _databaseContext.SaveChangesAsync(token);
+        => databaseContext.SaveChangesAsync(token);
 }

@@ -1,11 +1,10 @@
-﻿using CC.Shared.Domain;
-using CC.TechSupportService.Domain.Entities;
+﻿using CC.TechSupportService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CC.TechSupportService.Infrastructure.Persistence.Configurations;
 
-public class UserRequestConfiguration : IEntityTypeConfiguration<UserRequest>
+public sealed class UserRequestConfiguration : IEntityTypeConfiguration<UserRequest>
 {
     public void Configure(EntityTypeBuilder<UserRequest> builder)
     {
@@ -15,7 +14,6 @@ public class UserRequestConfiguration : IEntityTypeConfiguration<UserRequest>
             .ValueGeneratedOnAdd();
 
         builder.Property(usr => usr.UserId)
-            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter())
             .IsRequired();
 
         builder.Property(usr => usr.AmountOfRequestForLastHour)

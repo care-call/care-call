@@ -12,14 +12,8 @@ public record Reporter
     }
     
     public Guid ReporterId { get; private set; }
-    
     public ReporterType ReporterType { get; private set; }
     
     public static Result<Reporter> TryCreate(Guid reporterId, ReporterType reporterType)
-    {
-        if (reporterId == Guid.Empty)
-            return Result.Fail("reporterId cannot be empty!");
-
-        return Result.Ok(new Reporter(reporterId, reporterType));
-    }
+        => Result.Ok(new Reporter(reporterId, reporterType));
 }

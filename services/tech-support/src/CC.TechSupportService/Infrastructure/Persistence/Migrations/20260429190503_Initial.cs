@@ -16,6 +16,38 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                 name: "tech_support");
 
             migrationBuilder.CreateTable(
+                name: "ticket_attachments",
+                schema: "tech_support",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ticket_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_ticket_attachments", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ticket_comments",
+                schema: "tech_support",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ticket_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    body = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: false),
+                    is_internal = table.Column<bool>(type: "boolean", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    author_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    author_type = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_ticket_comments", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ticket_histories",
                 schema: "tech_support",
                 columns: table => new
@@ -43,17 +75,17 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                     assignee_id = table.Column<Guid>(type: "uuid", nullable: true),
                     subject = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    ticket_category = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
-                    status = table.Column<string>(type: "text", nullable: false),
-                    first_responded_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    sla_first_response_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    last_user_responded_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    resolved_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    closed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ticket_category = table.Column<int>(type: "integer", maxLength: 32, nullable: false),
+                    status = table.Column<int>(type: "integer", nullable: false),
+                    first_responded_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    sla_first_response_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    last_user_responded_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    resolved_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    closed_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     csat_rating = table.Column<byte>(type: "smallint", nullable: true),
                     csat_comment = table.Column<string>(type: "text", nullable: true),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     related_entity_related_entity_id = table.Column<Guid>(type: "uuid", nullable: true),
                     related_entity_related_type = table.Column<string>(type: "text", nullable: true),
                     reporter_reporter_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -79,52 +111,6 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_users_request", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ticket_attachments",
-                schema: "tech_support",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ticket_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_ticket_attachments", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_ticket_attachments_tickets_ticket_id",
-                        column: x => x.ticket_id,
-                        principalSchema: "tech_support",
-                        principalTable: "tickets",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ticket_comments",
-                schema: "tech_support",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ticket_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    body = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: false),
-                    is_internal = table.Column<bool>(type: "boolean", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    author_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    author_type = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_ticket_comments", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_ticket_comments_tickets_ticket_id",
-                        column: x => x.ticket_id,
-                        principalSchema: "tech_support",
-                        principalTable: "tickets",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,18 +142,6 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                 schema: "tech_support",
                 table: "files_details",
                 column: "attachment_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_ticket_attachments_ticket_id",
-                schema: "tech_support",
-                table: "ticket_attachments",
-                column: "ticket_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_ticket_comments_ticket_id",
-                schema: "tech_support",
-                table: "ticket_comments",
-                column: "ticket_id");
         }
 
         /// <inheritdoc />
@@ -186,15 +160,15 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                 schema: "tech_support");
 
             migrationBuilder.DropTable(
+                name: "tickets",
+                schema: "tech_support");
+
+            migrationBuilder.DropTable(
                 name: "users_request",
                 schema: "tech_support");
 
             migrationBuilder.DropTable(
                 name: "ticket_attachments",
-                schema: "tech_support");
-
-            migrationBuilder.DropTable(
-                name: "tickets",
                 schema: "tech_support");
         }
     }

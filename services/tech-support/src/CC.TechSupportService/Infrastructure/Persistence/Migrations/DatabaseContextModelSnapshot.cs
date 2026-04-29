@@ -27,6 +27,7 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("CC.TechSupportService.Domain.Entities.FileDetails", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -68,6 +69,7 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("CC.TechSupportService.Domain.Entities.Ticket", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -76,11 +78,11 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .HasColumnName("assignee_id");
 
                     b.Property<DateTime?>("ClosedAt")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("closed_at");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("created_at");
 
                     b.Property<string>("CsatComment")
@@ -98,11 +100,11 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .HasColumnName("description");
 
                     b.Property<DateTime?>("FirstRespondedAt")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("first_responded_at");
 
                     b.Property<DateTime?>("LastUserRespondedAt")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_user_responded_at");
 
                     b.Property<int>("Number")
@@ -110,16 +112,15 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .HasColumnName("number");
 
                     b.Property<DateTime?>("ResolvedAt")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("resolved_at");
 
                     b.Property<DateTime>("SlaFirstResponseAt")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("sla_first_response_at");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
                         .HasColumnName("status");
 
                     b.Property<string>("Subject")
@@ -128,14 +129,13 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("subject");
 
-                    b.Property<string>("TicketCategory")
-                        .IsRequired()
+                    b.Property<int>("TicketCategory")
                         .HasMaxLength(32)
-                        .HasColumnType("character varying(32)")
+                        .HasColumnType("integer")
                         .HasColumnName("ticket_category");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("updated_at");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "RelatedEntity", "CC.TechSupportService.Domain.Entities.Ticket.RelatedEntity#RelatedEntity", b1 =>
@@ -177,11 +177,12 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("CC.TechSupportService.Domain.Entities.TicketAttachment", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("created_at");
 
                     b.Property<Guid>("TicketId")
@@ -191,15 +192,13 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_ticket_attachments");
 
-                    b.HasIndex("TicketId")
-                        .HasDatabaseName("ix_ticket_attachments_ticket_id");
-
                     b.ToTable("ticket_attachments", "tech_support");
                 });
 
             modelBuilder.Entity("CC.TechSupportService.Domain.Entities.TicketComment", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -210,7 +209,7 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .HasColumnName("body");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("created_at");
 
                     b.Property<bool>("IsInternal")
@@ -238,15 +237,13 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_ticket_comments");
 
-                    b.HasIndex("TicketId")
-                        .HasDatabaseName("ix_ticket_comments_ticket_id");
-
                     b.ToTable("ticket_comments", "tech_support");
                 });
 
             modelBuilder.Entity("CC.TechSupportService.Domain.Entities.TicketHistory", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -317,33 +314,6 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_files_details_ticket_attachments_attachment_id");
-                });
-
-            modelBuilder.Entity("CC.TechSupportService.Domain.Entities.TicketAttachment", b =>
-                {
-                    b.HasOne("CC.TechSupportService.Domain.Entities.Ticket", null)
-                        .WithMany("Attachments")
-                        .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_ticket_attachments_tickets_ticket_id");
-                });
-
-            modelBuilder.Entity("CC.TechSupportService.Domain.Entities.TicketComment", b =>
-                {
-                    b.HasOne("CC.TechSupportService.Domain.Entities.Ticket", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_ticket_comments_tickets_ticket_id");
-                });
-
-            modelBuilder.Entity("CC.TechSupportService.Domain.Entities.Ticket", b =>
-                {
-                    b.Navigation("Attachments");
-
-                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("CC.TechSupportService.Domain.Entities.TicketAttachment", b =>

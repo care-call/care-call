@@ -1,4 +1,4 @@
-﻿namespace CC.TechSupportService.Domain.Abstractions;
+﻿namespace CC.TechSupportService.Application.Interfaces;
 
 public interface IUnitOfWork
 {

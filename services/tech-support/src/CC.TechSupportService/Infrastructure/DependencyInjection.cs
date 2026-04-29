@@ -7,8 +7,6 @@ public static class DependencyInjection
     extension(IServiceCollection services)
     {
         public IServiceCollection AddInfrastructure(IConfiguration configuration)
-        {
-            return services.AddPersistence(configuration);
-        }
+            => services.AddPersistence(configuration);
     }
 }

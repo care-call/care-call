@@ -4,25 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CC.TechSupportService.Infrastructure.Persistence;
 
-public class DatabaseContext : Microsoft.EntityFrameworkCore.DbContext
+public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbContext(options)
 {
     public const string SchemeName = "tech_support";
     
-    public DatabaseContext(DbContextOptions<DatabaseContext> options) 
-        : base(options)
-    {
-    }
-
     public DbSet<Ticket> Tickets { get; set; }
-    
     public DbSet<TicketHistory> TicketHistories { get; set; }
-    
     public DbSet<TicketAttachment> TicketAttachments { get; set; }
-    
     public DbSet<FileDetails> FilesDetails { get; set; }
-    
     public DbSet<TicketComment> TicketComments { get; set; }
-    
     public DbSet<UserRequest> UsersRequest { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,5 +21,10 @@ public class DatabaseContext : Microsoft.EntityFrameworkCore.DbContext
         modelBuilder.HasDefaultSchema(SchemeName);
         
         base.OnModelCreating(modelBuilder);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(new ChangesInterceptor());
     }
 }
