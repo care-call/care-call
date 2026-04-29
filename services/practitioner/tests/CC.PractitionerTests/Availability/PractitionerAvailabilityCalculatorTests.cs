@@ -147,6 +147,61 @@ public class PractitionerAvailabilityCalculatorTests
         Assert.Equal(TestMondayDay.AddHours(17), availabilityPeriod.To);
     }
 
+    [Fact]
+    public void Availability_ignores_out_of_period_employments()
+    {
+        var requestedPeriod = new DateTimeRange(
+            TestMondayDay.AddHours(10),
+            TestMondayDay.AddHours(16));
+
+        var schedule = CreateWorkSchedule(
+            TestMondayDay.DayOfWeek,
+            new TimeOnly(8, 0),
+            new TimeOnly(20, 0));
+        
+
+        var employment = new EmploymentSnapshot(
+            schedule.PractitionerId,
+            string.Empty,
+            new DateTimeRange(TestMondayDay.AddHours(17), TestMondayDay.AddHours(20)),
+            DateTime.MinValue);
+        
+        var result =  _sut.Calculate(
+            [schedule],
+            [],
+            [employment],
+            requestedPeriod);
+        
+        Assert.Single(result);
+
+        var availability = result.Single();
+
+        Assert.Equal(requestedPeriod.From, availability.From);
+        Assert.Equal(requestedPeriod.To, availability.To);
+    }
+    
+    [Fact]
+    public void Availability_includes_slots_when_validity_period_ends_before_requested_period()
+    {
+        var testWednesdayDay = TestMondayDay.AddDays(2);
+    
+        var requestedPeriod = new DateTimeRange(
+            TestMondayDay, 
+            testWednesdayDay);
+    
+        var schedule = CreateWorkSchedule(
+            TestMondayDay.DayOfWeek, 
+            new TimeOnly(9, 0), 
+            new TimeOnly(17, 0),
+            validTo: DateOnly.FromDateTime(TestMondayDay.AddDays(1)));
+
+        var result = _sut.Calculate([schedule], [], [], requestedPeriod);
+
+        var slot = Assert.Single(result);
+        Assert.Equal(TestMondayDay.AddHours(9), slot.From);
+        Assert.Equal(TestMondayDay.AddHours(17), slot.To);
+    }
+
     private static WorkSchedule CreateWorkSchedule(DayOfWeek dayOfWeek, TimeOnly start, TimeOnly end, DateOnly? validTo = null)
         => new(
             Guid.Empty,

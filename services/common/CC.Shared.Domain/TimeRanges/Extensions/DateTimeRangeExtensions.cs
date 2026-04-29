@@ -15,11 +15,13 @@ public static class DateTimeRangeExtensions
 
     extension(IEnumerable<DateTimeRange> ranges)
     {
-        public IEnumerable<DateTimeRange> MergeRanges()
+        public IReadOnlyCollection<DateTimeRange> MergeRanges()
         {
-            if (!ranges.Any()) return [];
-
             var sorted = ranges.OrderBy(r => r.From).ToArray();
+            
+            if (sorted.Length == 0)
+                return [];
+
             var merged = new List<DateTimeRange>();
 
             var current = sorted[0];
@@ -58,6 +60,18 @@ public static class DateTimeRangeExtensions
 
                 if (range.To > subtract.To)
                     yield return new DateTimeRange(subtract.To, range.To);
+            }
+        }
+
+        public IEnumerable<DateTimeRange> IntersectWith(DateTimeRange intersect)
+        {
+            foreach (var r in ranges)
+            {
+                var from = DateTime.Max(r.From, intersect.From);
+                var to = DateTime.Min(r.To, intersect.To);
+
+                if (from < to)
+                    yield return new DateTimeRange(from, to);
             }
         }
     }
