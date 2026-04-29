@@ -7,8 +7,8 @@ namespace CC.PractitionerService.Domain.Availability.Services;
 public sealed class PractitionerAvailabilityCalculator
 {
     public IReadOnlyCollection<DateTimeRange> Calculate(
-        IReadOnlyCollection<WorkSchedule> workSchedules,
-        IReadOnlyCollection<Adjustment> adjustments,
+        IEnumerable<WorkSchedule> workSchedules,
+        IEnumerable<Adjustment> adjustments,
         IReadOnlyCollection<EmploymentSnapshot> employments,
         DateTimeRange period)
     {
@@ -45,15 +45,16 @@ public sealed class PractitionerAvailabilityCalculator
                 }
             }
         }
-        return [.. slots.MergeRanges()];
+        
+        return slots.MergeRanges();
     }
 
     private static IReadOnlyCollection<DateTimeRange> ApplyAdjustments(
-        IEnumerable<DateTimeRange> slots,
+        IReadOnlyCollection<DateTimeRange> slots,
         IEnumerable<Adjustment> adjustments,
         DateTimeRange period)
     {
-        var result = new List<DateTimeRange>(slots);
+        IEnumerable<DateTimeRange> result = slots;
 
         var relevantAdjustments = adjustments
             .Where(a => a.Period.From < period.To && a.Period.To > period.From)
@@ -64,61 +65,51 @@ public sealed class PractitionerAvailabilityCalculator
             var adjStart = DateTime.Max(adjustment.Period.From, period.From);
             var adjEnd = DateTime.Min(adjustment.Period.To, period.To);
 
-            if (adjStart >= adjEnd) continue;
+            if (adjStart >= adjEnd) continue; 
 
             var adjRange = new DateTimeRange(adjStart, adjEnd);
 
             if (adjustment.Type == AdjustmentType.Override)
                 result = [adjRange];
             else
-                result = [.. result.SubtractRanges(adjRange)];
+                result = result.SubtractRanges(adjRange);
         }
 
-        return [.. result.MergeRanges()];
+        return result.MergeRanges();
     }
 
     private static IReadOnlyCollection<DateTimeRange> ApplyEmployments(
-        IEnumerable<DateTimeRange> slots,
+        IReadOnlyCollection<DateTimeRange> slots,
         IEnumerable<EmploymentSnapshot> employments,
         DateTimeRange period)
     {
-        if (!employments.Any()) return [.. slots];
-
-        var employmentRanges = employments
-            .Select(e => new DateTimeRange(
-                DateTime.Max(e.Period.From, period.From),
-                DateTime.Min(e.Period.To, period.To)))
-            .Where(r => r.From < r.To);
-
-        var mergedEmployments = employmentRanges.MergeRanges();
+        var mergedEmployments = employments
+            .Select(e => e.Period)
+            .IntersectWith(period)
+            .MergeRanges();
+        
+        if (mergedEmployments.Count == 0)
+            return slots;
 
         var result = new List<DateTimeRange>();
-
-        foreach (var orderedSlot in slots.OrderBy(x => x.From))
+        foreach (var orderedSlot in slots)
         {
-            var sorted = mergedEmployments
-                .Where(x => x.From < orderedSlot.To)
-                .OrderBy(x => x.From);
+            var potentiallyIntersecting = mergedEmployments.Where(x => x.From < orderedSlot.To);
 
             var current = orderedSlot.From;
-            var currentMax = current;
 
-            foreach (var employment in sorted)
+            foreach (var employment in potentiallyIntersecting)
             {
                 if (employment.From > current)
                     result.Add(new DateTimeRange(current, employment.From));
 
-                current = employment.To;
-
-                if (currentMax < current)
-                    currentMax = current;
+                current = DateTime.Max(current, employment.To);
             }
 
             if (current < orderedSlot.To)
-                result.Add(new DateTimeRange(
-                    currentMax > current ? currentMax : current,
-                    orderedSlot.To));
+                result.Add(new DateTimeRange(current, orderedSlot.To));
         }
-        return [.. result.MergeRanges()];
+        
+        return result.MergeRanges();
     }
 }

@@ -147,6 +147,39 @@ public class PractitionerAvailabilityCalculatorTests
         Assert.Equal(TestMondayDay.AddHours(17), availabilityPeriod.To);
     }
 
+    [Fact]
+    public void Availability_ignores_out_of_period_employments()
+    {
+        var requestedPeriod = new DateTimeRange(
+            TestMondayDay.AddHours(10),
+            TestMondayDay.AddHours(16));
+
+        var schedule = CreateWorkSchedule(
+            TestMondayDay.DayOfWeek,
+            new TimeOnly(8, 0),
+            new TimeOnly(20, 0));
+        
+
+        var employment = new EmploymentSnapshot(
+            schedule.PractitionerId,
+            string.Empty,
+            new DateTimeRange(TestMondayDay.AddHours(17), TestMondayDay.AddHours(20)),
+            DateTime.MinValue);
+        
+        var result =  _sut.Calculate(
+            [schedule],
+            [],
+            [employment],
+            requestedPeriod);
+        
+        Assert.Single(result);
+
+        var availability = result.Single();
+
+        Assert.Equal(requestedPeriod.From, availability.From);
+        Assert.Equal(requestedPeriod.To, availability.To);
+    }
+
     private static WorkSchedule CreateWorkSchedule(DayOfWeek dayOfWeek, TimeOnly start, TimeOnly end, DateOnly? validTo = null)
         => new(
             Guid.Empty,
