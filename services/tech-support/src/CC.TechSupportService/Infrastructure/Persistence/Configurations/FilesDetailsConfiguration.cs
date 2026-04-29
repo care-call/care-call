@@ -1,5 +1,4 @@
 ﻿using CC.TechSupportService.Domain.Entities;
-using CC.TechSupportService.Domain.ValueObjects;
 using CC.TechSupportService.Domain.ValueObjects.FileDetails;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

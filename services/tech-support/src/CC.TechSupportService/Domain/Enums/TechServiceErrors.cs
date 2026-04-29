@@ -1,5 +1,4 @@
 ﻿using CC.Common.Errors;
-using CC.TechSupportService.Domain.ValueObjects;
 using CC.TechSupportService.Domain.ValueObjects.Comment;
 using CC.TechSupportService.Domain.ValueObjects.FileDetails;
 using CC.TechSupportService.Domain.ValueObjects.Ticket;

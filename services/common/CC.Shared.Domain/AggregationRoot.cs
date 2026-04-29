@@ -6,9 +6,9 @@ public abstract class AggregationRoot<TId>(TId id) : Entity<TId>(id)
 
     public IReadOnlyList<IDomainEvent> Events => _events; 
     
-    protected void AddDomainEvent(IDomainEvent @event)
-        => _events.Add(@event);
-
     public void ClearDomainEvents()
         => _events.Clear();
+    
+    protected void AddDomainEvent(IDomainEvent @event)
+        => _events.Add(@event);
 }

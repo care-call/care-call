@@ -1,6 +1,5 @@
 ﻿using CC.Shared.Domain;
 using CC.TechSupportService.Domain.Enums;
-using CC.TechSupportService.Domain.ValueObjects;
 using CC.TechSupportService.Domain.ValueObjects.FileDetails;
 using FluentResults;
 

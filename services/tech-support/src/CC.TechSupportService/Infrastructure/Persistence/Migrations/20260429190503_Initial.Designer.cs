@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260429034245_Initial")]
+    [Migration("20260429190503_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -122,9 +122,8 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("sla_first_response_at");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
                         .HasColumnName("status");
 
                     b.Property<string>("Subject")
@@ -133,10 +132,9 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("subject");
 
-                    b.Property<string>("TicketCategory")
-                        .IsRequired()
+                    b.Property<int>("TicketCategory")
                         .HasMaxLength(32)
-                        .HasColumnType("character varying(32)")
+                        .HasColumnType("integer")
                         .HasColumnName("ticket_category");
 
                     b.Property<DateTime>("UpdatedAt")

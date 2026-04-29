@@ -41,13 +41,13 @@ public sealed class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .IsRequired();
 
         builder.Property(tc => tc.TicketCategory)
-            .HasConversion(x => TicketCategoryToString(x),
-                x => StringToTicketCategory(x))
+            .HasConversion(x => TicketCategoryToInt(x),
+                x => IntToTicketCategory(x))
             .HasMaxLength(32)
             .IsRequired();
 
         builder.Property(tc => tc.Status)
-            .HasConversion(x => TicketStatusToString(x), x => StringToTicketStatus(x))
+            .HasConversion(x => TicketStatusToInt(x), x => IntToTicketStatus(x))
             .IsRequired();
 
         builder.ComplexProperty(x => x.RelatedEntity, x =>
@@ -97,32 +97,49 @@ public sealed class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .IsRequired();
     }
 
-    private static string TicketCategoryToString(TicketCategory category)
-        => category.GetType().Name;
-
-    private static TicketCategory StringToTicketCategory(string value) => value switch
+    private static int TicketCategoryToInt(TicketCategory category) => category switch
     {
-        nameof(Bug) => new Bug(),
-        nameof(Question) => new Question(),
-        nameof(FeatureRequest) => new FeatureRequest(),
-        nameof(Complaint) => new Complaint(),
-        nameof(AccountIssue) => new AccountIssue(),
+        Bug => 1,
+        Question => 2,
+        FeatureRequest => 3,
+        Complaint => 4,
+        AccountIssue => 5,
+        _ => throw new ArgumentException("Invalid category!")
+    };
+
+    private static TicketCategory IntToTicketCategory(int value) => value switch
+    {
+        1 => new Bug(),
+        2 => new Question(),
+        3 => new FeatureRequest(),
+        4 => new Complaint(),
+        5 => new AccountIssue(),
         _ => throw new ArgumentException("Invalid input!")
     };
 
-    private static string TicketStatusToString(TicketStatus status)
-        => status.GetType().Name;
-
-    private static TicketStatus StringToTicketStatus(string value) => value switch
+    private static int TicketStatusToInt(TicketStatus status) => status switch
     {
-        nameof(New) => new New(),
-        nameof(Opened) => new Opened(),
-        nameof(InProgress) => new InProgress(),
-        nameof(WaitingForUser) => new WaitingForUser(),
-        nameof(Escalated) => new Escalated(),
-        nameof(Resolved) => new Resolved(),
-        nameof(Reopened) => new Reopened(),
-        nameof(Closed) => new Closed(),
+        New => 1,
+        Opened => 2,
+        InProgress => 3,
+        WaitingForUser => 4,
+        Escalated => 5,
+        Resolved => 6,
+        Reopened => 7,
+        Closed => 8,
+        _ => throw new ArgumentException("Invalid status type!")
+    };
+
+    private static TicketStatus IntToTicketStatus(int value) => value switch
+    {
+        1 => new New(),
+        2 => new Opened(),
+        3 => new InProgress(),
+        4 => new WaitingForUser(),
+        5 => new Escalated(),
+        6 => new Resolved(),
+        7 => new Reopened(),
+        8 => new Closed(),
         _ => throw new ArgumentException("Invalid input!")
     };
 }
