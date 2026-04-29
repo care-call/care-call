@@ -115,8 +115,8 @@ public sealed class AvailablePractitionersQuery(
             .Select(p => mapper.ToDto(
                 p.Profile,
                 availabilityCalculator.Calculate(
-                    [.. p.Schedules.Select(x => x.Schedule)],
-                    [.. p.Schedules.SelectMany(x => x.Adjustments)],
+                    p.Schedules.Select(x => x.Schedule),
+                    p.Schedules.SelectMany(x => x.Adjustments),
                     p.Employments,
                     period)))
             .Where(dto => dto.Availabilities.Count > 0)];
