@@ -1,4 +1,5 @@
-﻿using Vogen;
+﻿using CC.TechSupportService.Domain.Enums;
+using Vogen;
 
 namespace CC.TechSupportService.Domain.ValueObjects.Ticket;
 
@@ -8,14 +9,17 @@ namespace CC.TechSupportService.Domain.ValueObjects.Ticket;
 [ValueObject(typeof(string))]
 public partial record CsatComment
 {
-    private const int MaxCommentLength = 1024;
+    public const int MaxCommentLength = 1024;
+    public const int MinCommentLength = 16; 
     
     private static Validation Validate(string comment)
     {
-        if(comment == string.Empty)
-            return Validation.Invalid("Comment cannot be empty");
-        else if(comment.Length > MaxCommentLength)
-            return Validation.Invalid($"Comment length cannot be greater than {MaxCommentLength}");
+        if(string.IsNullOrEmpty(comment))
+            return Validation.Invalid(TechServiceErrors.CsatCommentIsEmpty.ToString());
+        if(comment.Length > MaxCommentLength)
+            return Validation.Invalid(TechServiceErrors.CsatCommentLengthExceeded.ToString());
+        if (comment.Length < MinCommentLength)
+            return Validation.Invalid(TechServiceErrors.CsatCommentLengthTooShort.ToString());
         
         return Validation.Ok;
     }

@@ -1,29 +1,15 @@
-﻿using CC.Shared.Domain;
-using CC.TechSupportService.Domain.Entities;
+﻿using CC.TechSupportService.Domain.Entities;
 using CC.TechSupportService.Domain.ValueObjects.Ticket;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CC.TechSupportService.Infrastructure.Persistence.Configurations;
 
-public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
+public sealed class TicketConfiguration : IEntityTypeConfiguration<Ticket>
 {
     public void Configure(EntityTypeBuilder<Ticket> builder)
     {
         builder.HasKey(tc => tc.Id);
-
-        builder.Property(tc => tc.Id)
-            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter());
-
-        builder.HasMany(x => x.Attachments)
-            .WithOne()
-            .HasForeignKey(x => x.TicketId)
-            .IsRequired();
-        
-        builder.HasMany(x => x.Comments)
-            .WithOne()
-            .HasForeignKey(x => x.TicketId)
-            .IsRequired();
         
         builder.HasAlternateKey(tc => tc.Number);
         
@@ -42,7 +28,6 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         });
 
         builder.Property(tc => tc.AssigneeId)
-            .HasConversion(new VogenEfCoreConverters.GuidIdEfCoreValueConverter())
             .IsRequired(false);
 
         builder.Property(tc => tc.Subject)
@@ -76,18 +61,23 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         });
 
         builder.Property(fr => fr.FirstRespondedAt)
+            .HasColumnType("timestamp without time zone")
             .IsRequired(false);
 
         builder.Property(sfr => sfr.SlaFirstResponseAt)
+            .HasColumnType("timestamp without time zone")
             .IsRequired();
         
         builder.Property(lu => lu.LastUserRespondedAt)
+            .HasColumnType("timestamp without time zone")
             .IsRequired(false);
 
         builder.Property(ra => ra.ResolvedAt)
+            .HasColumnType("timestamp without time zone")
             .IsRequired(false);
         
         builder.Property(ra => ra.ClosedAt)
+            .HasColumnType("timestamp without time zone")
             .IsRequired(false);
         
         builder.Property(rt => rt.CsatRating)
@@ -99,13 +89,15 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .IsRequired(false);
 
         builder.Property(cr => cr.CreatedAt)
+            .HasColumnType("timestamp without time zone")
             .IsRequired();
 
         builder.Property(ut => ut.UpdatedAt)
+            .HasColumnType("timestamp without time zone")
             .IsRequired();
     }
 
-    private static string TicketCategoryToString(TicketCategory category) 
+    private static string TicketCategoryToString(TicketCategory category)
         => category.GetType().Name;
 
     private static TicketCategory StringToTicketCategory(string value) => value switch

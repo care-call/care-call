@@ -1,4 +1,5 @@
-﻿using CC.TechSupportService.Domain.Abstractions;
+﻿using CC.TechSupportService.Application.Interfaces;
+using CC.TechSupportService.Domain.Abstractions;
 using CC.TechSupportService.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 

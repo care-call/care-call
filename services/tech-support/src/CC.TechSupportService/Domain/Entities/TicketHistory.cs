@@ -4,11 +4,11 @@ using FluentResults;
 
 namespace CC.TechSupportService.Domain.Entities;
 
-public class TicketHistory : Entity<GuidId>
+public sealed class TicketHistory : Entity<Guid>
 {
-    private TicketHistory(GuidId id) : base(id) { }
+    private TicketHistory(Guid id) : base(id) { }
 
-    private TicketHistory(GuidId id, GuidId ticketId, GuidId actorId, ActionType actionType, string? oldValue, string? newValue, DateTime createdAt) : base(id)
+    private TicketHistory(Guid id, Guid ticketId, Guid actorId, ActionType actionType, string? oldValue, string? newValue, DateTime createdAt) : base(id)
     {
         TicketId = ticketId;
         ActorId = actorId;
@@ -18,12 +18,12 @@ public class TicketHistory : Entity<GuidId>
         CreatedAt = createdAt;
     }
     
-    public GuidId TicketId { get; private set; }
+    public Guid TicketId { get; private set; }
 
     /// <summary>
     /// Кто сделал изменения
     /// </summary>
-    public GuidId ActorId { get; private set; }
+    public Guid ActorId { get; private set; }
 
     public ActionType ActionType  { get; private set; }
 
@@ -33,16 +33,16 @@ public class TicketHistory : Entity<GuidId>
 
     public DateTime CreatedAt { get; private set; }
 
-    public static Result<TicketHistory> TryCreate(GuidId id, 
-        GuidId ticketId, 
-        GuidId actorId, 
+    public static Result<TicketHistory> TryCreate(Guid id, 
+        Guid ticketId, 
+        Guid actorId, 
         ActionType action, 
         string? oldValue, 
         string? newValue, 
         DateTime createdAt)
     {
-        if(ticketId.Equals(actorId))
-            return Result.Fail("Ticket id cannot be the same as actor id!");
+        if (ticketId.Equals(actorId))
+            return Result.Fail(TechServiceErrors.PassingTheSameTicketIdAsActorId);
         
         return Result.Ok(new TicketHistory(id, ticketId, actorId, action, oldValue, newValue, createdAt));
     }

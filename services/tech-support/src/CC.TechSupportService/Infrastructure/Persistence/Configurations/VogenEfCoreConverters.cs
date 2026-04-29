@@ -7,6 +7,5 @@ namespace CC.TechSupportService.Infrastructure.Persistence.Configurations;
 [EfCoreConverter<Domain.ValueObjects.Ticket.CsatRating>]
 [EfCoreConverter<Domain.ValueObjects.Ticket.TicketDescription>]
 [EfCoreConverter<Domain.ValueObjects.Ticket.TicketSubject>]
-[EfCoreConverter<Domain.ValueObjects.ContentType>]
-[EfCoreConverter<Shared.Domain.GuidId>]
-internal partial class VogenEfCoreConverters;
+[EfCoreConverter<Domain.ValueObjects.FileDetails.ContentType>]
+internal sealed partial  class VogenEfCoreConverters;

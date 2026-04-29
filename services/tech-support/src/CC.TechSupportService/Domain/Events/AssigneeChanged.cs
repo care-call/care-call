@@ -2,4 +2,4 @@
 
 namespace CC.TechSupportService.Domain.Events;
 
-public record AssigneeChanged(Guid OldAssigneeId, Guid NewAssigneeId) : IDomainEvent;
+public sealed record AssigneeChanged(Guid OldAssigneeId, Guid NewAssigneeId) : IDomainEvent;
