@@ -1,12 +1,13 @@
 ﻿using CC.TechSupportService.Domain.ValueObjects.Ticket;
+using CC.TechSupportService.Features.Tickets.Enums;
 
-namespace CC.TechSupportService.Features.Tickets;
+namespace CC.TechSupportService.Features.Tickets.Extensions;
 
 public static class TicketCategoryExtensions
 {
     extension(TicketCategoryType type)
     {
-        public TicketCategory ToDomain()
+        public TicketCategory ToTicketCategory()
         {
             return type switch
             {
