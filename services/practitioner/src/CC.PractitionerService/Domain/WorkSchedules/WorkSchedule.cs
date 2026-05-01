@@ -55,6 +55,10 @@ public sealed class WorkSchedule : AggregationRoot<Guid>
         => ValidityPeriod.IsActiveOn(queryDate);
 
     public bool IsActiveOn(DateTimeRange period)
-        => ValidityPeriod.IsActiveOn(DateOnly.FromDateTime(period.From)) &&
-           ValidityPeriod.IsActiveOn(DateOnly.FromDateTime(period.To));
+    {
+        var lowerBoundIsIntersected = ValidityPeriod.IsActiveOn(DateOnly.FromDateTime(period.From));
+        var upperBoundIsIntersected = ValidityPeriod.IsActiveOn(DateOnly.FromDateTime(period.To));
+        
+        return lowerBoundIsIntersected || upperBoundIsIntersected || !lowerBoundIsIntersected && !upperBoundIsIntersected;
+    }
 }
