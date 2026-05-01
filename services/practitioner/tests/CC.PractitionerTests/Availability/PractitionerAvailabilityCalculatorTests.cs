@@ -45,6 +45,47 @@ public class PractitionerAvailabilityCalculatorTests
         Assert.Equal(TestMondayDay.AddHours(9), slot.From);
         Assert.Equal(TestMondayDay.AddHours(17), slot.To);
     }
+
+    [Fact]
+    public void Should_return_true_if_the_schedule_has_overlapping()
+    {
+        var testSundayDay = TestMondayDay.Subtract(TimeSpan.FromDays(1));
+        var testTuesdayDay = TestMondayDay.AddDays(1);
+        var testWednesdayDay = TestMondayDay.AddDays(2);
+    
+        var requestedPeriod = new DateTimeRange(
+            TestMondayDay, 
+            testWednesdayDay);
+    
+        var scheduleForSunday = CreateWorkSchedule(
+            testSundayDay.DayOfWeek, 
+            new TimeOnly(9, 0), 
+            new TimeOnly(17, 0),
+            validTo: DateOnly.FromDateTime(TestMondayDay.Subtract(TimeSpan.FromDays(1))));
+        
+        var scheduleForMonday = CreateWorkSchedule(
+            TestMondayDay.DayOfWeek, 
+            new TimeOnly(9, 0), 
+            new TimeOnly(17, 0),
+            validTo: DateOnly.FromDateTime(TestMondayDay.AddDays(1)));
+        
+        var scheduleForTuesday = CreateWorkSchedule(
+            testTuesdayDay.DayOfWeek, 
+            new TimeOnly(9, 0), 
+            new TimeOnly(17, 0),
+            validTo: DateOnly.FromDateTime(TestMondayDay.AddDays(2)));
+        
+        var scheduleForWednesday = CreateWorkSchedule(
+            testWednesdayDay.DayOfWeek, 
+            new TimeOnly(9, 0), 
+            new TimeOnly(17, 0),
+            validTo: DateOnly.FromDateTime(TestMondayDay.AddDays(3)));
+    
+        
+        var result = _sut.Calculate([scheduleForSunday, scheduleForMonday, scheduleForTuesday, scheduleForWednesday], [], [], requestedPeriod);
+
+        Assert.True(result.Count is 2);
+    }
     
     [Fact]
     public void Availability_excludes_hours_when_schedule_is_outside_validity_period()

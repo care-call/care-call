@@ -1,3 +1,5 @@
+using CC.Shared.Domain.TimeRanges;
+
 namespace CC.PractitionerService.Domain.WorkSchedules;
 
 public sealed record WorkScheduleValidityPeriod
@@ -25,4 +27,12 @@ public sealed record WorkScheduleValidityPeriod
 
     public bool IsActiveOn(DateOnly date) =>
         date >= From && (!To.HasValue || date <= To.Value);
+    
+    public bool HasOverlapWith(DateTimeRange period)
+    {
+        var lowerBoundIsOverlapping = IsActiveOn(DateOnly.FromDateTime(period.From));
+        var upperBoundIsOverlapping = IsActiveOn(DateOnly.FromDateTime(period.To));
+        
+        return lowerBoundIsOverlapping || upperBoundIsOverlapping || !lowerBoundIsOverlapping && !upperBoundIsOverlapping;
+    }
 }
