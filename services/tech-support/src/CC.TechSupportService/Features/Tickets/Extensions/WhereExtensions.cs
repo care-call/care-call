@@ -14,10 +14,9 @@ public static class WhereExtensions
                 return query;
 
             var parsedStatus = ParseStatus(status);
-
-            return parsedStatus is null ? query.Where(t => false) : query.Where(t => t.Status == parsedStatus);
+            return query.Where(t => t.Status == parsedStatus);
         }
-        private static TicketStatus? ParseStatus(string status)
+        private static TicketStatus ParseStatus(string status)
         {
             if (!Enum.TryParse<TicketStatusType>(status, ignoreCase: true, out var statusType)
                 || !Enum.IsDefined(statusType))

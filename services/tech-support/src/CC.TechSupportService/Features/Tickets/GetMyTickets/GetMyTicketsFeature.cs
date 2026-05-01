@@ -61,7 +61,6 @@ public class GetMyTicketsFeature
             query = query.WhereStatus(filterDto.Status);
         return query;
     }
-
 }
 
 public sealed record TicketItemDto
