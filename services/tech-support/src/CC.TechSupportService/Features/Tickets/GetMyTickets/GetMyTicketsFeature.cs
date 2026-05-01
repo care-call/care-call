@@ -1,5 +1,7 @@
-﻿using CC.Common.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using CC.Common.Models;
 using CC.TechSupportService.Domain.Entities;
+using CC.TechSupportService.Features.Tickets.Enums;
 using CC.TechSupportService.Features.Tickets.Extensions;
 using CC.TechSupportService.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +20,36 @@ public class GetMyTicketsFeature
         int pageSize,
         DatabaseContext dbContext)
     {
-        var query = dbContext.Tickets.AsQueryable();
-    
-        query = ApplyFilters(query, filterDto);
-        var pagedResult = await ApplyPagination(query, new PageInfo(pageNumber, pageSize));
+        var pageInfo = new PageInfo(pageNumber, pageSize);
+
+        object pageInfoObject = pageInfo;
+
+        var validationResults = new List<ValidationResult>();
+
+        var isValid = Validator.TryValidateObject(
+            pageInfoObject,
+            new ValidationContext(pageInfoObject),
+            validationResults,
+            validateAllProperties: true);
+
+        if (!isValid)
+        {
+            var errors = validationResults
+                .SelectMany(x => x.MemberNames.Select(member => new
+                {
+                    Member = member,
+                    Error = x.ErrorMessage ?? "Validation error"
+                }))
+                .GroupBy(x => x.Member)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Select(e => e.Error).ToArray());
+
+            return Results.ValidationProblem(errors);
+        }
+        
+        var query = ApplyFilters(dbContext.Tickets.AsQueryable(), filterDto);
+        var pagedResult = await ApplyPagination(query, pageInfo);
        
         return Results.Ok(pagedResult);
     }
@@ -48,18 +76,21 @@ public class GetMyTicketsFeature
             })
             .ToList();
         
-        var pagedResult = new PagedResult<TicketItemDto>(pageItems, pageInfo, totalRows, totalPages);
-        
-        return pagedResult;
+        return new PagedResult<TicketItemDto>(pageItems, pageInfo, totalRows, totalPages);;
     } 
     
     private static IQueryable<Ticket> ApplyFilters(
         IQueryable<Ticket> query,
         GetMyTicketsFilterDto? filterDto)
     {
-        if (filterDto != null) 
-            query = query.WhereStatus(filterDto.Status);
-        return query;
+        if (filterDto is null)
+            return query;
+
+        if (!filterDto.Status.HasValue) 
+            return query;
+        
+        var status = filterDto.Status.Value.ToTicketStatus();
+        return query.Where(t => t.Status == status);
     }
 }
 
@@ -73,4 +104,4 @@ public sealed record TicketItemDto
     public required string Status { get; set; }
 }
 
-public sealed record GetMyTicketsFilterDto(string? Status);
+public sealed record GetMyTicketsFilterDto(TicketStatusType? Status);
