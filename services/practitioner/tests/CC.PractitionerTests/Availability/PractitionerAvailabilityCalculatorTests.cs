@@ -47,7 +47,7 @@ public class PractitionerAvailabilityCalculatorTests
     }
 
     [Fact]
-    public void Should_return_true_if_the_schedule_has_overlapping()
+    public void Availability_includes_overlapping_slots()
     {
         var testSundayDay = TestMondayDay.Subtract(TimeSpan.FromDays(1));
         var testTuesdayDay = TestMondayDay.AddDays(1);
