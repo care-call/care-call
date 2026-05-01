@@ -1,8 +1,8 @@
 ﻿using CC.Common.Models;
+using CC.Common.Validations;
 using CC.TechSupportService.Domain.Entities;
 using CC.TechSupportService.Features.Tickets.Enums;
 using CC.TechSupportService.Features.Tickets.Extensions;
-using CC.TechSupportService.Features.Tickets.Validation;
 using CC.TechSupportService.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,8 +22,10 @@ public class GetMyTicketsFeature
     {
         var pageInfo = new PageInfo(pageNumber, pageSize);
 
-        if (pageInfo.ValidateByDataAnnotations() is { } error)
-            return error;
+        var validationErrors = DataAnnotationsValidation.ValidateByDataAnnotations(pageInfo);
+
+        if (validationErrors.Count > 0)
+            return Results.ValidationProblem(validationErrors);
         
         var query = ApplyFilters(dbContext.Tickets.AsQueryable(), filterDto);
         var pagedResult = await ApplyPagination(query, pageInfo);
