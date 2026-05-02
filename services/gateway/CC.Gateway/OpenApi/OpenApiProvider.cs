@@ -25,14 +25,14 @@ public class OpenApiProvider
     public IEnumerable<OpenApiDocumentInfo>? GetDocuments()
         => _documents.Values;
     
-    public async Task<string> GetDocumentAsJsonAsync(string clusterId, string route)
+    public Task<string> GetDocumentAsJsonAsync(string clusterId, string route)
     {
         var client = _httpClientFactory.CreateClient();
         
         var address = _clusterInfoProvider.GetAddress(clusterId);
         var url = new Uri(new Uri(address, UriKind.Absolute), route).ToString();
         
-        return await client.GetStringAsync(url);
+        return client.GetStringAsync(url);
     }
     
     private IEnumerable<OpenApiDocumentInfo> CreateDocuments()
