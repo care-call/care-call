@@ -32,5 +32,4 @@ builder.AddProject<Projects.CC_HandbookService>("handbook")
     .WaitFor(handbookDb)
     .WithExternalHttpEndpoints();
 
-
 builder.Build().Run();

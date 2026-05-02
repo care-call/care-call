@@ -7,11 +7,11 @@ namespace CC.PractitionerService.Infrastructure.Persistence.Adjustments;
 
 public class AdjustmentRepository(DatabaseContext db) : IAdjustmentRepository
 {
-    public async Task AddAsync(ICollection<Adjustment> adjustments) =>
-        await db.AddRangeAsync(adjustments);
+    public Task AddAsync(ICollection<Adjustment> adjustments) 
+        => db.AddRangeAsync(adjustments);
 
-    public async Task<List<Adjustment>> GetWeeklyAsync(Guid scheduleId, Week week) =>
-        await db.Adjustments.Where(a => a.WorkScheduleId == scheduleId &&
+    public Task<List<Adjustment>> GetWeeklyAsync(Guid scheduleId, Week week) 
+        => db.Adjustments.Where(a => a.WorkScheduleId == scheduleId &&
                                         a.Period.From >= week.StartedAt
                                         && a.Period.To <= week.EndedAt).ToListAsync();
 

@@ -23,6 +23,7 @@
     <PackageVersion Include="WolverineFx.Postgresql" Version="5.34.0" />
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
     <PackageVersion Include="WolverineFx.Kafka" Version="5.34.0" />
+    <PackageVersion Include="AsyncFixer" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />

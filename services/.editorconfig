@@ -7,3 +7,10 @@ dotnet_diagnostic.CCA0001.severity = error
 dotnet_code_quality.CCA0001.Domain = Application, Infrastructure
 dotnet_code_quality.CCA0001.Application = Infrastructure
 dotnet_code_quality.CCA0001.Infrastructure = Api, Controller
+
+dotnet_diagnostic.AsyncFixer01.severity = error
+dotnet_diagnostic.AsyncFixer02.severity = error
+dotnet_diagnostic.AsyncFixer03.severity = error
+dotnet_diagnostic.AsyncFixer04.severity = error
+dotnet_diagnostic.AsyncFixer05.severity = error
+dotnet_diagnostic.AsyncFixer06.severity = error
