@@ -12,24 +12,35 @@ var appointmentDb = postgres.AddDatabase("appointment-db", "care-call-appointmen
 var notificationDb = postgres.AddDatabase("notification-db", "care-call-notification");
 var handbookDb = postgres.AddDatabase("handbook-db", "handbook");
 
-builder.AddProject<Projects.CC_PractitionerService>("practitioner")
+var practitioner = builder.AddProject<Projects.CC_PractitionerService>("practitioner")
     .WithReference(practitionerDb, "DefaultConnection")
     .WaitFor(practitionerDb)
     .WithExternalHttpEndpoints();
 
-builder.AddProject<Projects.CC_AppointmentService>("appointment")
+var appointment = builder.AddProject<Projects.CC_AppointmentService>("appointment")
     .WithReference(appointmentDb, "DefaultConnection")
     .WaitFor(appointmentDb)
     .WithExternalHttpEndpoints();
 
-builder.AddProject<Projects.CC_NotificationService>("notification")
+var notification = builder.AddProject<Projects.CC_NotificationService>("notification")
     .WithReference(notificationDb, "DefaultConnection")
     .WaitFor(notificationDb)
     .WithExternalHttpEndpoints();
 
-builder.AddProject<Projects.CC_HandbookService>("handbook")
+var handbook = builder.AddProject<Projects.CC_HandbookService>("handbook")
     .WithReference(handbookDb, "DefaultConnection")
     .WaitFor(handbookDb)
+    .WithExternalHttpEndpoints();
+
+builder.AddProject<Projects.CC_Gateway>("gateway")
+    .WithReference(practitioner)
+    .WithReference(appointment)
+    .WithReference(notification)
+    .WithReference(handbook)
+    .WaitFor(practitioner)
+    .WaitFor(appointment)
+    .WaitFor(notification)
+    .WaitFor(handbook)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();
