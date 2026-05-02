@@ -1,13 +1,8 @@
-﻿using CC.Common.Models;
-
-namespace CC.NotificationService.Domain.interfaces;
+﻿namespace CC.NotificationService.Domain.Interfaces;
 
 public interface ITemplateVersionRepository
 {
-    Task<TemplateVersion> CreateAsync(TemplateVersion templateVersion);
+    ValueTask AddAsync(TemplateVersion templateVersion);
     Task<TemplateVersion> GetByIdAsync(Guid Id);
-    Task<TemplateVersion> DeleteByIdAsync(Guid Id);
-    Task SaveAsync();
-    void Update(TemplateVersion templateVersion);
-    Task<PagedResult<TemplateVersion>> GetAllAsync(bool isActive, int page, int pageSize);
+    Task DeleteByIdAsync(TemplateVersion templateVersion);
 }

@@ -1,6 +1,6 @@
 using CC.Common.Json;
 using CC.Common.Logging;
-using CC.NotificationService.Api.Endpoints.Templates;
+using CC.NotificationService.Api.Endpoints.Template;
 using CC.NotificationService.Api.Endpoints.WebNotifications;
 using CC.NotificationService.Application;
 using CC.NotificationService.Infrastructure;

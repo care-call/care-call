@@ -1,8 +1,10 @@
+using CC.NotificationService.Application.Dependencies;
 using CC.NotificationService.Application.Dependencies.UnitOfWork;
 using CC.NotificationService.Domain;
-using CC.NotificationService.Domain.interfaces;
+using CC.NotificationService.Domain.Interfaces;
 using CC.NotificationService.Infrastructure.Persistence.Notifications;
 using CC.NotificationService.Infrastructure.Repositories;
+using CC.NotificationService.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.NotificationService.Infrastructure.Persistence;
@@ -11,11 +13,11 @@ public static class DependencyInjection
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddPersistence(IConfiguration configuration)
-        {
-            return services.AddEfCore(configuration).AddRepositories();
-        }
-
+        public IServiceCollection AddPersistence(IConfiguration configuration)       
+          => services
+            .AddEfCore(configuration)
+            .AddDependencies();
+        
         public IServiceCollection AddEfCore(IConfiguration configuration)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -26,13 +28,13 @@ public static class DependencyInjection
                     .UseSnakeCaseNamingConvention());
         }
 
-        public IServiceCollection AddRepositories()
-        {
-            return services
+        public IServiceCollection AddDependencies()        
+           => services
                 .AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddScoped<INotificationsRepository, NotificationsRepository>()
                 .AddScoped<ITemplateRepository, TemplateRepository>()
-                .AddScoped<ITemplateVersionRepository, TemplateVersionRepository>();
-        }
+                .AddScoped<ITemplateVersionRepository, TemplateVersionRepository>()
+                .AddScoped<ITemplateVersionQuery, TemplateVersionQueryService>()
+                .AddScoped<ITemplateQuery, TemplateQueryService>();       
     }
 }
