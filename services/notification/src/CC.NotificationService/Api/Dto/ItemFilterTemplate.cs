@@ -2,4 +2,4 @@
 
 namespace CC.NotificationService.Api.Dto;
 
-public record ItemFilterTemplate([FromQuery] bool IsActive, [FromQuery] string Key);
+public sealed record ItemFilterTemplate([FromQuery] bool IsActive, [FromQuery] string Key);

@@ -31,5 +31,4 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\common\CC.ServiceDefaults\CC.ServiceDefaults.csproj" />
     </ItemGroup>
-    <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://www.schemastore.org/appsscript.json" /></VisualStudio></ProjectExtensions>
 </Project>

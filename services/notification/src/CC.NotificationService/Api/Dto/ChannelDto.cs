@@ -2,4 +2,4 @@
 
 namespace CC.NotificationService.Api.Dto;
 
-public record ChannelDto(ChannelType Channel, string Content);
+public sealed record ChannelDto(ChannelType Channel, string Content);
