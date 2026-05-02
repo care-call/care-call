@@ -2,11 +2,11 @@
 
 public class TemplateVersion
 {
-    public Guid Id { get; init; }
-    public string TemplateKey { get; init; }
-    public Template Template { get; init; }
-    public int Version { get; init; }
-    public bool IsActive { get; init; }
-    public List<ChannelContext> Channels { get; init; }
-    public DateTime CreatedAt { get; init; }
+    public Guid Id { get; set; }
+    public string TemplateKey { get; set; }
+    public Template Template { get; set; }
+    public int Version { get; set; }
+    public bool IsActive { get; set; }
+    public List<ChannelContext> Channels { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
