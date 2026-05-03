@@ -1,3 +1,6 @@
+using CC.NotificationService.Application.Dependencies;
+using CC.NotificationService.Application.Services;
+
 namespace CC.NotificationService.Application;
 
 public static class DependencyInjection
@@ -7,7 +10,8 @@ public static class DependencyInjection
         public IServiceCollection AddApplication()
         {
             services.AddSingleton(TimeProvider.System);
-            return services;
+            services.AddScoped<ITemplateService, TemplateService>();
+            return services;          
         }
     }
 }

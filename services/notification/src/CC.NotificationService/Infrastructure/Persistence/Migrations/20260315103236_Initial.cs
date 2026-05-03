@@ -1,5 +1,4 @@
-﻿using System;
-using CC.NotificationService.Domain;
+﻿using CC.NotificationService.Domain;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
