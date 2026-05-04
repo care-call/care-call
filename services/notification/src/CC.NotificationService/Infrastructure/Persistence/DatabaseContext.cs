@@ -1,4 +1,5 @@
-using CC.NotificationService.Domain;
+using CC.NotificationService.Domain.Notifications;
+using CC.NotificationService.Domain.Templates;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.NotificationService.Infrastructure.Persistence;
