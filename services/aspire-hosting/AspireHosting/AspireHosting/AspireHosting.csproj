@@ -19,6 +19,7 @@
         <ProjectReference Include="..\..\..\handbook\src\CC.HandbookService\CC.HandbookService.csproj" />
         <ProjectReference Include="..\..\..\notification\src\CC.NotificationService\CC.NotificationService.csproj" />
         <ProjectReference Include="..\..\..\practitioner\src\CC.PractitionerService\CC.PractitionerService.csproj" />
+        <ProjectReference Include="..\..\..\gateway\CC.Gateway\CC.Gateway.csproj" />
     </ItemGroup>
 
     <ItemGroup>
