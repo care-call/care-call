@@ -14,23 +14,19 @@ var handbookDb = postgres.AddDatabase("handbook-db", "handbook");
 
 var practitioner = builder.AddProject<Projects.CC_PractitionerService>("practitioner")
     .WithReference(practitionerDb, "DefaultConnection")
-    .WaitFor(practitionerDb)
-    .WithExternalHttpEndpoints();
+    .WaitFor(practitionerDb);
 
 var appointment = builder.AddProject<Projects.CC_AppointmentService>("appointment")
     .WithReference(appointmentDb, "DefaultConnection")
-    .WaitFor(appointmentDb)
-    .WithExternalHttpEndpoints();
+    .WaitFor(appointmentDb);
 
 var notification = builder.AddProject<Projects.CC_NotificationService>("notification")
     .WithReference(notificationDb, "DefaultConnection")
-    .WaitFor(notificationDb)
-    .WithExternalHttpEndpoints();
+    .WaitFor(notificationDb);
 
 var handbook = builder.AddProject<Projects.CC_HandbookService>("handbook")
     .WithReference(handbookDb, "DefaultConnection")
-    .WaitFor(handbookDb)
-    .WithExternalHttpEndpoints();
+    .WaitFor(handbookDb);
 
 builder.AddProject<Projects.CC_Gateway>("gateway")
     .WithReference(practitioner)
