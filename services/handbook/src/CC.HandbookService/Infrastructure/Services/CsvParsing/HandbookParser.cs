@@ -6,6 +6,7 @@ using CC.HandbookService.Infrastructure.Services.CsvParsing.Errors;
 using CC.HandbookService.Infrastructure.Services.CsvParsing.HandbookMaps;
 using CsvHelper;
 using CsvHelper.Configuration;
+using CsvHelper.TypeConversion;
 using FluentResults;
 using MissingFieldException = CsvHelper.MissingFieldException;
 
@@ -25,7 +26,11 @@ public class HandbookParser(IServiceProvider keyedProvider) : IHandbookParser
         try
         {
             await foreach (var record in csvReader.GetRecordsAsync<T>())
+            {
+                if (record is AgeGroup ageGroup && ageGroup.FromAge > ageGroup.ToAge)
+                    return Result.Fail(ParserErrors.InvalidAgeRange("FromAge/ToAge"));
                 records.Add(record);
+            }
         }
         catch (MissingFieldException ex)
         {
@@ -36,6 +41,11 @@ public class HandbookParser(IServiceProvider keyedProvider) : IHandbookParser
         {
             var cellName = GetCellName(ex);
             return Result.Fail(ParserErrors.EmptyField(cellName));
+        }
+        catch(TypeConverterException ex)
+        {
+            var cellName = GetCellName(ex);
+            return Result.Fail(ParserErrors.InvalidFormat(cellName));
         }
         
         return Result.Ok<IEnumerable<T>>(records);
