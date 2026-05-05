@@ -1,10 +1,14 @@
 ﻿using System.Reflection;
 using CC.TechSupportService.Domain.Entities;
+using CC.TechSupportService.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace CC.TechSupportService.Infrastructure.Persistence;
 
-public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbContext(options)
+public class DatabaseContext(
+    DbContextOptions<DatabaseContext> options,
+    IConnectionMultiplexer connectionMultiplexer) : DbContext(options)
 {
     public const string SchemeName = "tech_support";
     
@@ -25,6 +29,8 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.AddInterceptors(new ChangesInterceptor());
+        optionsBuilder.AddInterceptors(
+            new ChangesInterceptor(),
+            new TicketChangesInterceptor(connectionMultiplexer));
     }
 }

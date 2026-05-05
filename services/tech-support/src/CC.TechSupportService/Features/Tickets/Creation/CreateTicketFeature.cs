@@ -4,13 +4,16 @@ using CC.TechSupportService.Domain.ValueObjects.Ticket;
 using CC.TechSupportService.Features.Tickets.Enums;
 using CC.TechSupportService.Features.Tickets.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Wolverine.Attributes;
 using Wolverine.Http;
 using Wolverine.Persistence;
+using Wolverine.RateLimiting;
 
 namespace CC.TechSupportService.Features.Tickets.Creation;
 
 public class CreateTicketFeature
 {
+    [Middleware(typeof(TicketRateLimitMiddleware))]
     [ProducesResponseType<CreateTicketResponse>(200)]
     [WolverinePost("api/v1/tickets")]
     public static (IResult, Insert<Ticket>) Handle(CreateTicketRequest command)
