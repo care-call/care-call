@@ -47,7 +47,7 @@ public static class CreateAppointmentUseCase
         if (hasIntercept)
             return Result.Fail(AppointmentErrors.HasIntercepts());
 
-        await appointmentsRepository.AddAsync(appointment);
+        appointmentsRepository.Add(appointment);
         await unitOfWork.SaveAsync(cancellationToken);
         await jobBackgroundTasks.ScheduleCallCreationAsync(appointment);
         return Result.Ok();

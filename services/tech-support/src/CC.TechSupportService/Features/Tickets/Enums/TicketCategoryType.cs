@@ -1,4 +1,4 @@
-﻿namespace CC.TechSupportService.Features.Tickets;
+﻿namespace CC.TechSupportService.Features.Tickets.Enums;
 
 public enum TicketCategoryType
 {

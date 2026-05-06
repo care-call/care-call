@@ -24,8 +24,8 @@ public sealed class PractitionerAvailabilityCalculator
         var slots = new List<DateTimeRange>();
         var periodStart = DateOnly.FromDateTime(period.From);
         var periodEnd = DateOnly.FromDateTime(period.To);
-
-        foreach (var schedule in workSchedules.Where(s => s.IsActiveOn(period)))
+        
+        foreach (var schedule in workSchedules.Where(s => s.ValidityPeriod.HasOverlapWith(period)))
         {
             var scheduleEnd = schedule.ValidityPeriod.To ?? periodEnd;
             var effectiveEnd = scheduleEnd < periodEnd ? scheduleEnd : periodEnd;

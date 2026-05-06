@@ -1,4 +1,5 @@
-using CC.NotificationService.Domain;
+using CC.NotificationService.Domain.Notifications;
+using CC.NotificationService.Domain.Templates;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.NotificationService.Infrastructure.Persistence;
@@ -6,6 +7,8 @@ namespace CC.NotificationService.Infrastructure.Persistence;
 public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbContext(options)
 {
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<Template> Templates { get; set; }
+    public DbSet<TemplateVersion> TemplateVersions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

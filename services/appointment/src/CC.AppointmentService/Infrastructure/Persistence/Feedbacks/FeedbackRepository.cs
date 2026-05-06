@@ -9,6 +9,6 @@ internal sealed class FeedbackRepository(DatabaseContext db) : IFeedbackReposito
     public async Task AddAsync(Feedback feedback) =>
         await db.Feedbacks.AddAsync(feedback);
 
-    public async Task<bool> ExistsByAppointmentIdAsync(Guid appointmentId) =>
-        await db.Feedbacks.AnyAsync(feedback => feedback.AppointmentId == appointmentId);
+    public Task<bool> ExistsByAppointmentIdAsync(Guid appointmentId) 
+        => db.Feedbacks.AnyAsync(feedback => feedback.AppointmentId == appointmentId);
 }

@@ -1,34 +1,41 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>CC.NotificationService</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore"/>
-        <PackageReference Include="EFCore.NamingConventions"/>
-        <PackageReference Include="FluentResults"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+        <PackageReference Include="EFCore.NamingConventions" />
+        <PackageReference Include="FluentResults" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Riok.Mapperly" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
         <PackageReference Include="WolverineFx" />
+        <PackageReference Include="Vogen" />
+        <PackageReference Include="WolverineFx.EntityFrameworkCore" />
+        <PackageReference Include="WolverineFx.Http" />
+        <PackageReference Include="WolverineFx.Postgresql" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\common\CC.Common\CC.Common.csproj" />
         <ProjectReference Include="..\..\..\common\CC.Shared.Domain\CC.Shared.Domain.csproj" />
+        <ProjectReference Include="..\..\..\common\CC.Analyzer\CC.Analyzer\CC.Analyzer.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Application\UseCases\" />
+        <Folder Include="Infrastructure\Persistence\Migrations\" />
     </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\common\CC.ServiceDefaults\CC.ServiceDefaults.csproj" />
-    </ItemGroup>
+
 </Project>
