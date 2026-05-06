@@ -28,7 +28,14 @@ public class HandbookParser(IServiceProvider keyedProvider) : IHandbookParser
             await foreach (var record in csvReader.GetRecordsAsync<T>())
             {
                 if (record is AgeGroup ageGroup && ageGroup.FromAge > ageGroup.ToAge)
-                    return Result.Fail(ParserErrors.InvalidAgeRange("FromAge/ToAge"));
+                {
+                    var cellName = CsvCellHelper.GetCellName(
+                        csvReader.Context.Parser.Row,
+                        csvReader.Context.Reader.CurrentIndex + 1);
+                    
+                    return Result.Fail(ParserErrors.InvalidAgeRange(cellName));
+                }
+
                 records.Add(record);
             }
         }
