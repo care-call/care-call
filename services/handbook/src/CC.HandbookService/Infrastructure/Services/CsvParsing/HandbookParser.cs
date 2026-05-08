@@ -27,7 +27,6 @@ public class HandbookParser(IServiceProvider keyedProvider) : IHandbookParser
         {
             await foreach (var record in csvReader.GetRecordsAsync<T>())
                 records.Add(record);
-            
         }
         catch (MissingFieldException ex)
         {
@@ -39,7 +38,7 @@ public class HandbookParser(IServiceProvider keyedProvider) : IHandbookParser
             var cellName = GetCellName(ex);
             return Result.Fail(ParserErrors.EmptyField(cellName));
         }
-        catch(TypeConverterException ex)
+        catch (TypeConverterException ex)
         {
             var cellName = GetCellName(ex);
             return Result.Fail(ParserErrors.InvalidFormat(cellName));
