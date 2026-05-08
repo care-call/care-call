@@ -20,7 +20,16 @@ public class HandbookLoader<T>(
         var items = result.Value.ToList();
 
         var itemsCodes = items.Select(x => x.Code).ToArray();
-        
+
+        if (items is List<AgeGroup> ageGroups)
+        {
+            foreach (var ageGroup in ageGroups)
+            {
+                if (ageGroup.FromAge > ageGroup.ToAge)
+                    return Result.Fail($"FromAge не может быть больше ToAge");
+            }
+        }
+
         var entities = await repository.GetByCodes(itemsCodes);
 
         var newItems = new List<T>();

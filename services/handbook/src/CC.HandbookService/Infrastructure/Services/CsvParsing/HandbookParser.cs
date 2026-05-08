@@ -26,18 +26,8 @@ public class HandbookParser(IServiceProvider keyedProvider) : IHandbookParser
         try
         {
             await foreach (var record in csvReader.GetRecordsAsync<T>())
-            {
-                if (record is AgeGroup ageGroup && ageGroup.FromAge > ageGroup.ToAge)
-                {
-                    var cellName = CsvCellHelper.GetCellName(
-                        csvReader.Context.Parser.Row,
-                        csvReader.Context.Reader.CurrentIndex + 1);
-                    
-                    return Result.Fail(ParserErrors.InvalidAgeRange(cellName));
-                }
-
                 records.Add(record);
-            }
+            
         }
         catch (MissingFieldException ex)
         {
