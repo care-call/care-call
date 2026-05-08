@@ -16,9 +16,9 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Npgsql.DependencyInjection" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
         <PackageReference Include="Riok.Mapperly" />
-        <PackageReference Include="StackExchange.Redis" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
         <PackageReference Include="WolverineFx" />
         <PackageReference Include="Vogen" />
@@ -39,10 +39,6 @@
         <ProjectReference Include="..\..\..\common\CC.Analyzer\CC.Analyzer\CC.Analyzer.csproj"
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Infrastructure\Persistence\Migrations\" />
     </ItemGroup>
 
 </Project>

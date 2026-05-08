@@ -3,6 +3,7 @@ using CC.TechSupportService.Domain.Enums;
 using CC.TechSupportService.Domain.Events;
 using CC.TechSupportService.Domain.ValueObjects.Ticket;
 using FluentResults;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CC.TechSupportService.Domain.Entities;
 
@@ -76,6 +77,7 @@ public sealed class Ticket : AggregationRoot<Guid>
         RelatedEntity? relatedEntity,
         DateTime createdAt)
     {
+        //TODO: БАГ
         if (number < 0)
             Result.Fail(TechServiceErrors.NegativeTicketNumber);
         

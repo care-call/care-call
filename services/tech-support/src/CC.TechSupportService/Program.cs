@@ -1,5 +1,4 @@
 using CC.TechSupportService.Infrastructure;
-using StackExchange.Redis;
 using Wolverine;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.Http;
@@ -9,10 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
-var valkey = ConnectionMultiplexer.Connect(
-    builder.Configuration.GetConnectionString("ValkeyConnection")!);
-
-builder.Services.AddSingleton<IConnectionMultiplexer>(valkey);
 
 builder.Services.AddWolverineHttp();
 

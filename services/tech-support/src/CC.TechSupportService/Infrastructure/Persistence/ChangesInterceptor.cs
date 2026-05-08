@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace CC.TechSupportService.Infrastructure.Persistence.Interceptors;
+namespace CC.TechSupportService.Infrastructure.Persistence;
 
 public class ChangesInterceptor : SaveChangesInterceptor
 {

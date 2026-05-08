@@ -29,7 +29,7 @@ public class CreateTicketFeature
             DateTime.UtcNow);
         
         return (Results.Ok(new CreateTicketResponse(ticketResult.Value.Number)), new Insert<Ticket>(ticketResult.Value));
-    }
+    }   
 }
 
 public sealed record CreateTicketResponse(int TicketNumber);
