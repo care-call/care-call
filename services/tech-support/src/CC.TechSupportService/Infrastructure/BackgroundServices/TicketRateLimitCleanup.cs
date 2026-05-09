@@ -1,9 +1,10 @@
 using CC.TechSupportService.Domain.Constants;
+using CC.TechSupportService.Infrastructure.BackgroundServices.SqlExecutor;
 using Npgsql;
 
 namespace CC.TechSupportService.Infrastructure.BackgroundServices;
 
-public static class TicketRateLimitCleanupService
+public static class TicketRateLimitCleanup
 {
     extension(IServiceCollection services)
     {
@@ -14,7 +15,7 @@ public static class TicketRateLimitCleanupService
                 "DELETE FROM ticket_rate_limits WHERE now() - created_at >= @window",
                 [new NpgsqlParameter("window", TicketRateLimitConstants.Window)],
                 TimeSpan.FromHours(1),
-                sp.GetRequiredService<ILogger<IntervalSqlExecutor>>()));
+                sp.GetRequiredService<ILoggerFactory>().CreateLogger("TicketRateLimitCleanup")));
 
             return services;
         }
