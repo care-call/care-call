@@ -1,4 +1,4 @@
-namespace CC.NotificationService.Domain;
+namespace CC.NotificationService.Domain.Notifications;
 
 public enum NotificationChannelType
 {

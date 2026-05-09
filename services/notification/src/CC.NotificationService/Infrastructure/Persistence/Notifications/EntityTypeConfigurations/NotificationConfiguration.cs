@@ -1,4 +1,4 @@
-using CC.NotificationService.Domain;
+using CC.NotificationService.Domain.Notifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

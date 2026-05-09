@@ -1,6 +1,6 @@
 using CC.Shared.Domain;
 
-namespace CC.NotificationService.Domain;
+namespace CC.NotificationService.Domain.Notifications;
 
 public sealed partial class Notification : AggregationRoot<Guid>
 {

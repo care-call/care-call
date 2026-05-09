@@ -14,15 +14,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CC.NotificationService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260315103236_Initial")]
-    partial class Initial
+    [Migration("20260426164646_AddsTemplateHistoryAndTemplate")]
+    partial class AddsTemplateHistoryAndTemplate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.1")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -66,6 +66,68 @@ namespace CC.NotificationService.Infrastructure.Persistence.Migrations
                     b.ToTable("notifications", (string)null);
                 });
 
+            modelBuilder.Entity("CC.NotificationService.Domain.Template", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("create_at");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("key");
+
+                    b.HasKey("Id")
+                        .HasName("pk_templates");
+
+                    b.HasAlternateKey("Key")
+                        .HasName("ak_templates_key");
+
+                    b.ToTable("templates", (string)null);
+                });
+
+            modelBuilder.Entity("CC.NotificationService.Domain.TemplateVersion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("create_at");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("TemplateKey")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("template_key");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("integer")
+                        .HasColumnName("version");
+
+                    b.HasKey("Id")
+                        .HasName("pk_template_versions");
+
+                    b.HasIndex("TemplateKey")
+                        .HasDatabaseName("ix_template_versions_template_key");
+
+                    b.ToTable("template_versions", (string)null);
+                });
+
             modelBuilder.Entity("CC.NotificationService.Domain.Notification", b =>
                 {
                     b.OwnsMany("CC.NotificationService.Domain.NotificationChannel", "Channels", b1 =>
@@ -107,6 +169,46 @@ namespace CC.NotificationService.Infrastructure.Persistence.Migrations
                         });
 
                     b.Navigation("Channels");
+                });
+
+            modelBuilder.Entity("CC.NotificationService.Domain.TemplateVersion", b =>
+                {
+                    b.HasOne("CC.NotificationService.Domain.Template", "Template")
+                        .WithMany()
+                        .HasForeignKey("TemplateKey")
+                        .HasPrincipalKey("Key")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_template_versions_templates_template_key");
+
+                    b.OwnsMany("CC.NotificationService.Domain.ChannelContext", "Channels", b1 =>
+                        {
+                            b1.Property<Guid>("TemplateVersionId");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAdd();
+
+                            b1.Property<int>("Channel");
+
+                            b1.Property<string>("Content")
+                                .IsRequired();
+
+                            b1.HasKey("TemplateVersionId", "__synthesizedOrdinal");
+
+                            b1.ToTable("template_versions");
+
+                            b1
+                                .ToJson("channels")
+                                .HasColumnType("jsonb");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TemplateVersionId")
+                                .HasConstraintName("fk_template_versions_template_versions_template_version_id");
+                        });
+
+                    b.Navigation("Channels");
+
+                    b.Navigation("Template");
                 });
 #pragma warning restore 612, 618
         }
