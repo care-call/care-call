@@ -15,6 +15,8 @@ public static class DependencyInjection
                 {
                     dbCtxBuilder.UseSnakeCaseNamingConvention();
                 });
+            
+            services.AddNpgsqlDataSource(configuration.GetConnectionString("DefaultConnection")!);
 
             return services;
         }

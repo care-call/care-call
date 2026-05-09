@@ -76,6 +76,7 @@ public sealed class Ticket : AggregationRoot<Guid>
         RelatedEntity? relatedEntity,
         DateTime createdAt)
     {
+        //TODO: Исправить баг. Result.Fail не возвращается, ошибка игнорируется и выполнение продолжается
         if (number < 0)
             Result.Fail(TechServiceErrors.NegativeTicketNumber);
         
