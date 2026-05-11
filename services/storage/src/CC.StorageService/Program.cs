@@ -1,17 +1,45 @@
+﻿using Amazon.S3;
+using CC.ServiceDefaults;
+using CC.StorageService.Features.Upload;
+using CC.StorageService.Persistence;
+using CC.StorageService.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.AddServiceDefaults();
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddDbContextPool<Db>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// 🔧 Настройка S3 клиента
+var s3Endpoint = builder.Configuration["S3_ENDPOINT"] ?? "http://localhost:3900";
+var accessKey = builder.Configuration["S3_ACCESS_KEY"] ?? "dev-key";
+var secretKey = builder.Configuration["S3_SECRET_KEY"] ?? "devsecretkey123";
+var bucketName = builder.Configuration["S3_BUCKET"] ?? "care-call-storage";
+
+var s3Config = new AmazonS3Config
+{
+    ServiceURL = s3Endpoint,
+    ForcePathStyle = true,
+    UseHttp = true,
+    AuthenticationRegion = "us-east-1"
+};
+
+builder.Services.AddSingleton<IAmazonS3>(sp =>
+    new AmazonS3Client(accessKey, secretKey, s3Config));
+
+builder.Services.AddScoped<IStorageService, S3StorageService>();
+
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {
@@ -20,9 +48,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
-app.MapControllers();
+UploadFileFeature.MapEndpoint(app);
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<Db>();
+    await dbContext.Database.MigrateAsync();
+}
+
+
 
 app.Run();
