@@ -1,5 +1,5 @@
-﻿using CC.Common.Models;
-using CC.Common.Validations;
+using CC.Common.Models;
+using CC.Common.Pagination;
 using CC.TechSupportService.Domain.Entities;
 using CC.TechSupportService.Features.Tickets.Enums;
 using CC.TechSupportService.Features.Tickets.Extensions;
@@ -21,28 +21,25 @@ public class GetMyTicketsFeature
         DatabaseContext dbContext)
     {
         var pageInfo = new PageInfo(pageNumber, pageSize);
-
-        var validationErrors = DataAnnotationsValidation.ValidateByDataAnnotations(pageInfo);
-
-        if (validationErrors.Count > 0)
+        if (pageInfo.IsInvalid(out var validationErrors))
             return Results.ValidationProblem(validationErrors);
-        
-        var query = ApplyFilters(dbContext.Tickets.AsQueryable(), filterDto);
+
+        var query = ApplyFilters(dbContext.Tickets.AsNoTracking(), filterDto);
         var pagedResult = await ApplyPagination(query, pageInfo);
-       
+
         return Results.Ok(pagedResult);
     }
-    
-    private static async Task<PagedResult<TicketItemDto>> ApplyPagination(IQueryable<Ticket> query, PageInfo pageInfo)
+
+    private static async Task<PagedResult<TicketItemDto>> ApplyPagination(
+        IQueryable<Ticket> query,
+        PageInfo pageInfo)
     {
         var totalRows = await query.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalRows / (double)pageInfo.Size);
 
         var items = await query
-            .Skip((pageInfo.Number - 1) * pageInfo.Size)
-            .Take(pageInfo.Size)
+            .ApplyPaging(pageInfo)
             .ToListAsync();
-        
+
         var pageItems = items
             .Select(i => new TicketItemDto
             {
@@ -54,10 +51,10 @@ public class GetMyTicketsFeature
                 Number = i.Number
             })
             .ToList();
-        
-        return new PagedResult<TicketItemDto>(pageItems, pageInfo, totalRows, totalPages);;
-    } 
-    
+
+        return PagedResult<TicketItemDto>.From(pageItems, pageInfo, totalRows);
+    }
+
     private static IQueryable<Ticket> ApplyFilters(
         IQueryable<Ticket> query,
         GetMyTicketsFilterDto? filterDto)
@@ -65,9 +62,9 @@ public class GetMyTicketsFeature
         if (filterDto is null)
             return query;
 
-        if (!filterDto.Status.HasValue) 
+        if (!filterDto.Status.HasValue)
             return query;
-        
+
         var status = filterDto.Status.Value.ToTicketStatus();
         return query.Where(t => t.Status == status);
     }

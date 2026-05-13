@@ -1,8 +1,8 @@
 using CC.Common.Models;
+using CC.Common.Pagination;
 using CC.NotificationService.Feature.Templates.Mapper;
 using CC.NotificationService.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Wolverine.Http;
 
 namespace CC.NotificationService.Feature.Templates.GetVersionsPage;
@@ -18,20 +18,17 @@ public class GetTemplateVersionsPageFeature
         int pageSize,
         DatabaseContext databaseContext)
     {
-        if (pageNum < 1 || pageSize < 1)
-            Results.BadRequest("Параметры страницы и Размер страницы должны быть больше 0.");   
-        
+        var pageInfo = new PageInfo(pageNum, pageSize);
+        if (pageInfo.IsInvalid(out var validationErrors))
+            return Results.ValidationProblem(validationErrors);
+
         var query = databaseContext.TemplateVersions
             .Where(t => t.IsActive == isActive && t.TemplateKey.StartsWith(key));
 
-        var totalItems = await query.CountAsync();
-        var items = await TemplateVersionDtoMapper
-            .MapToDto(query
-                .Skip((pageNum - 1) * pageSize)
-                .Take(pageSize))
-            .ToListAsync();
+        var pagedResult = await TemplateVersionDtoMapper
+            .MapToDto(query)
+            .ToPagedResultAsync(pageInfo);
 
-        var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
-        return Results.Ok(new PagedResult<TemplateVersionDto>(items, new PageInfo(pageNum, pageSize), totalItems, totalPages));
+        return Results.Ok(pagedResult);
     }
 }
