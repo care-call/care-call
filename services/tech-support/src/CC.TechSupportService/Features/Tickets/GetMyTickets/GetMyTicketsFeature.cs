@@ -52,7 +52,7 @@ public class GetMyTicketsFeature
             })
             .ToList();
 
-        return PagedResult.From(pageItems, pageInfo, totalRows);
+        return PagedResult<TicketItemDto>.From(pageItems, pageInfo, totalRows);
     }
 
     private static IQueryable<Ticket> ApplyFilters(

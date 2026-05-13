@@ -7,11 +7,8 @@ public sealed record PagedResult<T>(
 {
     public bool HasPrevious => Page.Number > 1;
     public bool HasNext => Page.Number < TotalPages;
-}
 
-public static class PagedResult
-{
-    public static PagedResult<T> From<T>(
+    public static PagedResult<T> From(
         IReadOnlyList<T> items,
         PageInfo page,
         int totalRows) =>

@@ -13,11 +13,10 @@ public static class QueryablePaginationExtensions
     {
         var totalRows = await query.CountAsync(ct);
         var items = await query
-            .Skip(pageInfo.Skip)
-            .Take(pageInfo.Size)
+            .ApplyPaging(pageInfo)
             .ToListAsync(ct);
 
-        return PagedResult.From(items, pageInfo, totalRows);
+        return PagedResult<T>.From(items, pageInfo, totalRows);
     }
 
     public static async Task<PagedResult<TResult>> ToPagedResultAsync<TSource, TResult>(
@@ -28,18 +27,17 @@ public static class QueryablePaginationExtensions
     {
         var totalRows = await query.CountAsync(ct);
         var items = await query
-            .Skip(pageInfo.Skip)
-            .Take(pageInfo.Size)
+            .ApplyPaging(pageInfo)
             .Select(selector)
             .ToListAsync(ct);
 
-        return PagedResult.From(items, pageInfo, totalRows);
+        return PagedResult<TResult>.From(items, pageInfo, totalRows);
     }
 
     public static IQueryable<T> ApplyPaging<T>(
         this IQueryable<T> query,
-        PageInfo pageInfo) =>
-        query
-            .Skip(pageInfo.Skip)
-            .Take(pageInfo.Size);
+        PageInfo pageInfo) => query.Skip(GetSkip(pageInfo)).Take(pageInfo.Size);
+
+    private static int GetSkip(PageInfo pageInfo) =>
+        checked((pageInfo.Number - 1) * pageInfo.Size);
 }
