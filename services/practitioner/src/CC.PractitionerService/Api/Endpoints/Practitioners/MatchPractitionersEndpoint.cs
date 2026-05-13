@@ -1,4 +1,4 @@
-﻿using CC.PractitionerService.Api.Contracts.Practitioners;
+using CC.PractitionerService.Api.Contracts.Practitioners;
 using CC.PractitionerService.Application.UseCases.Practitioners;
 using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 using FluentResults;

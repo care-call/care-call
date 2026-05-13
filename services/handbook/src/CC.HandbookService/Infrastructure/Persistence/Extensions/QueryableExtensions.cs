@@ -1,24 +1,10 @@
 using System.Linq.Expressions;
-using CC.Common.Models;
 using CC.HandbookService.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
 
 namespace CC.HandbookService.Infrastructure.Persistence.Extensions;
 
 public static class QueryableExtensions
 {
-    public static async Task<PagedResult<T>> ToPagedResultAsync<T>(this IQueryable<T> query, PageInfo pageInfo)
-    {
-        var totalRows = await query.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalRows / (double)pageInfo.Size);
-        var items = await query
-            .Skip((pageInfo.Number - 1) * pageInfo.Size)
-            .Take(pageInfo.Size)
-            .ToListAsync();
-
-        return new PagedResult<T>(items, pageInfo, totalRows, totalPages);
-    }
-    
     public static IQueryable<T> ApplySearch<T>(this IQueryable<T> query, string searchBy, string searchValue)
     {
         var propertyInfo = typeof(T).GetProperty(searchBy);

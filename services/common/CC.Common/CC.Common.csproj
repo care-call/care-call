@@ -13,6 +13,7 @@
         <PackageReference Include="Serilog.Sinks.OpenTelemetry" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
         <PackageReference Include="FluentResults"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
     </ItemGroup>
 
     <ItemGroup>
