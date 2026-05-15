@@ -1,6 +1,8 @@
-using CC.Shared.Domain;
+﻿using CC.Shared.Domain;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
+using ContractDateTimeRange = СС.Contracts.Shared.DateTimeRange;
+using СС.Contracts.Appointments.Events;
 
 namespace CC.AppointmentService.Domain.Appointments;
 
@@ -16,7 +18,7 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
     public required PractitionerSnapshot PractitionerSnapshot { get; init; }
     public Uri? CallUrl { get; set; }
     public CancellationReason? CancellationReason { get; private set; }
-    /// <summary>Данные завершения. Null означает что запись ещё не завершена.</summary>
+    /// <summary>Данные завершения. Null означает, что запись еще не завершена.</summary>
     public AppointmentCompletion? Completion { get; private set; }
 
     public static Result<Appointment> Create(
@@ -30,7 +32,7 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
         if (timeSlot.From - now < Policy.MinLeadTime)
             return Result.Fail(AppointmentErrors.TooSoon);
 
-        return new Appointment(Guid.CreateVersion7())
+        var appointment = new Appointment(Guid.CreateVersion7())
         {
             ClientId = clientId,
             PractitionerId = practitionerId,
@@ -39,6 +41,10 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
             ClientSnapshot = clientSnapshot,
             PractitionerSnapshot = practitionerSnapshot
         };
+
+        appointment.AddCreatedDomainEvent();
+
+        return appointment;
     }
 
     public Result Cancel(CancellationReason reason, DateTime now)
@@ -50,6 +56,7 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
 
         CancellationReason = reason;
         Status = AppointmentStatus.Cancelled;
+        AddCancelledDomainEvent(reason);
         return Result.Ok();
     }
 
@@ -73,7 +80,31 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
             return Result.Fail(AppointmentErrors.TooSoon);
 
         TimeSlot = newTimeSlot;
+        AddTransferredDomainEvent();
         return Result.Ok();
+    }
+
+    private void AddCreatedDomainEvent()
+    {
+        AddDomainEvent(new AppointmentCreatedEvent(
+            Id,
+            PractitionerId,
+            new ContractDateTimeRange(TimeSlot.From, TimeSlot.To)));
+    }
+
+    private void AddTransferredDomainEvent()
+    {
+        AddDomainEvent(new AppointmentTransferredEvent(
+            Id,
+            new ContractDateTimeRange(TimeSlot.From, TimeSlot.To)));
+    }
+
+    private void AddCancelledDomainEvent(CancellationReason reason)
+    {
+        AddDomainEvent(new AppointmentCancelledEvent(
+            Id,
+            ClientId,
+            reason.Value));
     }
 
     public bool HasInsufficientBreakAfter(Appointment previous) =>

@@ -27,12 +27,13 @@ public class TransferAppointmentUseCaseTest
     };
     
     private Appointment MakeAppointment(
+        Guid? appointmentId = null,
         Guid? clientId = null, 
         AppointmentStatus? status = null, 
         DateTimeRange? period = null,
         string? cancellationReason = null)
     {
-        var builder = AppointmentBuilder.Create(_appointmentId, clientId ?? _clientId)
+        var builder = AppointmentBuilder.Create(appointmentId ?? _appointmentId, clientId ?? _clientId)
             .WithStatus(status ?? AppointmentStatus.Planned);
         
         if (period.HasValue)
@@ -111,7 +112,8 @@ public class TransferAppointmentUseCaseTest
             - (newTimeSlot.To - newTimeSlot.From),
             newTimeSlot.From.Add(-AppointmentPolicy.Default.MinBreakBetweenAppointments).AddSeconds(1));
         
-        _appointmentsRepository.GetLastAppointmentAsync(_clientId).Returns(MakeAppointment(period: lastAppointmentTimeSlot));
+        _appointmentsRepository.GetLastAppointmentAsync(_clientId)
+            .Returns(MakeAppointment(appointmentId: Guid.NewGuid(), period: lastAppointmentTimeSlot));
         
         var result = await Act();
         

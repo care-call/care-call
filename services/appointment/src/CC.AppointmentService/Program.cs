@@ -1,4 +1,4 @@
-using CC.AppointmentService.Api.Endpoints.Appointments;
+﻿using CC.AppointmentService.Api.Endpoints.Appointments;
 using CC.AppointmentService.Api.Endpoints.Appointments.Practitioner;
 using CC.AppointmentService.Api.Endpoints.Feedback;
 using CC.AppointmentService.Application;
@@ -9,7 +9,12 @@ using CC.Common.Json;
 using CC.Common.Logging;
 using CC.ServiceDefaults;
 using Hangfire;
+using CC.Shared.Domain;
 using Wolverine;
+using Wolverine.EntityFrameworkCore;
+using Wolverine.Kafka;
+using Wolverine.Postgresql;
+using СС.Contracts.Appointments.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +36,13 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Host.UseWolverine(opts =>
 {
     opts.Discovery.CustomizeHandlerDiscovery(t => t.Includes.WithNameSuffix("UseCase"));
+    opts.UseKafka(builder.Configuration.GetConnectionString("Kafka")!);
+    opts.PublishMessage<AppointmentCreatedEvent>().ToKafkaTopic("appointments");
+    opts.PublishMessage<AppointmentTransferredEvent>().ToKafkaTopic("appointments");
+    opts.PublishMessage<AppointmentCancelledEvent>().ToKafkaTopic("appointments");
+    opts.PersistMessagesWithPostgresql(builder.Configuration.GetConnectionString("DefaultConnection")!);
+    opts.UseEntityFrameworkCoreTransactions();
+    opts.PublishDomainEventsFromEntityFrameworkCore<IDomainEventSource>(x => x.DomainEvents);
 });
 
 var app = builder.Build();

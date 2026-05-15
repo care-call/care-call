@@ -1,5 +1,6 @@
-﻿using СС.Contracts.Shared;
+using CC.Shared.Domain;
+using СС.Contracts.Shared;
 
 namespace СС.Contracts.Appointments.Events;
 
-public sealed record AppointmentTransferredEvent(Guid AppointmentId, DateTimeRange TimeSlot);
+public sealed record AppointmentTransferredEvent(Guid AppointmentId, DateTimeRange TimeSlot) : IDomainEvent;
