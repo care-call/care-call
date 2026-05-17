@@ -4,7 +4,7 @@ using СС.Contracts.Appointments.Events;
 
 namespace CC.AppointmentService.Application.EventHandlers.Appointments;
 
-public static class AppointmentIntegrationEventHandler
+public static class PublishIntegrationEventOnAppointmentDomainEventHandler
 {
     public static AppointmentCreatedEvent Handle(AppointmentCreatedDomainEvent domainEvent) =>
         new(
