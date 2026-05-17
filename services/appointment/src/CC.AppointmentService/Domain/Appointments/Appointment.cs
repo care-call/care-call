@@ -1,8 +1,7 @@
 ﻿using CC.Shared.Domain;
 using CC.Shared.Domain.TimeRanges;
 using FluentResults;
-using ContractDateTimeRange = СС.Contracts.Shared.DateTimeRange;
-using СС.Contracts.Appointments.Events;
+using CC.AppointmentService.Domain.Appointments.Events;
 
 namespace CC.AppointmentService.Domain.Appointments;
 
@@ -84,28 +83,16 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
         return Result.Ok();
     }
 
-    private void AddCreatedDomainEvent()
-    {
-        AddDomainEvent(new AppointmentCreatedEvent(
-            Id,
-            PractitionerId,
-            new ContractDateTimeRange(TimeSlot.From, TimeSlot.To)));
-    }
+    private void AddCreatedDomainEvent() => AddDomainEvent(
+        new AppointmentCreatedDomainEvent(Id, ClientId, PractitionerId,TimeSlot));
+    
 
-    private void AddTransferredDomainEvent()
-    {
-        AddDomainEvent(new AppointmentTransferredEvent(
-            Id,
-            new ContractDateTimeRange(TimeSlot.From, TimeSlot.To)));
-    }
+    private void AddTransferredDomainEvent() => AddDomainEvent(
+        new AppointmentTransferredDomainEvent(Id, ClientId, PractitionerId, TimeSlot));
+    
 
-    private void AddCancelledDomainEvent(CancellationReason reason)
-    {
-        AddDomainEvent(new AppointmentCancelledEvent(
-            Id,
-            ClientId,
-            reason.Value));
-    }
+    private void AddCancelledDomainEvent(CancellationReason reason) => AddDomainEvent(
+        new AppointmentCancelledDomainEvent(Id, ClientId, PractitionerId, reason.Value));
 
     public bool HasInsufficientBreakAfter(Appointment previous) =>
         TimeSlot.From - previous.TimeSlot.To < Policy.MinBreakBetweenAppointments;

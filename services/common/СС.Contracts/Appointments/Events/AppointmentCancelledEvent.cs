@@ -1,5 +1,3 @@
-using CC.Shared.Domain;
-
 namespace СС.Contracts.Appointments.Events;
 
-public sealed record AppointmentCancelledEvent(Guid AppointmentId, Guid ClientId, string Reason) : IDomainEvent;
+public sealed record AppointmentCancelledEvent(Guid AppointmentId, Guid ClientId, Guid PractitionerId, string Reason);

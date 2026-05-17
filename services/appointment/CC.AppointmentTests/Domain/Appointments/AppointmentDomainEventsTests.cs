@@ -1,8 +1,8 @@
-using CC.AppointmentService.Domain.Appointments;
+﻿using CC.AppointmentService.Domain.Appointments;
+using CC.AppointmentService.Domain.Appointments.Events;
 using CC.Shared.Domain;
 using CC.Shared.Domain.TimeRanges;
 using Shouldly;
-using СС.Contracts.Appointments.Events;
 
 namespace CC.AppointmentTests.Domain.Appointments;
 
@@ -12,8 +12,8 @@ public class AppointmentDomainEventsTests
     
     private Appointment CreateAppointment() =>
         Appointment.Create(Guid.NewGuid(), Guid.NewGuid(), Slot(1),
-            new ClientSnapshot { FullName = new FullName("Тест", "Клиент", null) },
-            new PractitionerSnapshot { FullName = new FullName("Тест", "Врач", null) }, _now).Value;
+            new ClientSnapshot { FullName = new FullName("Тест‚", "Клиент", null) },
+            new PractitionerSnapshot { FullName = new FullName("Тест‚", "Врач", null) }, _now).Value;
 
     private Appointment BuildAppointment() =>
         AppointmentBuilder.Create(Guid.NewGuid(), Guid.NewGuid()).WithTimeSlot(Slot(1)).Build();
@@ -25,8 +25,8 @@ public class AppointmentDomainEventsTests
     {
         var appointment = CreateAppointment();
 
-        ((IDomainEventSource)appointment).DomainEvents.ShouldHaveSingleItem()
-            .ShouldBeOfType<AppointmentCreatedEvent>();
+        appointment.DomainEvents.ShouldHaveSingleItem()
+            .ShouldBeOfType<AppointmentCreatedDomainEvent>();
     }
 
     [Fact]
@@ -35,8 +35,8 @@ public class AppointmentDomainEventsTests
         var appointment = BuildAppointment();
         appointment.Transfer(Slot(2), _now);
 
-        ((IDomainEventSource)appointment).DomainEvents.ShouldHaveSingleItem()
-            .ShouldBeOfType<AppointmentTransferredEvent>();
+        appointment.DomainEvents.ShouldHaveSingleItem()
+            .ShouldBeOfType<AppointmentTransferredDomainEvent>();
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class AppointmentDomainEventsTests
         var appointment = BuildAppointment();
         appointment.Cancel(CancellationReason.From("Клиент попросил отменить запись"), _now);
 
-        ((IDomainEventSource)appointment).DomainEvents.ShouldHaveSingleItem()
-            .ShouldBeOfType<AppointmentCancelledEvent>();
+        appointment.DomainEvents.ShouldHaveSingleItem()
+            .ShouldBeOfType<AppointmentCancelledDomainEvent>();
     }
 }
