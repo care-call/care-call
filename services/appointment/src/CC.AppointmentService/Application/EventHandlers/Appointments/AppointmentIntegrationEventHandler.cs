@@ -2,7 +2,7 @@ using CC.AppointmentService.Domain.Appointments.Events;
 using ContractDateTimeRange = СС.Contracts.Shared.DateTimeRange;
 using СС.Contracts.Appointments.Events;
 
-namespace CC.AppointmentService.Infrastructure.Messaging;
+namespace CC.AppointmentService.Application.EventHandlers.Appointments;
 
 public static class AppointmentIntegrationEventHandler
 {

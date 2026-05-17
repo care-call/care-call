@@ -55,7 +55,7 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
 
         CancellationReason = reason;
         Status = AppointmentStatus.Cancelled;
-        AddCancelledDomainEvent(reason);
+        AddCancelledDomainEvent();
         return Result.Ok();
     }
 
@@ -91,8 +91,8 @@ public sealed class Appointment(Guid id) : AggregationRoot<Guid>(id)
         new AppointmentTransferredDomainEvent(Id, ClientId, PractitionerId, TimeSlot));
     
 
-    private void AddCancelledDomainEvent(CancellationReason reason) => AddDomainEvent(
-        new AppointmentCancelledDomainEvent(Id, ClientId, PractitionerId, reason.Value));
+    private void AddCancelledDomainEvent() => AddDomainEvent(
+        new AppointmentCancelledDomainEvent(Id, ClientId, PractitionerId, CancellationReason!.Value.Value));
 
     public bool HasInsufficientBreakAfter(Appointment previous) =>
         TimeSlot.From - previous.TimeSlot.To < Policy.MinBreakBetweenAppointments;

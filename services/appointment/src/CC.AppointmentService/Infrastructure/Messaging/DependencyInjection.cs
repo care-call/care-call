@@ -1,4 +1,5 @@
 using CC.Shared.Domain;
+using CC.AppointmentService.Application.EventHandlers.Appointments;
 using CC.AppointmentService.Application.UseCases.Appointments.CallCreation;
 using CC.AppointmentService.Application.UseCases.Appointments.Cancellation;
 using CC.AppointmentService.Application.UseCases.Appointments.Complete;
@@ -24,15 +25,7 @@ public static class DependencyInjection
         {
             return host.UseWolverine(opts =>
             {
-                opts.Discovery.IncludeType(typeof(CreateAppointmentUseCase));
-                opts.Discovery.IncludeType(typeof(TransferAppointmentUseCase));
-                opts.Discovery.IncludeType(typeof(CancelAppointmentUseCase));
-                opts.Discovery.IncludeType(typeof(CompleteAppointmentUseCase));
-                opts.Discovery.IncludeType(typeof(CreateCallUseCase));
-                opts.Discovery.IncludeType(typeof(GetPractitionerAppointmentsUseCase));
-                opts.Discovery.IncludeType(typeof(GetClientHistoryUseCase));
-                opts.Discovery.IncludeType(typeof(CreateFeedbackUseCase));
-                opts.Discovery.IncludeType(typeof(AppointmentIntegrationEventHandler));
+                opts.Discovery.CustomizeHandlerDiscovery(t => t.Includes.WithNameSuffix("UseCase"));
                 opts.UseKafka(configuration.GetConnectionString("Kafka")!);
                 opts.PublishMessage<AppointmentCreatedEvent>().ToKafkaTopic("appointments");
                 opts.PublishMessage<AppointmentTransferredEvent>().ToKafkaTopic("appointments");
