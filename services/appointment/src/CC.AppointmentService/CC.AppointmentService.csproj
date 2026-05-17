@@ -24,6 +24,9 @@
         <PackageReference Include="Vogen" />
         <PackageReference Include="Vogen.Serialization" />
         <PackageReference Include="WolverineFx" />
+        <PackageReference Include="WolverineFx.EntityFrameworkCore" />
+        <PackageReference Include="WolverineFx.Kafka" />
+        <PackageReference Include="WolverineFx.Postgresql" />
     </ItemGroup>
 
     <ItemGroup>
@@ -39,6 +42,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\CC.Common\CC.Common.csproj" />
       <ProjectReference Include="..\..\..\common\CC.Shared.Domain\CC.Shared.Domain.csproj" />
+      <ProjectReference Include="..\..\..\common\СС.Contracts\СС.Contracts.csproj" />
       <ProjectReference Include="..\..\..\common\CC.Analyzer\CC.Analyzer\CC.Analyzer.csproj"
                         OutputItemType="Analyzer"
                         ReferenceOutputAssembly="false" />

@@ -2,13 +2,13 @@ namespace CC.Shared.Domain;
 
 public abstract class AggregationRoot<TId>(TId id) : Entity<TId>(id)
 {
-    private List<IDomainEvent> _events { get; set; } = [];
+    private readonly List<IDomainEvent> _domainEvents = [];
 
-    public IReadOnlyList<IDomainEvent> Events => _events; 
-    
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
+
     public void ClearDomainEvents()
-        => _events.Clear();
-    
+        => _domainEvents.Clear();
+
     protected void AddDomainEvent(IDomainEvent @event)
-        => _events.Add(@event);
+        => _domainEvents.Add(@event);
 }
