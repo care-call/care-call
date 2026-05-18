@@ -31,7 +31,7 @@ public static class UploadFileFeature
             file.Length,
             userId);
 
-        return Results.Ok(new { fileId });
+        return Results.Ok(new FileIdResponse(fileId));
     }
 
     private static Guid GetUserId(HttpContext httpContext)
@@ -39,3 +39,5 @@ public static class UploadFileFeature
         return Guid.NewGuid(); // временно для демо
     }
 }
+
+internal record FileIdResponse(Guid FileId);

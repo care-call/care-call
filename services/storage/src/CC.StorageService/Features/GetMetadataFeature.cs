@@ -1,4 +1,5 @@
 ﻿using CC.StorageService.Persistence;
+using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace CC.StorageService.Features;
@@ -11,17 +12,13 @@ public static class GetMetadataFeature
             .WithName("GetMetadata");
     }
 
-    private static async Task<IResult> HandleAsync(
+    private static async Task<Result<List<FileMetadataItemResponse>>> HandleAsync(
         Guid[] ids,
         Db db)
     {
-        if (ids == null || ids.Count() == 0)
-            return Results.BadRequest(new { error = "No file IDs provided" });
-
         var files = await db.FileMetadata
             .Where(f => ids.ToList().Contains(f.Id))
-            .Select(f => new
-            {
+            .Select(f => new FileMetadataItemResponse(
                 f.Id,
                 f.OriginalName,
                 f.ContentType,
@@ -31,9 +28,11 @@ public static class GetMetadataFeature
                 f.EntityType,
                 f.EntityId,
                 f.CreatedAt
-            })
+            ))
             .ToListAsync();
 
-        return Results.Ok(files);
+        return Result.Ok(files);
     }
 }
+
+internal record FileMetadataItemResponse(Guid Id, string OriginalName, string ContentType, long Size, string Status, DateTime? ExpiresAt, string? EntityType, Guid? EntityId, DateTime CreatedAt);
