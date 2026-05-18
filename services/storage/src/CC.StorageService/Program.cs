@@ -1,9 +1,14 @@
-﻿using Amazon.S3;
+﻿using System.Net;
+using System.Net.Sockets;
+using Amazon.S3;
 using CC.ServiceDefaults;
-using CC.StorageService.Features.Upload;
+using CC.StorageService.Features;
 using CC.StorageService.Persistence;
 using CC.StorageService.Services;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,9 +56,19 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 UploadFileFeature.MapEndpoint(app);
+DownloadFileFeature.MapEndpoint(app);
+LinkFilesFeature.MapEndpoint(app);
+GetMetadataFeature.MapEndpoint(app);
+GetEntityFilesFeature.MapEndpoint(app);
+DeleteFileFeature.MapEndpoint(app);
 
 using (var scope = app.Services.CreateScope())
 {
+    var s3 = scope.ServiceProvider.GetRequiredService<IAmazonS3>();
+    if (!await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(s3, bucketName))
+    {
+        await s3.PutBucketAsync(bucketName);
+    }
     var dbContext = scope.ServiceProvider.GetRequiredService<Db>();
     await dbContext.Database.MigrateAsync();
 }

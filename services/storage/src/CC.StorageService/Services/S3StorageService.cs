@@ -21,15 +21,12 @@ public class S3StorageService(
         long fileSize,
         Guid userId)
     {
-        // 1. Создаем entity с бизнес-логикой
         var fileId = Guid.NewGuid();
         var metadata = FileMetadata.CreateNew(fileName, contentType, fileSize, userId);
 
-        // 2. Генерируем S3 ключ
         var s3Key = $"temp/{fileId}/{Guid.NewGuid()}_{fileName}";
         metadata.SetS3Key(s3Key);
 
-        // 3. Загружаем в S3
         var putRequest = new PutObjectRequest
         {
             BucketName = _bucketName,
@@ -40,7 +37,6 @@ public class S3StorageService(
 
         await s3.PutObjectAsync(putRequest);
 
-        // 4. Сохраняем в БД
         await db.AddAsync(metadata);
         await db.SaveChangesAsync();
 

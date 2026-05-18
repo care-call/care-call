@@ -1,6 +1,6 @@
 ﻿using CC.StorageService.Services;
 
-namespace CC.StorageService.Features.Upload;
+namespace CC.StorageService.Features;
 
 public static class UploadFileFeature
 {
@@ -24,7 +24,6 @@ public static class UploadFileFeature
 
         var userId = GetUserId(httpContext);
 
-        // Вызываем сервис
         var fileId = await storageService.UploadTemporaryAsync(
             file.OpenReadStream(),
             file.FileName,
@@ -37,7 +36,6 @@ public static class UploadFileFeature
 
     private static Guid GetUserId(HttpContext httpContext)
     {
-        // TODO: взять из JWT токена или заголовка
         return Guid.NewGuid(); // временно для демо
     }
 }

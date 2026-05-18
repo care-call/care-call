@@ -1,5 +1,6 @@
 ﻿using CC.Shared.Domain;
 using CC.Shared.Domain.Exceptions;
+using CC.StorageService.Entities.ValueObjects;
 
 namespace CC.StorageService.Entities;
 
@@ -30,7 +31,6 @@ public class FileMetadata : Entity<Guid>
         return metadata;
     }
 
-    // Поля
     public string S3Key { get; private set; } = string.Empty;
     public string OriginalName { get; private set; } = string.Empty;
     public string ContentType { get; private set; } = string.Empty;
@@ -43,7 +43,8 @@ public class FileMetadata : Entity<Guid>
     public DateTime CreatedAt { get; private set; }
     public DateTime? ExpiresAt { get; private set; }
 
-    // Бизнес-методы
+    public FileStatus StatusValue => FileStatus.FromString(Status);
+
     public void SetS3Key(string s3Key)
     {
         if (string.IsNullOrWhiteSpace(s3Key))
@@ -62,7 +63,7 @@ public class FileMetadata : Entity<Guid>
 
     public void Link(string entityType, Guid entityId, string fieldName)
     {
-        if (Status != "temporary")
+        if (!StatusValue.CanBeLinked)
             throw new DomainException($"Cannot link file with status {Status}");
 
         if (string.IsNullOrWhiteSpace(entityType))
@@ -77,6 +78,9 @@ public class FileMetadata : Entity<Guid>
 
     public void Delete()
     {
+        if (!StatusValue.CanBeDeleted)
+            throw new DomainException($"Cannot delete file with status {Status}");
+
         Status = "deleted";
     }
 
@@ -84,4 +88,6 @@ public class FileMetadata : Entity<Guid>
     {
         return Status == "temporary" && ExpiresAt.HasValue && ExpiresAt.Value < DateTime.UtcNow;
     }
+
+    public bool CanBeDownloaded() => StatusValue.CanBeDownloaded;
 }
