@@ -1,4 +1,5 @@
-﻿using CC.PractitionerService.Application.Dependencies;
+using CC.Common.Models;
+using CC.PractitionerService.Application.Dependencies;
 using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 using FluentResults;
 
@@ -12,8 +13,7 @@ public sealed record AvailablePractitionerFilter
     public IReadOnlyCollection<int>? ProblemAreas { get; init; }
     public IReadOnlyCollection<int>? PractitionerLanguages { get; init; }
     public string? PractitionerFullName { get; init; }
-    public int PageSize { get; init; } = 20;
-    public int PageNumber { get; init; }
+    public PageInfo PageInfo { get; init; } = new(1, 20);
 }
 
 public sealed class GetAvailablePractitionersUseCase(IAvailablePractitionersQuery availablePractitionersQuery)

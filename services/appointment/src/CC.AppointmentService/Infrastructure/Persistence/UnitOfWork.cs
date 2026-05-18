@@ -1,11 +1,12 @@
 using CC.AppointmentService.Application.Dependencies.UnitOfWork;
+using Wolverine.EntityFrameworkCore;
 
 namespace CC.AppointmentService.Infrastructure.Persistence;
 
-public class UnitOfWork(DatabaseContext db) : IUnitOfWork
+public class UnitOfWork(IDbContextOutbox<DatabaseContext> outbox) : IUnitOfWork
 {
     public Task SaveAsync(CancellationToken ct = default)
     {
-        return db.SaveChangesAsync(ct);
+        return outbox.SaveChangesAndFlushMessagesAsync(ct);
     }
 }

@@ -1,4 +1,5 @@
-﻿using CC.PractitionerService.Application.Dependencies;
+using CC.Common.Pagination;
+using CC.PractitionerService.Application.Dependencies;
 using CC.PractitionerService.Application.UseCases.Practitioners;
 using CC.PractitionerService.Application.UseCases.Practitioners.Dtos;
 using CC.PractitionerService.Domain.Availability;
@@ -60,9 +61,7 @@ public sealed class AvailablePractitionersQuery(
         IQueryable<PractitionerProfile> query,
         AvailablePractitionerFilter filter)
     {
-        return query
-            .Skip(filter.PageNumber * filter.PageSize)
-            .Take(filter.PageSize);
+        return query.ApplyPaging(filter.PageInfo);
     }
 
     private Task<PractitionerFetchData[]> FetchPractitionersDataAsync(

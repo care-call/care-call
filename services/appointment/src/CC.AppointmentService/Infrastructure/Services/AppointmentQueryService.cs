@@ -1,8 +1,8 @@
 using CC.AppointmentService.Application.Dependencies.AppointmentsQuery;
 using CC.AppointmentService.Domain.Appointments;
 using CC.AppointmentService.Infrastructure.Persistence;
-using CC.AppointmentService.Infrastructure.Persistence.Extensions;
 using CC.Common.Models;
+using CC.Common.Pagination;
 
 namespace CC.AppointmentService.Infrastructure.Services;
 
@@ -18,13 +18,15 @@ public class AppointmentQueryService(DatabaseContext dbContext,
         appointmentsQuery = ApplySort(appointmentsQuery, now);
         appointmentsQuery = ApplyFilters(appointmentsQuery,new ClientHistoryFilterDto(query.From, query.To));
         
-        var pageItemDtos = appointmentsQuery.Select(a => new AppointmentPageItemDto()
-        {
-            Id =  a.Id,
-            PractitionerFullName = a.PractitionerSnapshot.FullName.GetFullName(),
-            DateOfEvent = a.TimeSlot.From
-        });
-        var pagedResult = await pageItemDtos.ToPagedResultAsync(query.PageInfo.Number, query.PageInfo.Size, ct);
+        var pagedResult = await appointmentsQuery.ToPagedResultAsync(
+            query.PageInfo,
+            a => new AppointmentPageItemDto
+            {
+                Id =  a.Id,
+                PractitionerFullName = a.PractitionerSnapshot.FullName.GetFullName(),
+                DateOfEvent = a.TimeSlot.From
+            },
+            ct);
         
         return pagedResult;
     }

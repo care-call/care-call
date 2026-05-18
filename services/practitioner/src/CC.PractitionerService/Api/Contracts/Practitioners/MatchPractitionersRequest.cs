@@ -1,4 +1,4 @@
-﻿namespace CC.PractitionerService.Api.Contracts.Practitioners;
+namespace CC.PractitionerService.Api.Contracts.Practitioners;
 
 /// <summary>
 /// Запрос на подбор практиканта для записи.

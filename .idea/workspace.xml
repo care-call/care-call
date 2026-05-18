@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="CMakeProjectFlavorService">
     <option name="flavorId" value="CMakePlainProjectFlavor" />
   </component>
+  <component name="CMakeSettings">
+    <configurations />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="f03dba97-b19f-4a30-ac70-fbd6a568781c" name="Changes" comment="" />
+    <list default="true" id="f03dba97-b19f-4a30-ac70-fbd6a568781c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/services/common/CC.Common.EntityFrameworkCore/CC.Common.EntityFrameworkCore.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/common/CC.Common.EntityFrameworkCore/Pagination/QueryablePaginationExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/common/CC.Common/Pagination/QueryablePaginationExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/common/tests/CC.Common.Tests/CC.Common.Tests.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/common/tests/CC.Common.Tests/Pagination/QueryablePaginationExtensionsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/Directory.Packages.props" beforeDir="false" afterPath="$PROJECT_DIR$/services/Directory.Packages.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/appointment/src/CC.AppointmentService/Infrastructure/Persistence/Extensions/QueryablePagedExtension.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/appointment/src/CC.AppointmentService/Infrastructure/Services/AppointmentQueryService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/appointment/src/CC.AppointmentService/Infrastructure/Services/AppointmentQueryService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/common/CC.Common/CC.Common.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/services/common/CC.Common/CC.Common.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/common/CC.Common/Models/PageInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/common/CC.Common/Models/PageInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/common/CC.Common/Models/PageResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/common/CC.Common/Models/PageResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/handbook/src/CC.HandbookService/Api/Endpoints/GetHandbookEndpoint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/handbook/src/CC.HandbookService/Api/Endpoints/GetHandbookEndpoint.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/handbook/src/CC.HandbookService/Infrastructure/Persistence/Extensions/QueryableExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/handbook/src/CC.HandbookService/Infrastructure/Persistence/Extensions/QueryableExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/handbook/src/CC.HandbookService/Infrastructure/Persistence/Repositories/HandbookRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/handbook/src/CC.HandbookService/Infrastructure/Persistence/Repositories/HandbookRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/notification/src/CC.NotificationService/CC.NotificationService.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/services/notification/src/CC.NotificationService/CC.NotificationService.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/notification/src/CC.NotificationService/Feature/Templates/GetPage/GetTemplatePageFeature.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/notification/src/CC.NotificationService/Feature/Templates/GetPage/GetTemplatePageFeature.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/notification/src/CC.NotificationService/Feature/Templates/GetVersionsPage/GetTemplateVersionsPageFeature.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/notification/src/CC.NotificationService/Feature/Templates/GetVersionsPage/GetTemplateVersionsPageFeature.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Api/Contracts/Practitioners/MatchPractitionersRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Api/Contracts/Practitioners/MatchPractitionersRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Api/Endpoints/Practitioners/MatchPractitionersEndpoint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Api/Endpoints/Practitioners/MatchPractitionersEndpoint.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Application/UseCases/Practitioners/GetAvailablePractitionersUseCase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Application/UseCases/Practitioners/GetAvailablePractitionersUseCase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Infrastructure/Persistence/Availability/AvailablePractitionersQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Infrastructure/Persistence/Availability/AvailablePractitionersQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/tech-support/src/CC.TechSupportService/Features/Tickets/GetMyTickets/GetMyTicketsFeature.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/tech-support/src/CC.TechSupportService/Features/Tickets/GetMyTickets/GetMyTicketsFeature.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,13 +51,34 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/services/appointment/src/CC.AppointmentService/Api/Endpoints/Appointments/AppointmentsEndpoints.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/services/appointment/src/CC.AppointmentService/Api/Endpoints/Appointments/CancelAppointmentEndpoint.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/appointment/src/CC.AppointmentService/Infrastructure/Services/AppointmentQueryService.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/services/appointment/src/CC.AppointmentService/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/common/CC.Common.EntityFrameworkCore/Pagination/QueryablePaginationExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/common/CC.Common/Models/AppointmentPageItemDto.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/common/CC.Common/Models/PageInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/common/CC.Common/Models/PageResult.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/common/tests/CC.Common.Tests/Pagination/QueryablePaginationExtensionsTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/common/tests/CC.Shared.Domain.Tests/TimeRanges/MergeRangesTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/common/tests/CC.Shared.Domain.Tests/TimeRanges/TestData/DisjointTimeRangesTestData.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/handbook/src/CC.HandbookService/Infrastructure/Persistence/Extensions/QueryableExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/handbook/src/CC.HandbookService/Infrastructure/Persistence/Repositories/HandbookRepository.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/services/handbook/src/CC.HandbookService/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/notification/src/CC.NotificationService/Feature/Templates/GetPage/GetTemplatePageFeature.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/notification/src/CC.NotificationService/Feature/Templates/GetVersionsPage/GetTemplateVersionsPageFeature.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Api/Contracts/Practitioners/MatchPractitionersRequest.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Api/Endpoints/Practitioners/MatchPractitionersEndpoint.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Application/UseCases/Practitioners/GetAvailablePractitionersUseCase.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/practitioner/src/CC.PractitionerService/Infrastructure/Persistence/Availability/AvailablePractitionersQuery.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/services/tech-support/src/CC.TechSupportService/Features/Tickets/GetMyTickets/GetMyTicketsFeature.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -41,24 +92,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/CCL-194/ImplementsRequestForm&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Github Repositories/care-call&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.appearance&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "feature/CCL-218/AddsCommonPagination",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "E:/Github Repositories/care-call",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "configurable.group.appearance",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="f03dba97-b19f-4a30-ac70-fbd6a568781c" name="Changes" comment="" />
@@ -118,6 +169,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Change" />
+    <MESSAGE value="12" />
+    <option name="LAST_COMMIT_MESSAGE" value="12" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

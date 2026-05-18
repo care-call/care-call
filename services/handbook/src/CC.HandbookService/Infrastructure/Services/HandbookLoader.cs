@@ -20,13 +20,16 @@ public class HandbookLoader<T>(
         var items = result.Value.ToList();
 
         var itemsCodes = items.Select(x => x.Code).ToArray();
-        
         var entities = await repository.GetByCodes(itemsCodes);
 
         var newItems = new List<T>();
 
         foreach (var item in items)
         {
+            var validation = item.Validate();
+            if (!validation.IsSuccess)
+                return validation;
+
             item.IsActive = true;
 
             if (entities.TryGetValue(item.Code, out var entity))
