@@ -9,15 +9,12 @@ public static class GetEntityFilesFeature
 {
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/storage/entity/{entityType}/{entityId:guid}", HandleAsync)
+        app.MapGet("/api/files/entity/{entityType}/{entityId:guid}", HandleAsync)
             .WithName("GetEntityFiles")
             .DisableAntiforgery();
     }
 
-    private static async Task<Result<List<EntityFileItemResponse>>> HandleAsync(
-        string entityType,
-        Guid entityId,
-        Db db)
+    private static async Task<Result<List<EntityFileItemResponse>>> HandleAsync(string entityType, Guid entityId, Db db)
     {
         var files = await db.FileMetadata
             .Where(f => f.EntityType == entityType && f.EntityId == entityId && f.Status != FileStatus.Deleted.Value)

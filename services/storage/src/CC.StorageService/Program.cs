@@ -1,14 +1,8 @@
-﻿using System.Net;
-using System.Net.Sockets;
-using Amazon.S3;
+﻿using Amazon.S3;
 using CC.ServiceDefaults;
 using CC.StorageService.Features;
 using CC.StorageService.Persistence;
-using CC.StorageService.Services;
-using Google.Protobuf.WellKnownTypes;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +14,11 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContextPool<Db>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 🔧 Настройка S3 клиента
-var s3Endpoint = builder.Configuration["S3_ENDPOINT"] ?? "http://localhost:3900";
-var accessKey = builder.Configuration["S3_ACCESS_KEY"] ?? "dev-key";
-var secretKey = builder.Configuration["S3_SECRET_KEY"] ?? "devsecretkey123";
-var bucketName = builder.Configuration["S3_BUCKET"] ?? "care-call-storage";
+var s3Settings = builder.Configuration.GetSection("S3");
+var s3Endpoint = s3Settings["Endpoint"] ?? "http://localhost:3900";
+var accessKey = s3Settings["AccessKey"] ?? "minioadmin";
+var secretKey = s3Settings["SecretKey"] ?? "minioadmin";
+var bucketName = s3Settings["Bucket"] ?? "care-call-storage";
 
 var s3Config = new AmazonS3Config
 {
@@ -36,8 +30,6 @@ var s3Config = new AmazonS3Config
 
 builder.Services.AddSingleton<IAmazonS3>(sp =>
     new AmazonS3Client(accessKey, secretKey, s3Config));
-
-builder.Services.AddScoped<IStorageService, S3StorageService>();
 
 builder.Services.AddHttpClient();
 
@@ -72,7 +64,5 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<Db>();
     await dbContext.Database.MigrateAsync();
 }
-
-
 
 app.Run();

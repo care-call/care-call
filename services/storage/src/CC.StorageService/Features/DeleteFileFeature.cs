@@ -7,17 +7,15 @@ public static class DeleteFileFeature
 {
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/api/storage/{fileId:guid}", HandleAsync)
+        app.MapDelete("/api/files/{fileId:guid}", HandleAsync)
             .WithName("DeleteFile");
     }
 
-    private static async Task<IResult> HandleAsync(
-        Guid fileId,
-        Db db)
+    private static async Task<IResult> HandleAsync(Guid fileId, Db db)
     {
         var metadata = await db.FileMetadata.FirstOrDefaultAsync(f => f.Id == fileId);
-        if (metadata == null)
-            return Results.NotFound(new { error = $"File {fileId} not found" });
+        if (metadata is null)
+            return Results.NotFound(new { error = $"Файл {fileId} не найден" });
 
         metadata.Delete();
         await db.SaveChangesAsync();

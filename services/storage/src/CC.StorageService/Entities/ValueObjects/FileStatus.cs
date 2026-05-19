@@ -3,11 +3,11 @@ using CC.Shared.Domain.Exceptions;
 
 namespace CC.StorageService.Entities.ValueObjects;
 
-public sealed class FileStatus : ValueObject
+public sealed record FileStatus
 {
-    public static readonly FileStatus Temporary = new("temporary", canLink: true, canDelete: true, canDownload: true);
-    public static readonly FileStatus Linked = new("linked", canLink: false, canDelete: true, canDownload: true);
-    public static readonly FileStatus Deleted = new("deleted", canLink: false, canDelete: false, canDownload: false);
+    public static readonly FileStatus Temporary = new("temporary", true, true, true);
+    public static readonly FileStatus Linked = new("linked", false, true, true);
+    public static readonly FileStatus Deleted = new("deleted", false, false, false);
 
     public string Value { get; }
     public bool CanBeLinked { get; }
@@ -22,21 +22,13 @@ public sealed class FileStatus : ValueObject
         CanBeDownloaded = canDownload;
     }
 
-    public static FileStatus FromString(string status)
+    public static FileStatus FromString(string status) => status switch
     {
-        return status switch
-        {
-            "temporary" => Temporary,
-            "linked" => Linked,
-            "deleted" => Deleted,
-            _ => throw new DomainException($"Invalid file status: {status}")
-        };
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
+        "temporary" => Temporary,
+        "linked" => Linked,
+        "deleted" => Deleted,
+        _ => throw new DomainException($"Некорректный статус файла: {status}")
+    };
 
     public override string ToString() => Value;
 }

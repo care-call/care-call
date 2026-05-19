@@ -8,13 +8,11 @@ public static class GetMetadataFeature
 {
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/storage/metadata", HandleAsync)
+        app.MapGet("/api/files/metadata", HandleAsync)
             .WithName("GetMetadata");
     }
 
-    private static async Task<Result<List<FileMetadataItemResponse>>> HandleAsync(
-        Guid[] ids,
-        Db db)
+    private static async Task<Result<List<FileMetadataItemResponse>>> HandleAsync(Guid[] ids, Db db)
     {
         var files = await db.FileMetadata
             .Where(f => ids.ToList().Contains(f.Id))

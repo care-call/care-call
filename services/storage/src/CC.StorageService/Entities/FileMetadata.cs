@@ -6,7 +6,23 @@ namespace CC.StorageService.Entities;
 
 public class FileMetadata : Entity<Guid>
 {
-    private FileMetadata(Guid id) : base(id) { }
+    private FileMetadata(
+        Guid id,
+        string originalName,
+        string contentType,
+        long size,
+        Guid createdBy,
+        string s3Key) : base(id)
+    {
+        OriginalName = originalName;
+        ContentType = contentType;
+        Size = size;
+        CreatedBy = createdBy;
+        CreatedAt = DateTime.UtcNow;
+        S3Key = s3Key;
+        Status = FileStatus.Temporary.Value;
+        ExpiresAt = DateTime.UtcNow.AddHours(24);
+    }
 
     public static FileMetadata CreateNew(
         string originalName,
@@ -15,27 +31,22 @@ public class FileMetadata : Entity<Guid>
         Guid createdBy)
     {
         if (string.IsNullOrWhiteSpace(originalName))
-            throw new DomainException("File name cannot be empty");
+            throw new DomainException("Имя файла не может быть пустым");
 
         if (size <= 0)
-            throw new DomainException("File size must be positive");
+            throw new DomainException("Размер файла должен быть больше нуля");
 
-        var metadata = new FileMetadata(Guid.NewGuid());
-        metadata.OriginalName = originalName;
-        metadata.ContentType = contentType;
-        metadata.Size = size;
-        metadata.CreatedBy = createdBy;
-        metadata.CreatedAt = DateTime.UtcNow;
-        metadata.SetTemporary();
+        var id = Guid.CreateVersion7();
+        var s3Key = $"temp/{id}/{Guid.CreateVersion7()}_{originalName}";
 
-        return metadata;
+        return new FileMetadata(id, originalName, contentType, size, createdBy, s3Key);
     }
 
-    public string S3Key { get; private set; } = string.Empty;
-    public string OriginalName { get; private set; } = string.Empty;
-    public string ContentType { get; private set; } = string.Empty;
+    public string S3Key { get; private set; }
+    public string OriginalName { get; private set; }
+    public string ContentType { get; private set; }
     public long Size { get; private set; }
-    public string Status { get; private set; } = string.Empty;
+    public string Status { get; private set; }
     public Guid? EntityId { get; private set; }
     public string? EntityType { get; private set; }
     public string? FieldName { get; private set; }
@@ -45,49 +56,26 @@ public class FileMetadata : Entity<Guid>
 
     public FileStatus StatusValue => FileStatus.FromString(Status);
 
-    public void SetS3Key(string s3Key)
-    {
-        if (string.IsNullOrWhiteSpace(s3Key))
-            throw new DomainException("S3 key cannot be empty");
-        S3Key = s3Key;
-    }
-
-    public void SetTemporary()
-    {
-        Status = "temporary";
-        ExpiresAt = DateTime.UtcNow.AddHours(24);
-        EntityId = null;
-        EntityType = null;
-        FieldName = null;
-    }
-
     public void Link(string entityType, Guid entityId, string fieldName)
     {
         if (!StatusValue.CanBeLinked)
-            throw new DomainException($"Cannot link file with status {Status}");
+            throw new DomainException($"Невозможно привязать файл со статусом {Status}");
 
         if (string.IsNullOrWhiteSpace(entityType))
-            throw new DomainException("Entity type cannot be empty");
+            throw new DomainException("Тип сущности не может быть пустым");
 
         EntityType = entityType;
         EntityId = entityId;
         FieldName = fieldName;
-        Status = "linked";
+        Status = FileStatus.Linked.Value;
         ExpiresAt = null;
     }
 
     public void Delete()
     {
         if (!StatusValue.CanBeDeleted)
-            throw new DomainException($"Cannot delete file with status {Status}");
+            throw new DomainException($"Невозможно удалить файл со статусом {Status}");
 
-        Status = "deleted";
+        Status = FileStatus.Deleted.Value;
     }
-
-    public bool IsExpired()
-    {
-        return Status == "temporary" && ExpiresAt.HasValue && ExpiresAt.Value < DateTime.UtcNow;
-    }
-
-    public bool CanBeDownloaded() => StatusValue.CanBeDownloaded;
 }
