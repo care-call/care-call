@@ -25,7 +25,7 @@ public sealed class AvailablePractitionersQuery(
 
         var period = GetPeriod(filter.PeriodFrom, filter.PeriodTo);
 
-        var practitionersData = await FetchPractitionersDataAsync(query, ct);
+        var practitionersData = await FetchPractitionersDataAsync(query, period, ct);
         return MapAndFilterByAvailability(practitionersData, period);
     }
 
@@ -64,26 +64,59 @@ public sealed class AvailablePractitionersQuery(
         return query.ApplyPaging(filter.PageInfo);
     }
 
-    private Task<PractitionerFetchData[]> FetchPractitionersDataAsync(
+    private async Task<PractitionerFetchData[]> FetchPractitionersDataAsync(
         IQueryable<PractitionerProfile> query,
+        DateTimeRange period,
         CancellationToken ct)
     {
-        return query.Select(p => new PractitionerFetchData(
-            p,
-            databaseContext.WorkSchedules
-                .Where(ws => ws.PractitionerId == p.Id)
-                .Select(s => new ScheduleWithAdjustments(
-                    s,
-                    databaseContext.Adjustments.Where(a => a.WorkScheduleId == s.Id).ToArray()
-                ))
-                .ToArray(),
-            databaseContext.Employments
-                .Where(e => e.PractitionerId == p.Id && !e.IsDeleted)
-                .Select(e => new EmploymentSnapshot(e.PractitionerId, e.ExternalEmploymentKey, e.Period, e.CreatedAt))
-                .ToArray()
-        ))
-        .AsSplitQuery()
-        .ToArrayAsync(ct);
+        var periodStart = DateOnly.FromDateTime(period.From);
+        var periodEnd = DateOnly.FromDateTime(period.To);
+
+        var rawData = await query.Select(p => new
+            {
+                Profile = p,
+                Schedules = databaseContext.WorkSchedules
+                    .Where(ws => ws.PractitionerId == p.Id)
+                    .Where(ws =>
+                        ws.ValidityPeriod.From <= periodEnd &&
+                        (!ws.ValidityPeriod.To.HasValue || ws.ValidityPeriod.To >= periodStart))
+                    .Select(s => new
+                    {
+                        Schedule = s,
+                        Adjustments = databaseContext.Adjustments
+                            .Where(a => a.WorkScheduleId == s.Id)
+                            .Where(a =>
+                                a.Period.From < period.To &&
+                                a.Period.To > period.From)
+                            .ToArray()
+                    })
+                    .ToArray(),
+                Employments = databaseContext.Employments
+                    .Where(e => e.PractitionerId == p.Id)
+                    .Where(e =>
+                        !e.IsDeleted &&
+                        e.Period.From < period.To &&
+                        e.Period.To > period.From)
+                    .Select(e => new
+                    {
+                        e.PractitionerId,
+                        e.ExternalEmploymentKey,
+                        e.Period,
+                        e.CreatedAt
+                    })
+                    .ToArray()
+            })
+            .AsSplitQuery()
+            .ToArrayAsync(ct);
+
+        return [.. rawData.Select(p => new PractitionerFetchData(
+            p.Profile,
+            [.. p.Schedules.Select(s => new ScheduleWithAdjustments(s.Schedule, s.Adjustments))],
+            [.. p.Employments.Select(e => new EmploymentSnapshot(
+                e.PractitionerId,
+                e.ExternalEmploymentKey,
+                e.Period,
+                e.CreatedAt))]))];
     }
 
     private DateTimeRange GetPeriod(DateOnly periodFrom, DateOnly periodTo)
