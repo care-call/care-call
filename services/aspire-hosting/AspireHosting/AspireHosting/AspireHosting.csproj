@@ -12,10 +12,11 @@
         <PackageReference Include="Aspire.Hosting.Docker" />
         <PackageReference Include="Aspire.Hosting.Docker.SshDeploy" />
         <PackageReference Include="Aspire.Hosting.PostgreSQL" />
-    </ItemGroup>
+	</ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\appointment\src\CC.AppointmentService\CC.AppointmentService.csproj" />
+		<ProjectReference Include="..\..\..\storage\src\CC.StorageService\CC.StorageService.csproj" />
+		<ProjectReference Include="..\..\..\appointment\src\CC.AppointmentService\CC.AppointmentService.csproj" />
         <ProjectReference Include="..\..\..\handbook\src\CC.HandbookService\CC.HandbookService.csproj" />
         <ProjectReference Include="..\..\..\notification\src\CC.NotificationService\CC.NotificationService.csproj" />
         <ProjectReference Include="..\..\..\practitioner\src\CC.PractitionerService\CC.PractitionerService.csproj" />

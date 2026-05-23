@@ -1,0 +1,2 @@
+﻿namespace CC.Shared.Domain;
+
